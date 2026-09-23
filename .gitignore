@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+
+# python
+__pycache__/
+*.pyc
+*.pyo
+
+# simulator output
+*.gif
+*.mp4
+
+# saved parameter sets are worth keeping, so params.json is deliberately NOT ignored

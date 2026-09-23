@@ -1,0 +1,6 @@
+# Air hockey simulator
+# numpy and pygame are all that is needed to run and watch it. Pillow is only for the
+# gif recorder in view.py, and it usually arrives with matplotlib.
+numpy>=1.24
+pygame>=2.5
+pillow>=9.0
