@@ -1,0 +1,20 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# venv
+.venv/
+
+# ROS build
+build/
+install/
+log/
+
+# Editor
+.vscode/
+.idea/
