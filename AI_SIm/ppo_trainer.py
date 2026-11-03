@@ -35,14 +35,20 @@ for i in range(20): # 20 steps of training for now
     actions.append(action)
     log_probs.append(log_probability)
 
-    observation, reward, terminated, truncated, info = enviorment.step(action)
+    next_observation, reward, terminated, truncated, info = enviorment.step(action)
+
+    done = terminated or truncated
+
 
     critic_values.append(critic_value)
     rewards.append(reward)
 
     total_reward += reward
 
-    
+    if terminated or truncated:
+        observation = enviorment.reset()
+    else:
+        observation = next_observation
 
 
 
@@ -53,4 +59,3 @@ for i in range(20):
     advantages[i] -= critic_values[i]
 
 print(rewards, critic_values, advantages)
-
