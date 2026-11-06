@@ -9,8 +9,8 @@ from pcb import Board
 W, H = 86.0, 64.0
 OUT = [(0, 0), (W, 0), (W, H), (0, H)]
 
-R = "Resistor_SMD:R_0603_1608Metric"
-C = "Capacitor_SMD:C_0603_1608Metric"
+R = "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+C = "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
 SOCK = "Connector_PinSocket_2.54mm:PinSocket_1x19_P2.54mm_Vertical"
 XH = "Connector_JST:JST_XH_B{n}B-XH-A_1x0{n}_P2.50mm_Vertical"
 HDR = "Connector_PinHeader_2.54mm:PinHeader_1x0{n}_P2.54mm_Vertical"
@@ -96,7 +96,7 @@ def build():
         b.net("GND", [(con, "2"), (cd, "2")])
 
     # --- status LED: GPIO22 -> 1k -> LED -> GND
-    b.place("D1", "LED_SMD:LED_0603_1608Metric", None, 0, "GREEN")
+    b.place("D1", "LED_THT:LED_D3.0mm", None, 0, "GREEN")
     b.place("RL1", R, None, 0, "1k")
     b.net("LED_A", [sockpin("IO22"), ("RL1", "1")])
     b.net("LED_M", [("RL1", "2"), ("D1", "2")])
@@ -115,7 +115,7 @@ def build():
 
     # --- test points
     for ref, net in (("TP1", "V3"), ("TP2", "V5"), ("TP3", "GND")):
-        b.place(ref, "TestPoint:TestPoint_Pad_D2.0mm", None, 0, net)
+        b.place(ref, "TestPoint:TestPoint_THTPad_D2.0mm_Drill1.0mm", None, 0, net)
         b.net(net, [(ref, "1")], **({} if net == "GND" else {"amps": 0.3}))
 
     b.pour("GND", "B", OUT)
