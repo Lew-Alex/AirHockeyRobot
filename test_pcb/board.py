@@ -30,6 +30,24 @@ def build():
     # ESP32 dev board sockets, pin 1 at the top, rows 25.4 mm apart
     b.place("J1", SOCK, (30.8, 56.6), 0, "ESP32 DevKitC L")
     b.place("J2", SOCK, (56.2, 56.6), 0, "ESP32 DevKitC R")
+
+    # --- left edge: motor drivers (PWM, DIR, GND) and encoders (VCC, GND, A, B)
+    b.place("J3", XH.format(n=4), (5.0, 58.5), 270, "ENC1")
+    b.place("J4", XH.format(n=4), (5.0, 44.5), 270, "ENC2")
+    b.place("J5", XH.format(n=3), (5.0, 30.5), 270, "MOTOR1")
+    b.place("J6", XH.format(n=3), (5.0, 19.5), 270, "MOTOR2")
+    # encoder supply select: 1-2 = 3V3, 2-3 = 5V
+    b.place("JP1", HDR.format(n=3), (19.0, 11.0), 90, "ENC_VCC", lcsc="C49257")
+
+    # --- right edge: 4 limit switches + e-stop sense (NC to GND)
+    for i, y in enumerate((55.0, 46.0, 37.0, 28.0, 19.0)):
+        b.place(f"J{7+i}", XH.format(n=2), (81.0, y), 90, ["LIM1", "LIM2", "LIM3", "LIM4", "ESTOP"][i])
+    # spare GPIO / UART header
+    b.place("J12", HDR.format(n=6), (67.0, 11.0), 90, "SPARE", lcsc="C37208")
+
+    # mounting holes (M3)
+    for x, y in ((13.0, 4.0), (73.0, 4.0), (73.0, H - 4), (13.0, H - 4)):
+        b.hole((x, y), d=3.2)
     return b
 
 
