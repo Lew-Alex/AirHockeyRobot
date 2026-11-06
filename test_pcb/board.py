@@ -48,6 +48,19 @@ def build():
     # mounting holes (M3)
     for x, y in ((13.0, 4.0), (73.0, 4.0), (73.0, H - 4), (13.0, H - 4)):
         b.hole((x, y), d=3.2)
+
+    # --- motor outputs: GPIO -> 220R -> connector, 10k pull-down at the connector
+    motors = [("1", "IO25", "IO26", "J5"), ("2", "IO27", "IO33", "J6")]
+    for m, pwm, dr, con in motors:
+        for sig, gpio, pin in (("PWM", pwm, "1"), ("DIR", dr, "2")):
+            rs, rp = f"RS_{sig}{m}", f"RP_{sig}{m}"
+            b.place(rs, R, None, 0, "220")
+            b.place(rp, R, None, 0, "10k")
+            b.net(f"{sig}{m}_MCU", [(rs, "1"), sockpin(gpio)])
+            b.net(f"{sig}{m}", [(rs, "2"), (rp, "1"), (con, pin)])
+            b.net("GND", [(rp, "2")])
+        b.net("GND", [(con, "3")])
+
     return b
 
 
