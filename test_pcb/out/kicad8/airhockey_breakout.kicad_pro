@@ -1,0 +1,225 @@
+{
+  "meta": {
+    "filename": "airhockey_breakout.kicad_pro",
+    "version": 3
+  },
+  "board": {
+    "design_settings": {
+      "rules": {
+        "min_clearance": 0.2,
+        "min_track_width": 0.2,
+        "min_via_diameter": 0.6,
+        "min_through_hole_diameter": 0.8,
+        "min_copper_edge_clearance": 0.3,
+        "min_hole_clearance": 0.25
+      }
+    }
+  },
+  "net_settings": {
+    "meta": {
+      "version": 4
+    },
+    "classes": [
+      {
+        "name": "Default",
+        "clearance": 0.2,
+        "track_width": 0.2,
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "priority": 2147483647
+      },
+      {
+        "name": "W0.20mm",
+        "clearance": 0.2,
+        "track_width": 0.2,
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "priority": 0
+      }
+    ],
+    "netclass_patterns": [
+      {
+        "netclass": "W0.20mm",
+        "pattern": "DIR1"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "DIR1_MCU"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "DIR2"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "DIR2_MCU"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "E1A"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "E1A_RAW"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "E1B"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "E1B_RAW"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "E2A"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "E2A_RAW"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "E2B"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "E2B_RAW"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "ENCVCC"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "ESTOP"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "ESTOP_RAW"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "GND"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "LED_A"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "LED_M"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "LIM1"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "LIM1_RAW"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "LIM2"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "LIM2_RAW"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "LIM3"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "LIM3_RAW"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "LIM4"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "LIM4_RAW"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "PWM1"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "PWM1_MCU"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "PWM2"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "PWM2_MCU"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "SPARE_IO13"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "SPARE_IO21"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "SPARE_IO23"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "SPARE_IO32"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "V3"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "V5"
+      }
+    ],
+    "netclass_assignments": {
+      "DIR1": "W0.20mm",
+      "DIR1_MCU": "W0.20mm",
+      "DIR2": "W0.20mm",
+      "DIR2_MCU": "W0.20mm",
+      "E1A": "W0.20mm",
+      "E1A_RAW": "W0.20mm",
+      "E1B": "W0.20mm",
+      "E1B_RAW": "W0.20mm",
+      "E2A": "W0.20mm",
+      "E2A_RAW": "W0.20mm",
+      "E2B": "W0.20mm",
+      "E2B_RAW": "W0.20mm",
+      "ENCVCC": "W0.20mm",
+      "ESTOP": "W0.20mm",
+      "ESTOP_RAW": "W0.20mm",
+      "GND": "W0.20mm",
+      "LED_A": "W0.20mm",
+      "LED_M": "W0.20mm",
+      "LIM1": "W0.20mm",
+      "LIM1_RAW": "W0.20mm",
+      "LIM2": "W0.20mm",
+      "LIM2_RAW": "W0.20mm",
+      "LIM3": "W0.20mm",
+      "LIM3_RAW": "W0.20mm",
+      "LIM4": "W0.20mm",
+      "LIM4_RAW": "W0.20mm",
+      "PWM1": "W0.20mm",
+      "PWM1_MCU": "W0.20mm",
+      "PWM2": "W0.20mm",
+      "PWM2_MCU": "W0.20mm",
+      "SPARE_IO13": "W0.20mm",
+      "SPARE_IO21": "W0.20mm",
+      "SPARE_IO23": "W0.20mm",
+      "SPARE_IO32": "W0.20mm",
+      "V3": "W0.20mm",
+      "V5": "W0.20mm"
+    }
+  }
+}
