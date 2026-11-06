@@ -82,6 +82,19 @@ def build():
     b.net("V3", [("JP1", "1")], amps=0.3)
     b.net("V5", [("JP1", "3")], amps=0.3)
 
+    # --- NC switches to GND: 10k pull-up to 3V3 at the connector, 1k series, 100nF to GND at the GPIO
+    sw = [("LIM1", "J7", "IO16"), ("LIM2", "J8", "IO17"), ("LIM3", "J9", "IO19"),
+          ("LIM4", "J10", "IO18"), ("ESTOP", "J11", "IO4")]
+    for n, con, gpio in sw:
+        pu, rs, cd = f"RU_{n}", f"RS_{n}", f"CD_{n}"
+        b.place(pu, R, None, 0, "10k")
+        b.place(rs, R, None, 0, "1k")
+        b.place(cd, C, None, 0, "100nF")
+        b.net(f"{n}_RAW", [(con, "1"), (pu, "1"), (rs, "1")])
+        b.net(n, [(rs, "2"), (cd, "1"), sockpin(gpio)])
+        b.net("V3", [(pu, "2")], amps=0.3)
+        b.net("GND", [(con, "2"), (cd, "2")])
+
     return b
 
 
