@@ -1,0 +1,4 @@
+{"size_mm": [86, 64], "layers": 2, "house": "jlcpcb-2",
+ "nets": {"V3": {"amps": 0.3}, "V5": {"amps": 0.3}, "ENCVCC": {"amps": 0.2}},
+ "edge": ["J3", "J4", "J5", "J6", "J7", "J8", "J9", "J10", "J11"],
+ "holes": {"count": 4, "d": 3.2}}
