@@ -108,6 +108,18 @@ def build():
     for pin, gpio in (("3", "IO21"), ("4", "IO23"), ("5", "IO32"), ("6", "IO13")):
         b.net(f"SPARE_{gpio}", [("J12", pin), sockpin(gpio)])
 
+    # --- sockets: power and ground
+    b.net("V3", [("J1", L["V3"])], amps=0.3)
+    b.net("V5", [("J1", L["V5"])], amps=0.3)
+    b.net("GND", [("J1", L["GND"]), ("J2", Rt["GND1"]), ("J2", Rt["GND2"])])
+
+    # --- test points
+    for ref, net in (("TP1", "V3"), ("TP2", "V5"), ("TP3", "GND")):
+        b.place(ref, "TestPoint:TestPoint_Pad_D2.0mm", None, 0, net)
+        b.net(net, [(ref, "1")], **({} if net == "GND" else {"amps": 0.3}))
+
+    b.pour("GND", "B", OUT)
+    b.pour("GND", "F", OUT)
     return b
 
 
