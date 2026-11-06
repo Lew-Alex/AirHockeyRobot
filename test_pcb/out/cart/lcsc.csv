@@ -1,0 +1,24 @@
+Quantity,Manufacture Part Number,Manufacturer,LCSC Part Number,Customer Part Number
+39,100nF C capacitor,,,"CD_ESTOP,CD_LIM1,CD_LIM2,CD_LIM3,CD_LIM4,CE1,CE2"
+22,330pF C capacitor,,,"CF_E1A,CF_E2A,CF_E1B,CF_E2B"
+6,GREEN LED LED,,,D1
+6,1x19 2.54mm pin socket,,,J1
+6,LIM4 JST connector,,,J10
+6,ESTOP JST connector,,,J11
+6,1x06 2.54mm pin header,,C37208,J12
+6,1x19 2.54mm pin socket,,,J2
+6,ENC1 JST connector,,,J3
+6,ENC2 JST connector,,,J4
+6,MOTOR1 JST connector,,,J5
+6,MOTOR2 JST connector,,,J6
+6,LIM1 JST connector,,,J7
+6,LIM2 JST connector,,,J8
+6,LIM3 JST connector,,,J9
+6,1x03 2.54mm pin header,,C49257,JP1
+55,1k R resistor,,,"RF_E1A,RF_E2A,RF_E1B,RF_E2B,RL1,RS_ESTOP,RS_LIM1,RS_LIM2,RS_LIM3,RS_LIM4"
+50,10k R resistor,,,"RP_DIR1,RP_DIR2,RP_PWM1,RP_PWM2,RU_ESTOP,RU_LIM1,RU_LIM2,RU_LIM3,RU_LIM4"
+22,220 R resistor,,,"RS_DIR1,RS_DIR2,RS_PWM1,RS_PWM2"
+22,4.7k R resistor,,,"RU_E1A,RU_E2A,RU_E1B,RU_E2B"
+6,V3 TestPoint,,,TP1
+6,V5 TestPoint,,,TP2
+6,GND TestPoint,,,TP3

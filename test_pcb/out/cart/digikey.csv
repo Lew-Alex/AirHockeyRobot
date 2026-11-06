@@ -1,0 +1,24 @@
+Quantity,Manufacturer Part Number,Manufacturer,Customer Reference,Description
+39,100nF C capacitor,,"CD_ESTOP,CD_LIM1,CD_LIM2,CD_LIM3,CD_LIM4,CE1,CE2",100nF C_Disc_D3.0mm_W2.0mm_P2.50mm
+22,330pF C capacitor,,"CF_E1A,CF_E2A,CF_E1B,CF_E2B",330pF C_Disc_D3.0mm_W2.0mm_P2.50mm
+6,GREEN LED LED,,D1,GREEN LED_D3.0mm
+6,1x19 2.54mm pin socket,,J1,ESP32 DevKitC L PinSocket_1x19_P2.54mm_Vertical
+6,LIM4 JST connector,,J10,LIM4 JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical
+6,ESTOP JST connector,,J11,ESTOP JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical
+6,1x06 2.54mm pin header,,J12,SPARE PinHeader_1x06_P2.54mm_Vertical
+6,1x19 2.54mm pin socket,,J2,ESP32 DevKitC R PinSocket_1x19_P2.54mm_Vertical
+6,ENC1 JST connector,,J3,ENC1 JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical
+6,ENC2 JST connector,,J4,ENC2 JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical
+6,MOTOR1 JST connector,,J5,MOTOR1 JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical
+6,MOTOR2 JST connector,,J6,MOTOR2 JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical
+6,LIM1 JST connector,,J7,LIM1 JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical
+6,LIM2 JST connector,,J8,LIM2 JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical
+6,LIM3 JST connector,,J9,LIM3 JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical
+6,1x03 2.54mm pin header,,JP1,ENC_VCC PinHeader_1x03_P2.54mm_Vertical
+55,1k R resistor,,"RF_E1A,RF_E2A,RF_E1B,RF_E2B,RL1,RS_ESTOP,RS_LIM1,RS_LIM2,RS_LIM3,RS_LIM4",1k R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical
+50,10k R resistor,,"RP_DIR1,RP_DIR2,RP_PWM1,RP_PWM2,RU_ESTOP,RU_LIM1,RU_LIM2,RU_LIM3,RU_LIM4",10k R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical
+22,220 R resistor,,"RS_DIR1,RS_DIR2,RS_PWM1,RS_PWM2",220 R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical
+22,4.7k R resistor,,"RU_E1A,RU_E2A,RU_E1B,RU_E2B",4.7k R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical
+6,V3 TestPoint,,TP1,V3 TestPoint_THTPad_D2.0mm_Drill1.0mm
+6,V5 TestPoint,,TP2,V5 TestPoint_THTPad_D2.0mm_Drill1.0mm
+6,GND TestPoint,,TP3,GND TestPoint_THTPad_D2.0mm_Drill1.0mm
