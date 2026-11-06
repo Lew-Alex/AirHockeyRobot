@@ -1,0 +1,8 @@
+out/board_state.pkl
+out/run.json
+out/err.txt
+out/progress.json
+out/viewer.json
+out/board.json
+__pycache__/
+out/result.json
