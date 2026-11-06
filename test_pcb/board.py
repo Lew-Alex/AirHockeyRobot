@@ -61,6 +61,27 @@ def build():
             b.net("GND", [(rp, "2")])
         b.net("GND", [(con, "3")])
 
+    # --- encoders: connector -> 4.7k pull-up (3V3) at connector, 1k + 330pF filter to GPIO
+    encs = [("1", "IO34", "IO35", "J3"), ("2", "IO36", "IO39", "J4")]
+    for e, a, bb, con in encs:
+        b.net(f"ENCVCC", [(con, "1")])
+        b.net("GND", [(con, "2")])
+        b.place(f"CE{e}", C, None, 0, "100nF")
+        b.net("ENCVCC", [(f"CE{e}", "1")])
+        b.net("GND", [(f"CE{e}", "2")])
+        for ch, gpio, pin in (("A", a, "3"), ("B", bb, "4")):
+            pu, rf, cf = f"RU_E{e}{ch}", f"RF_E{e}{ch}", f"CF_E{e}{ch}"
+            b.place(pu, R, None, 0, "4.7k")
+            b.place(rf, R, None, 0, "1k")
+            b.place(cf, C, None, 0, "330pF")
+            b.net(f"E{e}{ch}_RAW", [(con, pin), (pu, "1"), (rf, "1")])
+            b.net(f"E{e}{ch}", [(rf, "2"), (cf, "1"), sockpin(gpio)])
+            b.net("V3", [(pu, "2")], amps=0.3)
+            b.net("GND", [(cf, "2")])
+    b.net("ENCVCC", [("JP1", "2")], amps=0.2)
+    b.net("V3", [("JP1", "1")], amps=0.3)
+    b.net("V5", [("JP1", "3")], amps=0.3)
+
     return b
 
 
