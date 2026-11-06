@@ -95,6 +95,19 @@ def build():
         b.net("V3", [(pu, "2")], amps=0.3)
         b.net("GND", [(con, "2"), (cd, "2")])
 
+    # --- status LED: GPIO22 -> 1k -> LED -> GND
+    b.place("D1", "LED_SMD:LED_0603_1608Metric", None, 0, "GREEN")
+    b.place("RL1", R, None, 0, "1k")
+    b.net("LED_A", [sockpin("IO22"), ("RL1", "1")])
+    b.net("LED_M", [("RL1", "2"), ("D1", "2")])
+    b.net("GND", [("D1", "1")])
+
+    # --- spare header: GND 3V3 IO21 IO23 IO32 IO13
+    b.net("GND", [("J12", "1")])
+    b.net("V3", [("J12", "2")], amps=0.3)
+    for pin, gpio in (("3", "IO21"), ("4", "IO23"), ("5", "IO32"), ("6", "IO13")):
+        b.net(f"SPARE_{gpio}", [("J12", pin), sockpin(gpio)])
+
     return b
 
 
