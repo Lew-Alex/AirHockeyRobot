@@ -656,7 +656,7 @@ def main() -> int:
         if control_mode == "untrained_actor":
             with torch.no_grad():
                 policy_input = torch.tensor(observation, dtype=torch.float32)
-                policy_action, _, _ = policy.act(policy_input, explore=True)
+                _, policy_action, _, _ = policy.act(policy_input, explore=True)
 
             robot_action = pygame.Vector2(policy_action.tolist())
             control_name = "untrained PPO (random exploration)"
