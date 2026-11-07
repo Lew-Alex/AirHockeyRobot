@@ -1,4 +1,5 @@
 import AVFoundation
+import Photos
 import SwiftUI
 
 /// One capture format of the back camera that can run at 60 fps or more.
@@ -40,6 +41,8 @@ final class CameraController: NSObject, ObservableObject {
     @Published private(set) var droppedFrames = 0
     @Published private(set) var appliedShutter = "-"
     @Published private(set) var appliedISO: Float = 0
+    @Published private(set) var isRecording = false
+    @Published private(set) var recordingNote = ""
 
     // MARK: Camera objects
 
@@ -47,6 +50,7 @@ final class CameraController: NSObject, ObservableObject {
     private let sessionQueue = DispatchQueue(label: "camera120.session")
     private let frameQueue = DispatchQueue(label: "camera120.frames", qos: .userInteractive)
     private let videoOutput = AVCaptureVideoDataOutput()
+    private let movieOutput = AVCaptureMovieFileOutput()
     private var device: AVCaptureDevice?
     private var configured = false
 
@@ -62,6 +66,11 @@ final class CameraController: NSObject, ObservableObject {
     private var lastPTS = 0.0
     private var windowMaxGapMs = 0.0
     private var droppedCount = 0
+
+    // Presentation timestamps of the frames in the current recording.
+    // Only touched on frameQueue.
+    private var collectingTimestamps = false
+    private var recordedTimestamps: [Double] = []
 
     // MARK: Public controls
 
@@ -90,8 +99,12 @@ final class CameraController: NSObject, ObservableObject {
         }
     }
 
+    // Settings are locked while a recording is running so a take has one
+    // frame rate, shutter speed and ISO throughout.
+
     func selectFormat(id: Int) {
         sessionQueue.async {
+            guard !self.movieOutput.isRecording else { return }
             self.requestedFormatIndex = id
             self.applyFormatAndFrameRate()
             self.applyExposure()
@@ -100,6 +113,7 @@ final class CameraController: NSObject, ObservableObject {
 
     func setTargetFPS(_ fps: Int) {
         sessionQueue.async {
+            guard !self.movieOutput.isRecording else { return }
             self.requestedFPS = fps
             self.applyFormatAndFrameRate()
             self.applyExposure()
@@ -108,6 +122,7 @@ final class CameraController: NSObject, ObservableObject {
 
     func setShutter(denominator: Int) {
         sessionQueue.async {
+            guard !self.movieOutput.isRecording else { return }
             self.requestedShutter = denominator
             self.applyExposure()
         }
@@ -115,8 +130,46 @@ final class CameraController: NSObject, ObservableObject {
 
     func setISO(_ value: Float) {
         sessionQueue.async {
+            guard !self.movieOutput.isRecording else { return }
             self.requestedISO = value
             self.applyExposure()
+        }
+    }
+
+    /// Starts a recording, or stops the one in progress. Each take is saved as
+    /// a .mov and a .csv of frame timestamps in the app's Documents folder, then
+    /// the video is added to the photo library.
+    func toggleRecording() {
+        sessionQueue.async {
+            guard self.configured else { return }
+
+            if self.movieOutput.isRecording {
+                self.movieOutput.stopRecording()
+                return
+            }
+
+            if let connection = self.movieOutput.connection(with: .video) {
+                if connection.isVideoOrientationSupported {
+                    connection.videoOrientation = .landscapeRight
+                }
+                if connection.isVideoStabilizationSupported {
+                    connection.preferredVideoStabilizationMode = .off
+                }
+            }
+
+            let stamp = Self.fileTimestamp()
+            let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let url = folder.appendingPathComponent("rec_\(stamp).mov")
+
+            self.frameQueue.async {
+                self.recordedTimestamps.removeAll()
+                self.collectingTimestamps = true
+            }
+            self.movieOutput.startRecording(to: url, recordingDelegate: self)
+            self.publish {
+                self.isRecording = true
+                self.recordingNote = "Recording \(url.lastPathComponent)"
+            }
         }
     }
 
@@ -180,6 +233,12 @@ final class CameraController: NSObject, ObservableObject {
         if let connection = videoOutput.connection(with: .video), connection.isVideoStabilizationSupported {
             connection.preferredVideoStabilizationMode = .off
         }
+
+        guard session.canAddOutput(movieOutput) else {
+            publishMessage("Could not add the movie output.")
+            return false
+        }
+        session.addOutput(movieOutput)
         return true
     }
 
@@ -319,6 +378,87 @@ final class CameraController: NSObject, ObservableObject {
         guard exposureSeconds > 0 else { return "-" }
         return "1/\(Int((1.0 / exposureSeconds).rounded()))"
     }
+
+    private static func fileTimestamp() -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyyMMdd_HHmmss"
+        return formatter.string(from: Date())
+    }
+}
+
+// MARK: - Recording
+
+extension CameraController: AVCaptureFileOutputRecordingDelegate {
+
+    func fileOutput(_ output: AVCaptureFileOutput,
+                    didFinishRecordingTo outputFileURL: URL,
+                    from connections: [AVCaptureConnection],
+                    error: Error?) {
+        // A recording can report an error and still have been saved.
+        var finishedOK = (error == nil)
+        if let nsError = error as NSError?,
+           let saved = nsError.userInfo[AVErrorRecordingSuccessfullyFinishedKey] as? Bool {
+            finishedOK = saved
+        }
+
+        frameQueue.async {
+            self.collectingTimestamps = false
+            let stamps = self.recordedTimestamps
+            self.recordedTimestamps = []
+
+            let summary = self.writeTimestampFile(stamps, next: outputFileURL)
+            self.publish {
+                self.isRecording = false
+                self.recordingNote = finishedOK
+                    ? "Saved \(outputFileURL.lastPathComponent): \(summary)"
+                    : "Recording failed: \(error?.localizedDescription ?? "unknown error")"
+            }
+            if finishedOK {
+                self.saveToPhotos(outputFileURL)
+            }
+        }
+    }
+
+    /// Writes frame number, timestamp and gap to the previous frame, and returns
+    /// a one-line summary (frame count and average rate).
+    private func writeTimestampFile(_ stamps: [Double], next movieURL: URL) -> String {
+        var text = "frame,pts_seconds,gap_ms\n"
+        var previous: Double?
+        for (index, stamp) in stamps.enumerated() {
+            let gap = previous.map { (stamp - $0) * 1000 } ?? 0
+            text += "\(index),\(String(format: "%.6f", stamp)),\(String(format: "%.3f", gap))\n"
+            previous = stamp
+        }
+        let csvURL = movieURL.deletingPathExtension().appendingPathExtension("csv")
+        try? text.write(to: csvURL, atomically: true, encoding: .utf8)
+
+        guard let first = stamps.first, let last = stamps.last, stamps.count > 1, last > first else {
+            return "\(stamps.count) frames"
+        }
+        let averageFPS = Double(stamps.count - 1) / (last - first)
+        return "\(stamps.count) frames, \(String(format: "%.1f", averageFPS)) fps average"
+    }
+
+    private func saveToPhotos(_ url: URL) {
+        PHPhotoLibrary.requestAuthorization(for: .addOnly) { status in
+            guard status == .authorized || status == .limited else {
+                self.publish {
+                    self.recordingNote += " (Photos access is off; the file is in Files > Camera120.)"
+                }
+                return
+            }
+            PHPhotoLibrary.shared().performChanges({
+                _ = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
+            }, completionHandler: { success, error in
+                self.publish {
+                    self.recordingNote += success
+                        ? " Added to Photos."
+                        : " Could not add to Photos: \(error?.localizedDescription ?? "unknown error")."
+                }
+            })
+        }
+    }
 }
 
 // MARK: - Frame statistics
@@ -334,6 +474,10 @@ extension CameraController: AVCaptureVideoDataOutputSampleBufferDelegate {
             windowMaxGapMs = max(windowMaxGapMs, (pts - lastPTS) * 1000)
         }
         lastPTS = pts
+
+        if collectingTimestamps {
+            recordedTimestamps.append(pts)
+        }
 
         if windowFrames == 0 {
             windowStartPTS = pts

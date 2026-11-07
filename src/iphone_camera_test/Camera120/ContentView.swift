@@ -39,6 +39,9 @@ struct StatsView: View {
             Text("fps     \(String(format: "%.1f", camera.measuredFPS)) measured, \(camera.targetFPS) target")
             Text("gap     \(String(format: "%.1f", camera.maxGapMs)) ms max, \(camera.droppedFrames) dropped")
             Text("shutter \(camera.appliedShutter) applied, 1/\(camera.shutterDenominator) asked   ISO \(Int(camera.appliedISO))")
+            if !camera.recordingNote.isEmpty {
+                Text(camera.recordingNote)
+            }
         }
         .font(.system(.footnote, design: .monospaced))
         .foregroundColor(.white)
@@ -52,6 +55,29 @@ struct ControlsView: View {
     @ObservedObject var camera: CameraController
 
     var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Button(action: { camera.toggleRecording() }) {
+                Text(camera.isRecording ? "Stop recording" : "Record")
+                    .font(.headline)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 8)
+                    .background(camera.isRecording ? Color.red : Color.white)
+                    .foregroundColor(camera.isRecording ? .white : .black)
+                    .cornerRadius(10)
+            }
+            .disabled(!camera.cameraAvailable)
+
+            settingsRows
+                .disabled(camera.isRecording)
+                .opacity(camera.isRecording ? 0.4 : 1.0)
+        }
+        .padding(8)
+        .background(Color.black.opacity(0.6))
+        .cornerRadius(8)
+    }
+
+    /// Frame rate, format, shutter speed and ISO. Locked while recording.
+    private var settingsRows: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 6) {
                 Text("fps").foregroundColor(.white)
@@ -99,9 +125,6 @@ struct ControlsView: View {
                     .frame(width: 50, alignment: .trailing)
             }
         }
-        .padding(8)
-        .background(Color.black.opacity(0.6))
-        .cornerRadius(8)
     }
 }
 
