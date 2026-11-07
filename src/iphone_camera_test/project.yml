@@ -1,0 +1,38 @@
+# XcodeGen project description. Regenerate the Xcode project after adding or
+# removing source files:  xcodegen generate
+name: Camera120
+options:
+  bundleIdPrefix: ca.alexlewandowski
+  createIntermediateGroups: true
+  deploymentTarget:
+    iOS: "16.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    TARGETED_DEVICE_FAMILY: "1"
+targets:
+  Camera120:
+    type: application
+    platform: iOS
+    sources:
+      - path: Camera120
+    info:
+      path: Camera120/Info.plist
+      properties:
+        CFBundleDisplayName: Camera120
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationLandscapeRight
+        # Lets recordings be copied off the phone from the Files app or Finder.
+        UIFileSharingEnabled: true
+        LSSupportsOpeningDocumentsInPlace: true
+        NSCameraUsageDescription: Records video at a fixed frame rate and shutter speed for the air hockey camera test.
+        NSPhotoLibraryAddUsageDescription: Saves test recordings to your photo library.
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ca.alexlewandowski.airhockey.camera120
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        CODE_SIGN_STYLE: Automatic
