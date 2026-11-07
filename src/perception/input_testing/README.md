@@ -3,7 +3,7 @@
 Run this from the repository root with the puck tracker's existing Python environment.
 
 ```bash
-perception/prototype/.venv/bin/python perception/input_testing/camera_latency.py
+src/perception/prototype/.venv/bin/python src/perception/input_testing/camera_latency.py
 ```
 
 For wireless testing, unplug the iPhone, leave Wi-Fi and Bluetooth on for
