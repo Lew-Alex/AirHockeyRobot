@@ -6,7 +6,7 @@
 	(paper "A3")
 	(title_block
 		(title "airhockey_breakout")
-		(date "2026-11-06")
+		(date "2026-11-07")
 		(rev "A")
 		(company "")
 		(comment 1 "generated from the layout netlist")
@@ -78,6 +78,87 @@
 					(at 0 0 90)
 					(length 2.54)
 					(name "1"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "1"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+			)
+		)
+		(symbol "Connector_Generic:Conn_01x01"
+			(pin_names (offset 1.016) hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "J"
+				(at 0 2.54 0)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Value" "Conn_01x01"
+				(at 0 -2.54 0)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font (size 1.27 1.27))
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font (size 1.27 1.27))
+					(hide yes)
+				)
+			)
+			(property "Description" "Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)"
+				(at 0 0 0)
+				(effects
+					(font (size 1.27 1.27))
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "connector"
+				(at 0 0 0)
+				(effects
+					(font (size 1.27 1.27))
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "Connector*:*_1x??_*"
+				(at 0 0 0)
+				(effects
+					(font (size 1.27 1.27))
+					(hide yes)
+				)
+			)
+			(symbol "Conn_01x01_1_1"
+				(rectangle
+					(start -1.27 1.27)
+					(end 1.27 -1.27)
+					(stroke (width 0.254) (type default))
+					(fill (type background))
+				)
+				(rectangle
+					(start -1.27 0.127)
+					(end 0 -0.127)
+					(stroke (width 0.1524) (type default))
+					(fill (type none))
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 3.81)
+					(name "Pin_1"
 						(effects
 							(font (size 1.27 1.27))
 						)
@@ -1494,673 +1575,23 @@
 	)
 	(rectangle
 		(start 12 18)
-		(end 205.73 198.65)
+		(end 337.82 155.29)
 		(stroke (width 0.254) (type dash))
 		(fill (type none))
-		(uuid "b470a673-4296-53e2-b49a-0bd80425dafb")
+		(uuid "7ecbd484-b49a-5553-8c37-6c3084be0bef")
 	)
-	(text "ESTOP"
+	(text "ESP32 DevKitC L (J1) 1/2"
 		(exclude_from_sim no)
 		(at 14.54 22.2 0)
 		(effects
 			(font (size 2 2) (thickness 0.4) (bold yes))
 			(justify left bottom)
 		)
-		(uuid "3111938f-dcbc-5365-bee5-f6f461e26c4d")
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 17.78 38.1 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "26f63e6d-f10c-5c05-8b8a-3433fae832bd")
-		(property "Reference" "CD_ESTOP"
-			(at 20.412 37.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "100nF"
-			(at 20.412 39.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
-			(at 17.78 38.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 17.78 38.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "9ccb7fa5-be02-593b-a56c-c0f57a5602b0"))
-		(pin "2" (uuid "0b270bdb-0ff0-500b-ac36-dbbe3b2d8c33"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "CD_ESTOP") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 17.78 34.29)
-			(xy 17.78 29.21)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "11235f56-71ae-5217-a35b-ad7b0beafe22")
-	)
-	(label "ESTOP"
-		(at 17.78 29.21 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "6064cb2d-566b-585b-98cd-abeeb8f6f415")
-	)
-	(no_connect (at 17.78 41.91) (uuid "167360ca-914d-56d4-9856-73483b57bb1d"))
-	(symbol
-		(lib_id "Device:C")
-		(at 35.56 38.1 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "e76ace37-3860-5849-942e-f89c8d878ee7")
-		(property "Reference" "CD_LIM1"
-			(at 38.192 37.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "100nF"
-			(at 38.192 39.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
-			(at 35.56 38.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 35.56 38.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "cfa987bf-6597-57ff-8a26-318bb93657eb"))
-		(pin "2" (uuid "dce50a1b-83ab-5144-ac22-cda626d7b007"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "CD_LIM1") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 35.56 34.29)
-			(xy 35.56 29.21)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "524cb62d-1884-5e82-a6fe-d68b9d84a8d1")
-	)
-	(label "LIM1"
-		(at 35.56 29.21 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "7fbc4a01-738c-5c0c-9ae4-aa98cd5a7114")
-	)
-	(no_connect (at 35.56 41.91) (uuid "f971a59e-62a2-5358-be4d-ab6d5d6202ef"))
-	(symbol
-		(lib_id "Device:C")
-		(at 53.34 38.1 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "8e087fdb-5a7c-5ade-93e7-235b9cbb9623")
-		(property "Reference" "CD_LIM2"
-			(at 55.972 37.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "100nF"
-			(at 55.972 39.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
-			(at 53.34 38.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 53.34 38.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "2d92bc4a-a8a9-5e1d-b0e9-1a15c4b0a31a"))
-		(pin "2" (uuid "7beee65b-c4af-50d6-a174-b3c62e767052"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "CD_LIM2") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 53.34 34.29)
-			(xy 53.34 29.21)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "44d11750-2ce3-5b8e-9930-92ebdcae0139")
-	)
-	(label "LIM2"
-		(at 53.34 29.21 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "6e638cbd-f673-519b-9a0b-8a68c7087b79")
-	)
-	(no_connect (at 53.34 41.91) (uuid "a25215b4-1001-5ebc-95f3-1a5248e618bc"))
-	(symbol
-		(lib_id "Device:C")
-		(at 71.12 38.1 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "c65b73e5-e0d8-57e1-854a-eddd7450bd3b")
-		(property "Reference" "CD_LIM3"
-			(at 73.752 37.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "100nF"
-			(at 73.752 39.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
-			(at 71.12 38.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 71.12 38.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "93f47667-6f6d-5d94-874c-b59b62722616"))
-		(pin "2" (uuid "7f6982f4-aefd-585a-ab5c-75cf2fafb9a9"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "CD_LIM3") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 71.12 34.29)
-			(xy 71.12 29.21)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "af7df6dc-fce5-51e9-b553-9d98cc03e534")
-	)
-	(label "LIM3"
-		(at 71.12 29.21 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "778eb00c-14ed-50f0-b7c0-1824f1b0cbfe")
-	)
-	(no_connect (at 71.12 41.91) (uuid "471d1524-fbce-520a-ace0-ad4e36823ea9"))
-	(symbol
-		(lib_id "Device:C")
-		(at 88.9 38.1 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "441f68b4-f875-595d-bdfa-15ab6c79bada")
-		(property "Reference" "CD_LIM4"
-			(at 91.532 37.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "100nF"
-			(at 91.532 39.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
-			(at 88.9 38.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 88.9 38.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "bd958d6a-e9c1-556b-b80b-280464454f7e"))
-		(pin "2" (uuid "2f6db666-1fd3-553d-beac-52266c403b25"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "CD_LIM4") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 88.9 34.29)
-			(xy 88.9 29.21)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "40691298-c244-5b3b-9b85-62b5057c015f")
-	)
-	(label "LIM4"
-		(at 88.9 29.21 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "3abbb254-d884-5ed5-b772-ff833c33113d")
-	)
-	(no_connect (at 88.9 41.91) (uuid "81105a34-3806-5817-9b8f-220be683b19d"))
-	(symbol
-		(lib_id "Device:C")
-		(at 106.68 38.1 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "54241642-e507-57cd-a899-44fe63c8cfc6")
-		(property "Reference" "CF_E1A"
-			(at 109.312 37.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "330pF"
-			(at 109.312 39.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
-			(at 106.68 38.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 106.68 38.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "2986c883-27af-525a-8dc9-ed2c7b68e0aa"))
-		(pin "2" (uuid "2918c0e5-5d3c-5eab-bd57-d5c6f385612e"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "CF_E1A") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 106.68 34.29)
-			(xy 106.68 29.21)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "1a83f2ee-c06d-5a65-91c9-30da19405760")
-	)
-	(label "E1A"
-		(at 106.68 29.21 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "db744752-8501-5696-85ba-0730f295e868")
-	)
-	(no_connect (at 106.68 41.91) (uuid "f3b8bc72-4166-59ba-bfc8-0c6eabb30046"))
-	(symbol
-		(lib_id "Device:C")
-		(at 121.92 38.1 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "f1d80f71-c3e4-56ec-babc-6ad16f0804d2")
-		(property "Reference" "CF_E1B"
-			(at 124.552 37.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "330pF"
-			(at 124.552 39.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
-			(at 121.92 38.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 121.92 38.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "a767226b-7373-57f7-9fdf-8472804eb663"))
-		(pin "2" (uuid "0c8f569b-24bf-5022-a7a7-86826151e5f6"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "CF_E1B") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 121.92 34.29)
-			(xy 121.92 29.21)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "cd7d2ed3-5200-5ab4-9be2-8b3ffe49a9a6")
-	)
-	(label "E1B"
-		(at 121.92 29.21 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "948468a5-6c22-5323-a737-195bf28407b2")
-	)
-	(no_connect (at 121.92 41.91) (uuid "45e2a693-ec87-5595-bdf6-d6e8663655bd"))
-	(symbol
-		(lib_id "Device:C")
-		(at 137.16 38.1 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "0526eeec-304b-5114-905b-98eb642b4373")
-		(property "Reference" "CF_E2A"
-			(at 139.792 37.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "330pF"
-			(at 139.792 39.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
-			(at 137.16 38.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 137.16 38.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "8802f4a3-5322-5ce5-acc1-a801a84f3d8b"))
-		(pin "2" (uuid "5cbd0ad2-069e-5b95-885a-d6153463d807"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "CF_E2A") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 137.16 34.29)
-			(xy 137.16 29.21)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "66528599-e573-5d06-bf90-a1e30835f8c3")
-	)
-	(label "E2A"
-		(at 137.16 29.21 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "573212cd-6020-5eca-b35a-1c2eaf8dbfcd")
-	)
-	(no_connect (at 137.16 41.91) (uuid "a2f34445-38f6-53cd-a3be-e38a721e69ae"))
-	(symbol
-		(lib_id "Device:C")
-		(at 152.4 38.1 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "dcce3de3-9949-5ea8-bca2-825b89fe3824")
-		(property "Reference" "CF_E2B"
-			(at 155.032 37.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "330pF"
-			(at 155.032 39.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
-			(at 152.4 38.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 152.4 38.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "f813b393-c5fd-598c-9a32-5907dd03367a"))
-		(pin "2" (uuid "18d4fd85-818d-5ecc-8a7a-edc0480b161f"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "CF_E2B") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 152.4 34.29)
-			(xy 152.4 29.21)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "7a025145-4b7d-57b2-a76a-ea5b1e16553c")
-	)
-	(label "E2B"
-		(at 152.4 29.21 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "cf5d51a5-e29e-592f-a62e-31dc057b5e40")
-	)
-	(no_connect (at 152.4 41.91) (uuid "3a605a39-382a-5065-a9a6-7774513debb3"))
-	(symbol
-		(lib_id "Device:LED")
-		(at 167.64 38.1 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "fe9799c8-ba5e-52f4-8399-b653d6bc005c")
-		(property "Reference" "D1"
-			(at 170.526 37.481 270)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "GREEN"
-			(at 170.526 39.481 270)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "LED_THT:LED_D3.0mm"
-			(at 167.64 38.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 167.64 38.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "d09563da-85cc-54c4-9067-121a91b0fdc7"))
-		(pin "2" (uuid "ddf7f830-60d0-52fd-b96e-1989ec0e83a5"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "D1") (unit 1))
-			)
-		)
-	)
-	(no_connect (at 167.64 41.91) (uuid "57d176d0-40aa-5cdd-9e7f-b1b04d4b94be"))
-	(wire
-		(pts
-			(xy 167.64 34.29)
-			(xy 167.64 29.21)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "f819519a-d2f2-5593-980e-d471e0101930")
-	)
-	(label "LED_M"
-		(at 167.64 29.21 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "a478b5d2-5322-5640-996c-04a0cd18971f")
+		(uuid "bc0afb7d-d809-5ab1-b43a-01718d28732c")
 	)
 	(symbol
 		(lib_id "Connector_Generic:Conn_01x19")
-		(at 35.56 76.2 0)
+		(at 96.52 68.58 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -2168,21 +1599,21 @@
 		(dnp no)
 		(uuid "bd595353-f022-5369-9e74-1ac9efc07b2c")
 		(property "Reference" "J1"
-			(at 34.29 49.17 0)
+			(at 95.25 41.55 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
 		(property "Value" "ESP32 DevKitC L"
-			(at 34.29 51.17 0)
+			(at 95.25 43.55 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
 		(property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_1x19_P2.54mm_Vertical"
-			(at 35.56 76.2 0)
+			(at 96.52 68.58 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -2190,7 +1621,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 35.56 76.2 0)
+			(at 96.52 68.58 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -2222,18 +1653,34 @@
 			)
 		)
 	)
-	(no_connect (at 30.48 53.34) (uuid "0c3642fc-4aa8-5064-99c5-da07fff01c7c"))
-	(no_connect (at 30.48 55.88) (uuid "9703699b-ea1d-5a6c-92f1-00232164f1f0"))
 	(wire
 		(pts
-			(xy 30.48 58.42)
-			(xy 25.4 58.42)
+			(xy 91.44 45.72)
+			(xy 86.36 45.72)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "6e8599c8-ed7c-5258-850f-d154c3a1ea9f")
+	)
+	(label "V3"
+		(at 86.36 45.72 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "593ced70-03de-5c80-b195-d26961c74429")
+	)
+	(no_connect (at 91.44 48.26) (uuid "9703699b-ea1d-5a6c-92f1-00232164f1f0"))
+	(wire
+		(pts
+			(xy 91.44 50.8)
+			(xy 86.36 50.8)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "18cbd418-662a-54e7-a7fc-5b246ca881d7")
 	)
 	(label "E2A"
-		(at 25.4 58.42 180)
+		(at 86.36 50.8 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -2243,14 +1690,14 @@
 	)
 	(wire
 		(pts
-			(xy 30.48 60.96)
-			(xy 25.4 60.96)
+			(xy 91.44 53.34)
+			(xy 86.36 53.34)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "55aed57a-f70c-5465-aadf-ba587e364c92")
 	)
 	(label "E2B"
-		(at 25.4 60.96 180)
+		(at 86.36 53.34 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -2260,14 +1707,14 @@
 	)
 	(wire
 		(pts
-			(xy 30.48 63.5)
-			(xy 25.4 63.5)
+			(xy 91.44 55.88)
+			(xy 86.36 55.88)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "c1761a99-133e-5db3-b0de-303061a57728")
 	)
 	(label "E1A"
-		(at 25.4 63.5 180)
+		(at 86.36 55.88 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -2277,14 +1724,14 @@
 	)
 	(wire
 		(pts
-			(xy 30.48 66.04)
-			(xy 25.4 66.04)
+			(xy 91.44 58.42)
+			(xy 86.36 58.42)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "27a71506-7a99-5bc3-ab8c-f7bd97114602")
 	)
 	(label "E1B"
-		(at 25.4 66.04 180)
+		(at 86.36 58.42 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -2294,14 +1741,14 @@
 	)
 	(wire
 		(pts
-			(xy 30.48 68.58)
-			(xy 25.4 68.58)
+			(xy 91.44 60.96)
+			(xy 86.36 60.96)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "0939e6d3-1783-5141-8850-2773a7308e7f")
 	)
 	(label "SPARE_IO32"
-		(at 25.4 68.58 180)
+		(at 86.36 60.96 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -2311,14 +1758,14 @@
 	)
 	(wire
 		(pts
-			(xy 30.48 71.12)
-			(xy 25.4 71.12)
+			(xy 91.44 63.5)
+			(xy 86.36 63.5)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "c8d33d48-709f-510c-bca9-2952117cc13f")
 	)
 	(label "DIR2_MCU"
-		(at 25.4 71.12 180)
+		(at 86.36 63.5 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -2328,14 +1775,14 @@
 	)
 	(wire
 		(pts
-			(xy 30.48 73.66)
-			(xy 25.4 73.66)
+			(xy 91.44 66.04)
+			(xy 86.36 66.04)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "9f2d5d8b-9e3b-5a53-964a-a36b0c2e0dc9")
 	)
 	(label "PWM1_MCU"
-		(at 25.4 73.66 180)
+		(at 86.36 66.04 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -2345,14 +1792,14 @@
 	)
 	(wire
 		(pts
-			(xy 30.48 76.2)
-			(xy 25.4 76.2)
+			(xy 91.44 68.58)
+			(xy 86.36 68.58)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "7087a4e0-8695-51a1-b6ae-e1ea23ac88f2")
 	)
 	(label "DIR1_MCU"
-		(at 25.4 76.2 180)
+		(at 86.36 68.58 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -2362,14 +1809,14 @@
 	)
 	(wire
 		(pts
-			(xy 30.48 78.74)
-			(xy 25.4 78.74)
+			(xy 91.44 71.12)
+			(xy 86.36 71.12)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "444da505-4bca-55c9-8aa3-0e97aef8b133")
 	)
 	(label "PWM2_MCU"
-		(at 25.4 78.74 180)
+		(at 86.36 71.12 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -2377,19 +1824,42 @@
 		)
 		(uuid "ff584532-b966-55ff-bc84-e4b6ebff81e0")
 	)
-	(no_connect (at 30.48 81.28) (uuid "a7123552-99f3-5c0f-b013-9c9df690d6d0"))
-	(no_connect (at 30.48 83.82) (uuid "2a87a6b6-172e-52b3-b2f1-0b1ff908b4b0"))
-	(no_connect (at 30.48 86.36) (uuid "b8137306-e8a0-53da-9903-2f78f995f4bc"))
 	(wire
 		(pts
-			(xy 30.48 88.9)
-			(xy 25.4 88.9)
+			(xy 91.44 73.66)
+			(xy 86.36 73.66)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "eb2c17f8-d6aa-5ba5-8bff-af3a0c5ab3ba")
+	)
+	(label "SPARE_IO14"
+		(at 86.36 73.66 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "d77f3671-1995-5e82-b909-79a3c6ea0fea")
+	)
+	(no_connect (at 91.44 76.2) (uuid "2a87a6b6-172e-52b3-b2f1-0b1ff908b4b0"))
+	(wire
+		(pts
+			(xy 91.44 78.74)
+			(xy 86.36 78.74)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "8dcccba6-2d84-53ac-bdfd-f24f821b1e1c")
+	)
+	(wire
+		(pts
+			(xy 91.44 81.28)
+			(xy 86.36 81.28)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "9eb4c931-eec6-5a31-b1cb-d884dcc84a37")
 	)
-	(label "SPARE_IO13"
-		(at 25.4 88.9 180)
+	(label "LIM2"
+		(at 86.36 81.28 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -2397,35 +1867,114 @@
 		)
 		(uuid "a580d5b5-c41c-520d-a2ce-caa81422249c")
 	)
-	(no_connect (at 30.48 91.44) (uuid "c902a955-1c29-56ec-a153-f1644b624c31"))
-	(no_connect (at 30.48 93.98) (uuid "76d9cf09-08b1-552d-9df2-53dbbfa03d1d"))
-	(no_connect (at 30.48 96.52) (uuid "0ab1ca52-9e2b-5610-8067-3aa1fa415e15"))
-	(no_connect (at 30.48 99.06) (uuid "e9227aaf-dc03-53da-98fc-ab36d4f5554f"))
+	(no_connect (at 91.44 83.82) (uuid "c902a955-1c29-56ec-a153-f1644b624c31"))
+	(no_connect (at 91.44 86.36) (uuid "76d9cf09-08b1-552d-9df2-53dbbfa03d1d"))
+	(no_connect (at 91.44 88.9) (uuid "0ab1ca52-9e2b-5610-8067-3aa1fa415e15"))
+	(wire
+		(pts
+			(xy 91.44 91.44)
+			(xy 86.36 91.44)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "fd5eda47-f200-5618-af68-5e99ce4ad14f")
+	)
+	(label "V5"
+		(at 86.36 91.44 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "090715e5-b174-5240-b44b-f7cae6d205bf")
+	)
+	(wire
+		(pts
+			(xy 86.36 78.74)
+			(xy 71.12 78.74)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "8565d140-a8a9-523c-a40d-2210dde6e3f8")
+	)
 	(symbol
-		(lib_id "Connector_Generic:Conn_01x02")
-		(at 73.66 53.34 0)
+		(lib_id "power:GND")
+		(at 71.12 78.74 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "3b091495-6645-5399-9822-839ece8a0281")
+		(property "Reference" "#PWR001"
+			(at 71.12 78.74 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 71.12 82.55 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "e865cc56-15d2-58bb-90f0-af99a818ca18"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR001") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 86.36 45.72)
+			(xy 17.78 45.72)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "09aff156-7dbe-597d-88a1-b33703d49175")
+	)
+	(junction
+		(at 55.88 45.72)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "126b7175-10ba-5ce8-b48e-bee344f546dd")
+	)
+	(junction
+		(at 43.18 45.72)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "671c32d1-e160-5be6-88f5-2e673f7d4b56")
+	)
+	(junction
+		(at 30.48 45.72)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "1172a9ef-e369-50ed-9767-e2cabd58e46e")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 55.88 36.83 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "0b5465aa-8698-563c-97f6-531047cb3623")
-		(property "Reference" "J10"
-			(at 72.39 49.17 0)
+		(uuid "95b2e66a-fa4a-59ef-9673-4b7393a48b45")
+		(property "Reference" "RU_E2A"
+			(at 58.08 35.83 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
-		(property "Value" "LIM4"
-			(at 72.39 51.17 0)
+		(property "Value" "4.7k"
+			(at 58.08 37.83 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
-		(property "Footprint" "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical"
-			(at 73.66 53.34 0)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 55.88 36.83 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -2433,64 +1982,71 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 73.66 53.34 0)
+			(at 55.88 36.83 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 				(hide yes)
 			)
 		)
-		(pin "1" (uuid "9364fb3b-f401-56ea-9776-b3fc973632f3"))
-		(pin "2" (uuid "a1140156-97a6-521c-a512-3756b5e9c24a"))
+		(pin "1" (uuid "63aa033c-e09d-502f-bc35-355c75fee38a"))
+		(pin "2" (uuid "974a5120-f771-523d-85e8-1e162d435f25"))
 		(instances
 			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "J10") (unit 1))
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RU_E2A") (unit 1))
 			)
 		)
 	)
 	(wire
 		(pts
-			(xy 68.58 53.34)
-			(xy 63.5 53.34)
+			(xy 55.88 33.02)
+			(xy 55.88 27.94)
 		)
 		(stroke (width 0.1524) (type default))
-		(uuid "e89a7d74-b1c0-52d7-a454-ac8b2581d50c")
+		(uuid "fbf97496-b02a-5b7e-8d59-9704a2f130c7")
 	)
-	(label "LIM4_RAW"
-		(at 63.5 53.34 180)
+	(label "E2A_RAW"
+		(at 55.88 27.94 0)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
-			(justify right bottom)
+			(justify left bottom)
 		)
-		(uuid "91b6133d-1685-56bd-a69d-0f2899b95a88")
+		(uuid "73fb66a9-ec8a-5d51-ad04-1e2477e1acdf")
 	)
-	(no_connect (at 68.58 55.88) (uuid "fa6c02d2-3482-553a-a8cf-6b5ecc3a08f2"))
+	(wire
+		(pts
+			(xy 55.88 40.64)
+			(xy 55.88 45.72)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "045fd362-a220-53e2-9dd4-02697cca5c6d")
+	)
 	(symbol
-		(lib_id "Connector_Generic:Conn_01x02")
-		(at 101.6 53.34 0)
+		(lib_id "Device:R")
+		(at 43.18 36.83 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "e54da24b-4c64-5a73-a42f-345ab5bba1e8")
-		(property "Reference" "J11"
-			(at 100.33 49.17 0)
+		(uuid "4355d110-0eec-5e7b-b0c6-9806dca7ec70")
+		(property "Reference" "RU_E2B"
+			(at 45.38 35.83 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
-		(property "Value" "ESTOP"
-			(at 100.33 51.17 0)
+		(property "Value" "4.7k"
+			(at 45.38 37.83 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
-		(property "Footprint" "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical"
-			(at 101.6 53.34 0)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 43.18 36.83 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -2498,42 +2054,921 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 101.6 53.34 0)
+			(at 43.18 36.83 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 				(hide yes)
 			)
 		)
-		(pin "1" (uuid "2da78087-42ef-5f51-b3c3-66bc3158c22c"))
-		(pin "2" (uuid "31b7c0f8-17b5-5c7b-bc9b-ff50f1d7be25"))
+		(pin "1" (uuid "c06a4d05-1b53-5383-a91e-44b985050a39"))
+		(pin "2" (uuid "e9e37ae6-40f0-5e5d-810f-3ce850080945"))
 		(instances
 			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "J11") (unit 1))
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RU_E2B") (unit 1))
 			)
 		)
 	)
 	(wire
 		(pts
-			(xy 96.52 53.34)
-			(xy 91.44 53.34)
+			(xy 43.18 33.02)
+			(xy 43.18 27.94)
 		)
 		(stroke (width 0.1524) (type default))
-		(uuid "3f9c31fe-ef76-58bd-b70a-2f27eda79529")
+		(uuid "25f98663-abc3-5b78-8cee-cb2f6f25c714")
 	)
-	(label "ESTOP_RAW"
-		(at 91.44 53.34 180)
+	(label "E2B_RAW"
+		(at 43.18 27.94 0)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
-			(justify right bottom)
+			(justify left bottom)
 		)
-		(uuid "fa108bfe-616e-5e06-8b5c-18dd191ac168")
+		(uuid "349de1a5-a8d5-5133-82dd-c96ca9926b55")
 	)
-	(no_connect (at 96.52 55.88) (uuid "292d6099-01ab-5916-bd44-6a7c3bf50541"))
+	(wire
+		(pts
+			(xy 43.18 40.64)
+			(xy 43.18 45.72)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "538a280d-af34-51e7-8b78-8c840612e9b3")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 30.48 36.83 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "e79d0760-cbd1-584b-a01b-d9d3cecbe3a9")
+		(property "Reference" "RU_E1A"
+			(at 32.68 35.83 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "4.7k"
+			(at 32.68 37.83 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 30.48 36.83 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 30.48 36.83 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "0c4ae4d9-3d2f-5421-ae19-d50d8d7698e7"))
+		(pin "2" (uuid "4c334855-2d59-567d-af29-9a82ffba485a"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RU_E1A") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 30.48 33.02)
+			(xy 30.48 27.94)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "9f0178d4-a7a9-5a22-add6-4022d7d671ec")
+	)
+	(label "E1A_RAW"
+		(at 30.48 27.94 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "4d22daab-4ce0-5b40-aef5-970955460b62")
+	)
+	(wire
+		(pts
+			(xy 30.48 40.64)
+			(xy 30.48 45.72)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "c60a9c73-5f9d-532e-81da-e28a23c93b3c")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 17.78 36.83 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "40195924-981b-50f7-8841-db2d43d9f1e5")
+		(property "Reference" "RU_E1B"
+			(at 19.98 35.83 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "4.7k"
+			(at 19.98 37.83 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 17.78 36.83 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 17.78 36.83 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "d0b21109-7629-506b-84c0-c022cc02072c"))
+		(pin "2" (uuid "92fa490e-9387-54f5-9b95-fb1454aab7d3"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RU_E1B") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 17.78 33.02)
+			(xy 17.78 27.94)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "30b5082b-c742-5411-a34a-a1f56ca6485a")
+	)
+	(label "E1B_RAW"
+		(at 17.78 27.94 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "d6f01096-e82b-5883-ae0d-85f58c35f17f")
+	)
+	(wire
+		(pts
+			(xy 17.78 40.64)
+			(xy 17.78 45.72)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "9f266ba5-5e56-5522-9c83-632e2f1df27e")
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 121.92 53.34 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "0526eeec-304b-5114-905b-98eb642b4373")
+		(property "Reference" "CF_E2A"
+			(at 124.552 52.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "330pF"
+			(at 124.552 54.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
+			(at 121.92 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 121.92 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "8802f4a3-5322-5ce5-acc1-a801a84f3d8b"))
+		(pin "2" (uuid "5cbd0ad2-069e-5b95-885a-d6153463d807"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "CF_E2A") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 121.92 49.53)
+			(xy 121.92 44.45)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "66528599-e573-5d06-bf90-a1e30835f8c3")
+	)
+	(label "E2A"
+		(at 121.92 44.45 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "573212cd-6020-5eca-b35a-1c2eaf8dbfcd")
+	)
+	(wire
+		(pts
+			(xy 121.92 57.15)
+			(xy 121.92 62.23)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "33c6a1b7-ac59-54fc-a901-4d416563e59f")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 121.92 62.23 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "31d66a0f-50c5-5a9e-b75f-dc7509ca72b1")
+		(property "Reference" "#PWR002"
+			(at 121.92 62.23 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 121.92 66.04 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "ae85293d-e351-59a9-a0f4-6fd6565772e9"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR002") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 137.16 53.34 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "991737ae-d8ab-56eb-85f2-027f9e6b5ad9")
+		(property "Reference" "RF_E2A"
+			(at 139.36 52.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "1k"
+			(at 139.36 54.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 137.16 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 137.16 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "14892ca9-ceae-5d69-92eb-6a523148f662"))
+		(pin "2" (uuid "d97bcb64-0be3-5d11-874c-e2214cc39ca5"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RF_E2A") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 137.16 49.53)
+			(xy 137.16 44.45)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "bad6e177-2340-57c6-bad7-569c36b31cd5")
+	)
+	(label "E2A_RAW"
+		(at 137.16 44.45 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "3f672300-ed5c-5d1b-8d3d-f4be4b610152")
+	)
+	(wire
+		(pts
+			(xy 137.16 57.15)
+			(xy 137.16 62.23)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "b54148a5-1f45-5c75-a4a7-4b2402a93b91")
+	)
+	(label "E2A"
+		(at 137.16 62.23 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "fb011f5a-7454-5ca3-af28-6875d0141e98")
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 152.4 53.34 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "dcce3de3-9949-5ea8-bca2-825b89fe3824")
+		(property "Reference" "CF_E2B"
+			(at 155.032 52.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "330pF"
+			(at 155.032 54.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
+			(at 152.4 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 152.4 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "f813b393-c5fd-598c-9a32-5907dd03367a"))
+		(pin "2" (uuid "18d4fd85-818d-5ecc-8a7a-edc0480b161f"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "CF_E2B") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 152.4 49.53)
+			(xy 152.4 44.45)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "7a025145-4b7d-57b2-a76a-ea5b1e16553c")
+	)
+	(label "E2B"
+		(at 152.4 44.45 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "cf5d51a5-e29e-592f-a62e-31dc057b5e40")
+	)
+	(wire
+		(pts
+			(xy 152.4 57.15)
+			(xy 152.4 62.23)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "c272bc8f-8a1e-5a16-b3b7-42b121b6023a")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 152.4 62.23 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "b3f81583-a5cc-5270-a280-9611d34be877")
+		(property "Reference" "#PWR003"
+			(at 152.4 62.23 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 152.4 66.04 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "b30d6636-0027-5665-9ba9-46e619d618ea"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR003") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 167.64 53.34 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "aa9451f1-129a-5ddf-8aa5-e438cafc4aa2")
+		(property "Reference" "RF_E2B"
+			(at 169.84 52.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "1k"
+			(at 169.84 54.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 167.64 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 167.64 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "2d78bb64-fb88-5363-91e6-14a2b32d670c"))
+		(pin "2" (uuid "034ad0d0-85e9-5485-9f5f-cf446938fa76"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RF_E2B") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 167.64 49.53)
+			(xy 167.64 44.45)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "5b42df95-5a16-552b-b185-ea15fd9c2d14")
+	)
+	(label "E2B_RAW"
+		(at 167.64 44.45 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "6e64b418-5eb2-58c5-b05e-0935c0819a49")
+	)
+	(wire
+		(pts
+			(xy 167.64 57.15)
+			(xy 167.64 62.23)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "f2f83d17-ad1e-5fa2-ab2f-7aafdff2766f")
+	)
+	(label "E2B"
+		(at 167.64 62.23 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "13fea77c-cc3b-52fc-bd74-d8da608f4bf2")
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 182.88 53.34 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "54241642-e507-57cd-a899-44fe63c8cfc6")
+		(property "Reference" "CF_E1A"
+			(at 185.512 52.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "330pF"
+			(at 185.512 54.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
+			(at 182.88 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 182.88 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "2986c883-27af-525a-8dc9-ed2c7b68e0aa"))
+		(pin "2" (uuid "2918c0e5-5d3c-5eab-bd57-d5c6f385612e"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "CF_E1A") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 182.88 49.53)
+			(xy 182.88 44.45)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "1a83f2ee-c06d-5a65-91c9-30da19405760")
+	)
+	(label "E1A"
+		(at 182.88 44.45 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "db744752-8501-5696-85ba-0730f295e868")
+	)
+	(wire
+		(pts
+			(xy 182.88 57.15)
+			(xy 182.88 62.23)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "39104d76-f921-5087-937f-b877f90d8602")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 182.88 62.23 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "c3d65729-374a-5ef4-a62a-1037397507a4")
+		(property "Reference" "#PWR004"
+			(at 182.88 62.23 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 182.88 66.04 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "7809e698-76b3-514e-a8b5-17ea4a0b9265"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR004") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 198.12 53.34 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "55974946-0b62-5cfa-9b3c-442c72e84c89")
+		(property "Reference" "RF_E1A"
+			(at 200.32 52.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "1k"
+			(at 200.32 54.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 198.12 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 198.12 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "455f91ef-dd06-5abc-9564-7ea3f63f4604"))
+		(pin "2" (uuid "e68d6746-96ba-5e03-9ee8-863f9bedbfd6"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RF_E1A") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 198.12 49.53)
+			(xy 198.12 44.45)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "6f9f2d8e-bc11-50b6-9f8c-45a63cf95644")
+	)
+	(label "E1A_RAW"
+		(at 198.12 44.45 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "c10495ae-a445-5690-917d-652f34a21da5")
+	)
+	(wire
+		(pts
+			(xy 198.12 57.15)
+			(xy 198.12 62.23)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "3d6f94d2-b58f-582d-861f-7fc70317d00d")
+	)
+	(label "E1A"
+		(at 198.12 62.23 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "e2eb977b-4796-59ea-b733-aed244e2ffac")
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 213.36 53.34 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "f1d80f71-c3e4-56ec-babc-6ad16f0804d2")
+		(property "Reference" "CF_E1B"
+			(at 215.992 52.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "330pF"
+			(at 215.992 54.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
+			(at 213.36 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 213.36 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "a767226b-7373-57f7-9fdf-8472804eb663"))
+		(pin "2" (uuid "0c8f569b-24bf-5022-a7a7-86826151e5f6"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "CF_E1B") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 213.36 49.53)
+			(xy 213.36 44.45)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "cd7d2ed3-5200-5ab4-9be2-8b3ffe49a9a6")
+	)
+	(label "E1B"
+		(at 213.36 44.45 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "948468a5-6c22-5323-a737-195bf28407b2")
+	)
+	(wire
+		(pts
+			(xy 213.36 57.15)
+			(xy 213.36 62.23)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "ce1879c6-88c9-5b3a-a1b5-f8dcf568b0b3")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 213.36 62.23 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "d2feb868-c614-57ba-8369-271e8fe87926")
+		(property "Reference" "#PWR005"
+			(at 213.36 62.23 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 213.36 66.04 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "0f9960da-137d-5e7d-b918-78b14ad44928"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR005") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 228.6 53.34 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "eaedf46a-a007-5f95-8288-fdb78df6b5ba")
+		(property "Reference" "RF_E1B"
+			(at 230.8 52.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "1k"
+			(at 230.8 54.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 228.6 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 228.6 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "59bebd3a-e19e-5dab-bcd5-a21b44a2bee8"))
+		(pin "2" (uuid "36d0ece7-70c6-528d-9e8d-946bef6f6330"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RF_E1B") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 228.6 49.53)
+			(xy 228.6 44.45)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "1808a372-e147-5964-b94e-2dcbdf59d8de")
+	)
+	(label "E1B_RAW"
+		(at 228.6 44.45 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "2e62ccc4-3ebf-5726-a8ac-8b4c42fcad35")
+	)
+	(wire
+		(pts
+			(xy 228.6 57.15)
+			(xy 228.6 62.23)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "c0fc9342-bf56-58ab-98cc-d9655f38a64c")
+	)
+	(label "E1B"
+		(at 228.6 62.23 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "30064857-dcd4-58c4-9fb3-a39b4321eaa2")
+	)
 	(symbol
 		(lib_id "Connector_Generic:Conn_01x06")
-		(at 132.08 58.42 0)
+		(at 269.24 53.34 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -2541,21 +2976,21 @@
 		(dnp no)
 		(uuid "af2336c9-3488-5457-95e9-c8fcb691a42a")
 		(property "Reference" "J12"
-			(at 130.81 49.17 0)
+			(at 267.97 44.09 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
 		(property "Value" "SPARE"
-			(at 130.81 51.17 0)
+			(at 267.97 46.09 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
 		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical"
-			(at 132.08 58.42 0)
+			(at 269.24 53.34 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -2563,7 +2998,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 132.08 58.42 0)
+			(at 269.24 53.34 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -2571,7 +3006,7 @@
 			)
 		)
 		(property "LCSC" "C37208"
-			(at 132.08 58.42 0)
+			(at 269.24 53.34 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -2590,18 +3025,41 @@
 			)
 		)
 	)
-	(no_connect (at 127 53.34) (uuid "f107a342-6024-5f5b-883f-cbfcd8a0081b"))
-	(no_connect (at 127 55.88) (uuid "d36e0626-0f2b-5e2a-9d87-3380e4ed0ce3"))
 	(wire
 		(pts
-			(xy 127 58.42)
-			(xy 121.92 58.42)
+			(xy 264.16 48.26)
+			(xy 259.08 48.26)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "d9dbed5b-4e5a-5e90-8fc5-c88ff22ae718")
+	)
+	(wire
+		(pts
+			(xy 264.16 50.8)
+			(xy 259.08 50.8)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "d0a66cf9-d049-5b98-8ca3-fbf1dcf5b5b5")
+	)
+	(label "V3"
+		(at 259.08 50.8 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "ba7371c8-249a-527f-b874-3f5a3a78ea8a")
+	)
+	(wire
+		(pts
+			(xy 264.16 53.34)
+			(xy 259.08 53.34)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "c1b34a38-1cc0-5baf-b7c6-89de292ba9fb")
 	)
 	(label "SPARE_IO21"
-		(at 121.92 58.42 180)
+		(at 259.08 53.34 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -2611,14 +3069,14 @@
 	)
 	(wire
 		(pts
-			(xy 127 60.96)
-			(xy 121.92 60.96)
+			(xy 264.16 55.88)
+			(xy 259.08 55.88)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "26d81834-b5ee-54df-a84b-d116df437e17")
 	)
-	(label "SPARE_IO23"
-		(at 121.92 60.96 180)
+	(label "SPARE_IO32"
+		(at 259.08 55.88 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -2628,14 +3086,14 @@
 	)
 	(wire
 		(pts
-			(xy 127 63.5)
-			(xy 121.92 63.5)
+			(xy 264.16 58.42)
+			(xy 259.08 58.42)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "b7c385a9-b97a-5bef-8cb7-9db955a9ce21")
 	)
-	(label "SPARE_IO32"
-		(at 121.92 63.5 180)
+	(label "SPARE_IO14"
+		(at 259.08 58.42 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -2645,14 +3103,14 @@
 	)
 	(wire
 		(pts
-			(xy 127 66.04)
-			(xy 121.92 66.04)
+			(xy 264.16 60.96)
+			(xy 259.08 60.96)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "c8c9a1b8-6df5-5298-8a89-0762bd97ee02")
 	)
-	(label "SPARE_IO13"
-		(at 121.92 66.04 180)
+	(label "SPARE_IO16"
+		(at 259.08 60.96 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -2660,31 +3118,68 @@
 		)
 		(uuid "69720996-6afb-52ee-ba92-949e1f1241c1")
 	)
+	(wire
+		(pts
+			(xy 259.08 48.26)
+			(xy 243.84 48.26)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "c03ec1e8-e78b-565a-a5e2-2c4a6a97f230")
+	)
 	(symbol
-		(lib_id "Connector_Generic:Conn_01x19")
-		(at 162.56 76.2 0)
+		(lib_id "power:GND")
+		(at 243.84 48.26 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "34df732d-0119-5e10-a0bc-34ffda81cf90")
+		(property "Reference" "#PWR006"
+			(at 243.84 48.26 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 243.84 52.07 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "f8f83d62-5de2-5d1d-a5f3-80ca79f5bdb4"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR006") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 279.4 53.34 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "aaed8d87-d2a9-55f1-8ec3-5f15b00b6b58")
-		(property "Reference" "J2"
-			(at 161.29 49.17 0)
+		(uuid "6a9a800b-c5e0-5e59-8aa1-256f397ed8a8")
+		(property "Reference" "RS_DIR2"
+			(at 281.6 52.34 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
-		(property "Value" "ESP32 DevKitC R"
-			(at 161.29 51.17 0)
+		(property "Value" "220"
+			(at 281.6 54.34 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
-		(property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_1x19_P2.54mm_Vertical"
-			(at 162.56 76.2 0)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 279.4 53.34 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -2692,7 +3187,1036 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 162.56 76.2 0)
+			(at 279.4 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "6d0f2219-e9c1-5965-a3c9-8aadfb1ff321"))
+		(pin "2" (uuid "10c81e3e-1fa7-53b8-b77b-1d74204aef5c"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RS_DIR2") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 279.4 49.53)
+			(xy 279.4 44.45)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "1a948687-0535-50bf-9419-5087e6b1d603")
+	)
+	(label "DIR2_MCU"
+		(at 279.4 44.45 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "fb038f0a-3d55-5e90-bd2d-61f904dc4ccd")
+	)
+	(wire
+		(pts
+			(xy 279.4 57.15)
+			(xy 279.4 62.23)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "a50dce03-4dd3-51e9-90f4-3ba6f284f333")
+	)
+	(label "DIR2"
+		(at 279.4 62.23 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "6deb41c5-ebf6-5078-a7e0-0531a32a5be5")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 294.64 53.34 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "1233d43f-d671-5857-9452-b3bf48a35d52")
+		(property "Reference" "RS_PWM1"
+			(at 296.84 52.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "220"
+			(at 296.84 54.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 294.64 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 294.64 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "58b6ab9f-8738-5f0e-91ac-970b40126ad1"))
+		(pin "2" (uuid "334e3adb-e277-5342-a60e-e7b8a42c855c"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RS_PWM1") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 294.64 49.53)
+			(xy 294.64 44.45)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "a50c2332-7a08-5877-ba09-976994a83058")
+	)
+	(label "PWM1_MCU"
+		(at 294.64 44.45 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "b8fa6871-9e36-56cf-9d22-1451dfed7985")
+	)
+	(wire
+		(pts
+			(xy 294.64 57.15)
+			(xy 294.64 62.23)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "05440f92-1e15-5448-bf50-e2a1c68655b6")
+	)
+	(label "PWM1"
+		(at 294.64 62.23 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "8b669e3f-23a4-57e5-83d7-6598c666c7eb")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 309.88 53.34 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "e4293882-9f77-5d94-a15a-ce6851f7d8d3")
+		(property "Reference" "RS_DIR1"
+			(at 312.08 52.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "220"
+			(at 312.08 54.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 309.88 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 309.88 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "3c0000ef-7ed9-5b6c-b8cc-a72deefb90a8"))
+		(pin "2" (uuid "4ef86fba-6216-5e2b-93c4-5a885588c52a"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RS_DIR1") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 309.88 49.53)
+			(xy 309.88 44.45)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "db96601c-7d76-5c39-a5a1-92df84b92676")
+	)
+	(label "DIR1_MCU"
+		(at 309.88 44.45 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "74f1dcd4-283e-54d4-87b4-6bee52c52261")
+	)
+	(wire
+		(pts
+			(xy 309.88 57.15)
+			(xy 309.88 62.23)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "771dd176-3d97-5275-b2a9-07d1830a8aa1")
+	)
+	(label "DIR1"
+		(at 309.88 62.23 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "78e73c04-b0d8-59c5-9258-5c0948b00ed5")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 325.12 53.34 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "96f6fa94-abd7-5659-8459-933fc8656f78")
+		(property "Reference" "RS_PWM2"
+			(at 327.32 52.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "220"
+			(at 327.32 54.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 325.12 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 325.12 53.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "8f0a919a-ac51-5619-b03f-479a7853a41a"))
+		(pin "2" (uuid "281bbe93-1a16-5d3c-8ec8-04e6fe2c7fb5"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RS_PWM2") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 325.12 49.53)
+			(xy 325.12 44.45)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "00631160-7175-511a-b51b-694e2ce7d62a")
+	)
+	(label "PWM2_MCU"
+		(at 325.12 44.45 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "46038e1a-ba00-5413-9ddd-ef8008cf5100")
+	)
+	(wire
+		(pts
+			(xy 325.12 57.15)
+			(xy 325.12 62.23)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "9b2102c7-1f97-5a58-862d-d8d2a4f2149b")
+	)
+	(label "PWM2"
+		(at 325.12 62.23 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "a0685417-61a8-55fa-a14d-faf6f4d021a3")
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 121.92 81.28 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "8e087fdb-5a7c-5ade-93e7-235b9cbb9623")
+		(property "Reference" "CD_LIM2"
+			(at 124.552 80.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "100nF"
+			(at 124.552 82.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
+			(at 121.92 81.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 121.92 81.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "2d92bc4a-a8a9-5e1d-b0e9-1a15c4b0a31a"))
+		(pin "2" (uuid "7beee65b-c4af-50d6-a174-b3c62e767052"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "CD_LIM2") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 121.92 77.47)
+			(xy 121.92 72.39)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "44d11750-2ce3-5b8e-9930-92ebdcae0139")
+	)
+	(label "LIM2"
+		(at 121.92 72.39 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "6e638cbd-f673-519b-9a0b-8a68c7087b79")
+	)
+	(wire
+		(pts
+			(xy 121.92 85.09)
+			(xy 121.92 90.17)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "240c2102-4e25-5d92-889d-53dcd05f36a5")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 121.92 90.17 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "0b44f2c8-fdb4-551e-a891-024693119213")
+		(property "Reference" "#PWR007"
+			(at 121.92 90.17 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 121.92 93.98 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "22ec42d2-48f1-5b12-ae4f-9a6e5248c0bf"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR007") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 137.16 81.28 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "7a07b713-3191-5ca6-b735-5d98e2ee3c7b")
+		(property "Reference" "RS_LIM2"
+			(at 139.36 80.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "1k"
+			(at 139.36 82.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 137.16 81.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 137.16 81.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "10aa7a74-91ce-52a5-af4d-1170e74d7dbe"))
+		(pin "2" (uuid "869f746c-bb77-55b7-82bd-aee7f8f62a34"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RS_LIM2") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 137.16 77.47)
+			(xy 137.16 72.39)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "a8117207-a0d9-5844-a2cd-b4b1c19e3173")
+	)
+	(label "LIM2_RAW"
+		(at 137.16 72.39 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "ed7a6ebf-f2c6-5b36-bfb0-f01bdc8da660")
+	)
+	(wire
+		(pts
+			(xy 137.16 85.09)
+			(xy 137.16 90.17)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "3a6a2657-6c07-5f7e-956d-8fb1aa9c7f22")
+	)
+	(label "LIM2"
+		(at 137.16 90.17 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "6f220a6b-50b2-5256-9431-5b96941245d3")
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x01")
+		(at 165.1 76.2 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "6dcd21fc-e31e-5a96-84ab-d1a334258fa6")
+		(property "Reference" "J13"
+			(at 163.83 72.03 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "DRV_5V"
+			(at 163.83 74.03 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_1x01_P2.54mm_Vertical"
+			(at 165.1 76.2 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 165.1 76.2 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "18390cec-1656-51e7-ae0a-1ed19bc39604"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "J13") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 160.02 76.2)
+			(xy 154.94 76.2)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "3db570a7-549a-5d32-806e-be196ddd5d3f")
+	)
+	(label "V5"
+		(at 154.94 76.2 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "2a415450-0126-547d-b315-9224398971b2")
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x03")
+		(at 190.5 78.74 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "286b476f-7108-54c2-8963-157d3ad66249")
+		(property "Reference" "JP1"
+			(at 189.23 72.03 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "ENC_VCC"
+			(at 189.23 74.03 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical"
+			(at 190.5 78.74 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 190.5 78.74 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C49257"
+			(at 190.5 78.74 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "57a8ce4f-526d-5ed3-b85e-83d2af14e8f6"))
+		(pin "2" (uuid "3d8e37fd-27fc-521c-9726-d627cee44a91"))
+		(pin "3" (uuid "7e065b91-893f-5b71-94d2-5411e49e5ba9"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "JP1") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 185.42 76.2)
+			(xy 180.34 76.2)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "eb810f53-6f92-57d4-bcb4-c2df03f44ce5")
+	)
+	(label "V3"
+		(at 180.34 76.2 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "98ab4dd5-7d4e-5c1d-9804-d3a9931788ca")
+	)
+	(wire
+		(pts
+			(xy 185.42 78.74)
+			(xy 180.34 78.74)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "5c41adfe-24cd-5b74-9ee7-8539693bb5d1")
+	)
+	(label "ENCVCC"
+		(at 180.34 78.74 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "022d93cf-5de3-558e-886c-99bdfef466db")
+	)
+	(wire
+		(pts
+			(xy 185.42 81.28)
+			(xy 180.34 81.28)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "eb122e24-d5dd-55e9-820d-ae7e82f68f16")
+	)
+	(label "V5"
+		(at 180.34 81.28 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "429fb4fc-1c09-5a00-be59-afe6ce969075")
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 200.66 78.74 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "4ec5f7ca-a0fe-5288-8f08-aa68f4c3d62a")
+		(property "Reference" "TP2"
+			(at 199.898 71.776 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "V5"
+			(at 199.898 73.776 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_THTPad_D2.0mm_Drill1.0mm"
+			(at 200.66 78.74 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 200.66 78.74 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "0d84b4b0-a4a2-57fa-b407-b13981b03a3b"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "TP2") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 200.66 78.74)
+			(xy 200.66 83.82)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "576ae376-7eb0-5976-b943-de92464c861c")
+	)
+	(label "V5"
+		(at 200.66 83.82 270)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "79a6c802-1acc-57c5-9569-45ab2c374749")
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x04")
+		(at 233.68 78.74 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "e8796a61-1ff7-5540-b0fd-a50895d5d93a")
+		(property "Reference" "J4"
+			(at 232.41 72.03 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "ENC2"
+			(at 232.41 74.03 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical"
+			(at 233.68 78.74 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 233.68 78.74 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "09f9f29c-b854-52c3-9a1c-6be725d4322f"))
+		(pin "2" (uuid "36087b84-4336-5b81-ab43-a8757ad537fc"))
+		(pin "3" (uuid "5106268a-b7c0-5488-b049-b1f63044dd4c"))
+		(pin "4" (uuid "3fc33c3c-e741-5fe7-941c-fcf89867b76c"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "J4") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 228.6 76.2)
+			(xy 223.52 76.2)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "35b7be1d-2659-5861-a811-b5cb171a725a")
+	)
+	(label "ENCVCC"
+		(at 223.52 76.2 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "4b4e62d3-df61-5ece-b5d0-9c0f45ef6f21")
+	)
+	(wire
+		(pts
+			(xy 228.6 78.74)
+			(xy 223.52 78.74)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "65102533-4913-519e-859e-dcad9c61cfba")
+	)
+	(wire
+		(pts
+			(xy 228.6 81.28)
+			(xy 223.52 81.28)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "f38bc3a6-a16a-587c-b2a4-cda9789cec87")
+	)
+	(label "E2A_RAW"
+		(at 223.52 81.28 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "f1ec2b38-6cb2-58af-b384-2a76d44bd293")
+	)
+	(wire
+		(pts
+			(xy 228.6 83.82)
+			(xy 223.52 83.82)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "cc7f5983-862e-5e36-a051-97bacc478cdd")
+	)
+	(label "E2B_RAW"
+		(at 223.52 83.82 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "5972991f-5f3a-59ff-a7c3-a3a62ff70140")
+	)
+	(wire
+		(pts
+			(xy 223.52 78.74)
+			(xy 210.82 78.74)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "14a535e1-a7a3-5ff7-b277-290e531a019c")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 210.82 78.74 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "671ba12a-8090-5ad6-85c8-38303126b0e8")
+		(property "Reference" "#PWR008"
+			(at 210.82 78.74 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 210.82 82.55 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "d140c09e-6115-585b-aeb0-f7028d7a693f"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR008") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x04")
+		(at 266.7 78.74 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "1757e7d6-f05b-577f-abda-c117915d6615")
+		(property "Reference" "J3"
+			(at 265.43 72.03 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "ENC1"
+			(at 265.43 74.03 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical"
+			(at 266.7 78.74 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 266.7 78.74 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "64ea2853-0a9f-586f-9ce4-fce785806680"))
+		(pin "2" (uuid "99498256-25cb-5bce-81e7-8af8d88164b5"))
+		(pin "3" (uuid "5f1375cb-7900-55ad-b3df-026b86348970"))
+		(pin "4" (uuid "4ea36e43-830d-54e3-9faf-8a1a28bc6ea4"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "J3") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 261.62 76.2)
+			(xy 256.54 76.2)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "ab365307-30c3-5079-9c05-d092ac59e92b")
+	)
+	(label "ENCVCC"
+		(at 256.54 76.2 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "68b107ea-bca8-58c4-9ea0-867f8dfb4802")
+	)
+	(wire
+		(pts
+			(xy 261.62 78.74)
+			(xy 256.54 78.74)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "13800479-602e-5d61-87a2-8c89a33b55ca")
+	)
+	(wire
+		(pts
+			(xy 261.62 81.28)
+			(xy 256.54 81.28)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "7b10c406-06fe-50b0-bdfe-6b5f3546bc6a")
+	)
+	(label "E1A_RAW"
+		(at 256.54 81.28 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "32bde419-5a8a-554b-b702-c31809ef70dc")
+	)
+	(wire
+		(pts
+			(xy 261.62 83.82)
+			(xy 256.54 83.82)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "205dfaad-f546-502a-b403-a0c7b5fd038a")
+	)
+	(label "E1B_RAW"
+		(at 256.54 83.82 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "aaa60a13-223b-5be7-9cbe-5fcd707ddc0f")
+	)
+	(wire
+		(pts
+			(xy 256.54 78.74)
+			(xy 243.84 78.74)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "22f9b158-bd35-594d-a323-6bdf3a342725")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 243.84 78.74 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "c9dfa76e-f05c-55f1-8963-c651beb4b69d")
+		(property "Reference" "#PWR009"
+			(at 243.84 78.74 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 243.84 82.55 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "c01ca07f-f3e2-526b-b10b-54c633e14a9d"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR009") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x19")
+		(at 302.26 99.06 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "aaed8d87-d2a9-55f1-8ec3-5f15b00b6b58")
+		(property "Reference" "J2"
+			(at 300.99 72.03 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "ESP32 DevKitC R"
+			(at 300.99 74.03 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_1x19_P2.54mm_Vertical"
+			(at 302.26 99.06 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 302.26 99.06 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -2724,17 +4248,24 @@
 			)
 		)
 	)
-	(no_connect (at 157.48 53.34) (uuid "43634034-3074-5737-a378-9d79b7c1520b"))
 	(wire
 		(pts
-			(xy 157.48 55.88)
-			(xy 152.4 55.88)
+			(xy 297.18 76.2)
+			(xy 292.1 76.2)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "74d4e71c-a8b9-552d-8895-242b6bf5c454")
+	)
+	(wire
+		(pts
+			(xy 297.18 78.74)
+			(xy 292.1 78.74)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "bfb284b2-b3ae-53f7-a3e8-887ad54dc26b")
 	)
-	(label "SPARE_IO23"
-		(at 152.4 55.88 180)
+	(label "LIM1"
+		(at 292.1 78.74 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -2744,14 +4275,14 @@
 	)
 	(wire
 		(pts
-			(xy 157.48 58.42)
-			(xy 152.4 58.42)
+			(xy 297.18 81.28)
+			(xy 292.1 81.28)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "65e93c5a-d557-5f3e-906d-9ec50b2a12df")
 	)
 	(label "LED_A"
-		(at 152.4 58.42 180)
+		(at 292.1 81.28 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -2759,18 +4290,18 @@
 		)
 		(uuid "8c010922-9ef7-5599-9c7c-bedce2308a2d")
 	)
-	(no_connect (at 157.48 60.96) (uuid "769337c2-73e2-575f-9752-c02174b91d96"))
-	(no_connect (at 157.48 63.5) (uuid "0248a633-2ca4-5efa-9910-97e65447539a"))
+	(no_connect (at 297.18 83.82) (uuid "769337c2-73e2-575f-9752-c02174b91d96"))
+	(no_connect (at 297.18 86.36) (uuid "0248a633-2ca4-5efa-9910-97e65447539a"))
 	(wire
 		(pts
-			(xy 157.48 66.04)
-			(xy 152.4 66.04)
+			(xy 297.18 88.9)
+			(xy 292.1 88.9)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "20fbd72a-b608-5d72-be2b-929ce9975a23")
 	)
 	(label "SPARE_IO21"
-		(at 152.4 66.04 180)
+		(at 292.1 88.9 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -2778,17 +4309,24 @@
 		)
 		(uuid "08b95b01-edf3-5682-ae47-6624e99f08f8")
 	)
-	(no_connect (at 157.48 68.58) (uuid "ae5caa9c-2e2c-52bb-8aa7-937cf0ba3c92"))
 	(wire
 		(pts
-			(xy 157.48 71.12)
-			(xy 152.4 71.12)
+			(xy 297.18 91.44)
+			(xy 292.1 91.44)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "5c73e174-ba1b-5b1c-9478-598a2faa9192")
+	)
+	(wire
+		(pts
+			(xy 297.18 93.98)
+			(xy 292.1 93.98)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "351417c7-507b-511f-a695-3d70dc3f1921")
 	)
 	(label "LIM3"
-		(at 152.4 71.12 180)
+		(at 292.1 93.98 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -2798,14 +4336,14 @@
 	)
 	(wire
 		(pts
-			(xy 157.48 73.66)
-			(xy 152.4 73.66)
+			(xy 297.18 96.52)
+			(xy 292.1 96.52)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "520953eb-4aea-5da9-8242-2c5d33eb185d")
 	)
 	(label "LIM4"
-		(at 152.4 73.66 180)
+		(at 292.1 96.52 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -2813,34 +4351,18 @@
 		)
 		(uuid "c13de0a3-af96-559e-8dd1-f7e981a0219f")
 	)
-	(no_connect (at 157.48 76.2) (uuid "7e2ab105-783b-5943-849b-9b0f1d5dc376"))
+	(no_connect (at 297.18 99.06) (uuid "7e2ab105-783b-5943-849b-9b0f1d5dc376"))
+	(no_connect (at 297.18 101.6) (uuid "9ae0bb6e-274e-5aaa-887a-e483580889e7"))
 	(wire
 		(pts
-			(xy 157.48 78.74)
-			(xy 152.4 78.74)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "4ff698c9-4dd2-5caa-9c5a-91e7a99d51f8")
-	)
-	(label "LIM2"
-		(at 152.4 78.74 180)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify right bottom)
-		)
-		(uuid "90143f7d-e12a-5a6c-b220-ac25596c7ff5")
-	)
-	(wire
-		(pts
-			(xy 157.48 81.28)
-			(xy 152.4 81.28)
+			(xy 297.18 104.14)
+			(xy 292.1 104.14)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "e3152af6-9f17-5df0-b4d3-241d59ff26f4")
 	)
-	(label "LIM1"
-		(at 152.4 81.28 180)
+	(label "SPARE_IO16"
+		(at 292.1 104.14 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -2850,14 +4372,14 @@
 	)
 	(wire
 		(pts
-			(xy 157.48 83.82)
-			(xy 152.4 83.82)
+			(xy 297.18 106.68)
+			(xy 292.1 106.68)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "113265c0-f3a5-5827-a93a-592eaeef2ca9")
 	)
 	(label "ESTOP"
-		(at 152.4 83.82 180)
+		(at 292.1 106.68 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -2865,268 +4387,74 @@
 		)
 		(uuid "6ce465fd-cf40-536e-8116-9d5e32af60e4")
 	)
-	(no_connect (at 157.48 86.36) (uuid "31f5af81-e6e0-505e-9676-37172bea5afe"))
-	(no_connect (at 157.48 88.9) (uuid "213d32b0-e110-5a77-87f7-36723e60afae"))
-	(no_connect (at 157.48 91.44) (uuid "371cf446-eb02-52b5-920a-5655d6eb69dc"))
-	(no_connect (at 157.48 93.98) (uuid "0c46ec8b-7cd4-58f0-9621-09f8349b17ce"))
-	(no_connect (at 157.48 96.52) (uuid "769d75c1-abdc-5fd4-9101-d80755023de7"))
-	(no_connect (at 157.48 99.06) (uuid "84df0d84-c4c9-5ebe-83ac-b06cb749bdcd"))
-	(symbol
-		(lib_id "Connector_Generic:Conn_01x04")
-		(at 198.12 55.88 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "1757e7d6-f05b-577f-abda-c117915d6615")
-		(property "Reference" "J3"
-			(at 196.85 49.17 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "ENC1"
-			(at 196.85 51.17 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical"
-			(at 198.12 55.88 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 198.12 55.88 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "64ea2853-0a9f-586f-9ce4-fce785806680"))
-		(pin "2" (uuid "99498256-25cb-5bce-81e7-8af8d88164b5"))
-		(pin "3" (uuid "5f1375cb-7900-55ad-b3df-026b86348970"))
-		(pin "4" (uuid "4ea36e43-830d-54e3-9faf-8a1a28bc6ea4"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "J3") (unit 1))
-			)
-		)
-	)
-	(no_connect (at 193.04 53.34) (uuid "9abc6a91-ab2f-533a-9825-c2eb05215710"))
-	(no_connect (at 193.04 55.88) (uuid "d39e83da-536d-5f3f-90c5-a4500d34a753"))
+	(no_connect (at 297.18 109.22) (uuid "31f5af81-e6e0-505e-9676-37172bea5afe"))
+	(no_connect (at 297.18 111.76) (uuid "213d32b0-e110-5a77-87f7-36723e60afae"))
+	(no_connect (at 297.18 114.3) (uuid "371cf446-eb02-52b5-920a-5655d6eb69dc"))
+	(no_connect (at 297.18 116.84) (uuid "0c46ec8b-7cd4-58f0-9621-09f8349b17ce"))
+	(no_connect (at 297.18 119.38) (uuid "769d75c1-abdc-5fd4-9101-d80755023de7"))
+	(no_connect (at 297.18 121.92) (uuid "84df0d84-c4c9-5ebe-83ac-b06cb749bdcd"))
 	(wire
 		(pts
-			(xy 193.04 58.42)
-			(xy 187.96 58.42)
+			(xy 292.1 76.2)
+			(xy 276.86 76.2)
 		)
 		(stroke (width 0.1524) (type default))
-		(uuid "7b10c406-06fe-50b0-bdfe-6b5f3546bc6a")
-	)
-	(label "E1A_RAW"
-		(at 187.96 58.42 180)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify right bottom)
-		)
-		(uuid "32bde419-5a8a-554b-b702-c31809ef70dc")
+		(uuid "99f8050e-bdf4-5abb-97aa-87007534ce23")
 	)
 	(wire
 		(pts
-			(xy 193.04 60.96)
-			(xy 187.96 60.96)
+			(xy 292.1 91.44)
+			(xy 276.86 91.44)
 		)
 		(stroke (width 0.1524) (type default))
-		(uuid "205dfaad-f546-502a-b403-a0c7b5fd038a")
+		(uuid "46941896-480d-5e11-b2c9-d3f234f8d430")
 	)
-	(label "E1B_RAW"
-		(at 187.96 60.96 180)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify right bottom)
+	(wire
+		(pts
+			(xy 276.86 76.2)
+			(xy 276.86 91.44)
 		)
-		(uuid "aaa60a13-223b-5be7-9cbe-5fcd707ddc0f")
+		(stroke (width 0.1524) (type default))
+		(uuid "d8967f7c-0fe0-53a4-b53a-d0640c4374f6")
 	)
 	(symbol
-		(lib_id "Connector_Generic:Conn_01x04")
-		(at 33.02 111.76 0)
+		(lib_id "power:GND")
+		(at 276.86 91.44 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
+		(in_bom no)
+		(on_board no)
 		(dnp no)
-		(uuid "e8796a61-1ff7-5540-b0fd-a50895d5d93a")
-		(property "Reference" "J4"
-			(at 31.75 105.05 0)
+		(uuid "5a65a6b6-d443-51d1-8b5b-a02e85f9e5c6")
+		(property "Reference" "#PWR010"
+			(at 276.86 91.44 0)
 			(effects
 				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "ENC2"
-			(at 31.75 107.05 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical"
-			(at 33.02 111.76 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
-			(at 33.02 111.76 0)
+		(property "Value" "GND"
+			(at 276.86 95.25 0)
 			(effects
 				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
 			)
 		)
-		(pin "1" (uuid "09f9f29c-b854-52c3-9a1c-6be725d4322f"))
-		(pin "2" (uuid "36087b84-4336-5b81-ab43-a8757ad537fc"))
-		(pin "3" (uuid "5106268a-b7c0-5488-b049-b1f63044dd4c"))
-		(pin "4" (uuid "3fc33c3c-e741-5fe7-941c-fcf89867b76c"))
+		(pin "1" (uuid "50616812-8132-5e0f-b963-f31809dc39ae"))
 		(instances
 			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "J4") (unit 1))
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR010") (unit 1))
 			)
 		)
 	)
-	(no_connect (at 27.94 109.22) (uuid "95e75aea-52f4-56d4-9a7c-bb7f6ae2431d"))
-	(no_connect (at 27.94 111.76) (uuid "ae4ef5e4-0f48-5f01-abf6-c65e22d0974b"))
-	(wire
-		(pts
-			(xy 27.94 114.3)
-			(xy 22.86 114.3)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "f38bc3a6-a16a-587c-b2a4-cda9789cec87")
-	)
-	(label "E2A_RAW"
-		(at 22.86 114.3 180)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify right bottom)
-		)
-		(uuid "f1ec2b38-6cb2-58af-b384-2a76d44bd293")
-	)
-	(wire
-		(pts
-			(xy 27.94 116.84)
-			(xy 22.86 116.84)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "cc7f5983-862e-5e36-a051-97bacc478cdd")
-	)
-	(label "E2B_RAW"
-		(at 22.86 116.84 180)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify right bottom)
-		)
-		(uuid "5972991f-5f3a-59ff-a7c3-a3a62ff70140")
+	(junction
+		(at 276.86 91.44)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a7703109-689c-5937-8672-38107bf3ffe8")
 	)
 	(symbol
 		(lib_id "Connector_Generic:Conn_01x03")
-		(at 55.88 111.76 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "9acb0b7d-96e4-5a19-9010-b409c44d68dd")
-		(property "Reference" "J5"
-			(at 54.61 105.05 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "MOTOR1"
-			(at 54.61 107.05 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical"
-			(at 55.88 111.76 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 55.88 111.76 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "020d2460-972d-532b-899f-b3903384550a"))
-		(pin "2" (uuid "4e48b129-ae2a-5202-94a6-9051c24983e3"))
-		(pin "3" (uuid "f75cead5-a01b-51d6-ac39-b3354f3865f0"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "J5") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 50.8 109.22)
-			(xy 45.72 109.22)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "d2141ee6-3820-5768-977e-da00fac5c9e5")
-	)
-	(label "PWM1"
-		(at 45.72 109.22 180)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify right bottom)
-		)
-		(uuid "d7029390-ece1-5d62-8127-7fa3d7c1b7a1")
-	)
-	(wire
-		(pts
-			(xy 50.8 111.76)
-			(xy 45.72 111.76)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "c2309e56-221f-5fca-916d-7f6fa105ca8b")
-	)
-	(label "DIR1"
-		(at 45.72 111.76 180)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify right bottom)
-		)
-		(uuid "8ea3c39b-683f-5276-ad39-56b8edc59e62")
-	)
-	(no_connect (at 50.8 114.3) (uuid "52944393-dbfa-540e-875e-d43c0a949128"))
-	(symbol
-		(lib_id "Connector_Generic:Conn_01x03")
-		(at 81.28 111.76 0)
+		(at 139.7 134.62 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -3134,21 +4462,21 @@
 		(dnp no)
 		(uuid "d1d161f0-bf6f-53c2-a266-adae6a98bda4")
 		(property "Reference" "J6"
-			(at 80.01 105.05 0)
+			(at 138.43 127.91 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
 		(property "Value" "MOTOR2"
-			(at 80.01 107.05 0)
+			(at 138.43 129.91 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
 		(property "Footprint" "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical"
-			(at 81.28 111.76 0)
+			(at 139.7 134.62 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -3156,7 +4484,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 81.28 111.76 0)
+			(at 139.7 134.62 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -3174,14 +4502,14 @@
 	)
 	(wire
 		(pts
-			(xy 76.2 109.22)
-			(xy 71.12 109.22)
+			(xy 134.62 132.08)
+			(xy 129.54 132.08)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "35ef64bb-a176-5c75-8095-b3c04014e626")
 	)
 	(label "PWM2"
-		(at 71.12 109.22 180)
+		(at 129.54 132.08 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -3191,14 +4519,14 @@
 	)
 	(wire
 		(pts
-			(xy 76.2 111.76)
-			(xy 71.12 111.76)
+			(xy 134.62 134.62)
+			(xy 129.54 134.62)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "97b94641-7c2b-5ff0-92ca-5eea7d560730")
 	)
 	(label "DIR2"
-		(at 71.12 111.76 180)
+		(at 129.54 134.62 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -3206,675 +4534,54 @@
 		)
 		(uuid "60a26dc3-6b09-53ea-82d4-b6cca3829bd5")
 	)
-	(no_connect (at 76.2 114.3) (uuid "60c69993-0ea5-5161-8b3d-ccc6f16c9523"))
+	(wire
+		(pts
+			(xy 134.62 137.16)
+			(xy 129.54 137.16)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "8e09d2cd-9422-592a-8e19-2f139ff578e1")
+	)
+	(wire
+		(pts
+			(xy 129.54 137.16)
+			(xy 121.92 137.16)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "39ead877-e8d5-520c-ab23-6694158cc8c0")
+	)
 	(symbol
-		(lib_id "Connector_Generic:Conn_01x02")
-		(at 109.22 109.22 0)
+		(lib_id "power:GND")
+		(at 121.92 137.16 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
+		(in_bom no)
+		(on_board no)
 		(dnp no)
-		(uuid "ab833d6e-9749-5004-b73c-9e9337b280e0")
-		(property "Reference" "J7"
-			(at 107.95 105.05 0)
+		(uuid "b5e5ebb2-69ab-56bc-9305-3a92c068790d")
+		(property "Reference" "#PWR011"
+			(at 121.92 137.16 0)
 			(effects
 				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "LIM1"
-			(at 107.95 107.05 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical"
-			(at 109.22 109.22 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
-			(at 109.22 109.22 0)
+		(property "Value" "GND"
+			(at 121.92 140.97 0)
 			(effects
 				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
 			)
 		)
-		(pin "1" (uuid "ac5e7369-25c6-5339-ad3d-5e58e6fdd2ed"))
-		(pin "2" (uuid "bb221a89-1b71-5387-a1a1-095deebe6474"))
+		(pin "1" (uuid "f20a8d8a-5ba4-5283-9195-bb9f337a933e"))
 		(instances
 			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "J7") (unit 1))
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR011") (unit 1))
 			)
 		)
-	)
-	(wire
-		(pts
-			(xy 104.14 109.22)
-			(xy 99.06 109.22)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "0a3b1cba-5076-5142-bef4-5d4360f192ec")
-	)
-	(label "LIM1_RAW"
-		(at 99.06 109.22 180)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify right bottom)
-		)
-		(uuid "ab2c1ec9-ebbd-5819-8356-2bc33afa2cdf")
-	)
-	(no_connect (at 104.14 111.76) (uuid "f950dfd2-bd0e-53d2-9ca4-be301da2b686"))
-	(symbol
-		(lib_id "Connector_Generic:Conn_01x02")
-		(at 134.62 109.22 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "c175e0a3-53d2-54f2-b4d8-fb67fdf00ce1")
-		(property "Reference" "J8"
-			(at 133.35 105.05 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "LIM2"
-			(at 133.35 107.05 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical"
-			(at 134.62 109.22 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 134.62 109.22 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "1c7cbfe9-bad7-5abc-9b8c-7ec51c718328"))
-		(pin "2" (uuid "9f777f73-1ec3-50e2-aca5-f4a26d07e592"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "J8") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 129.54 109.22)
-			(xy 124.46 109.22)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "16de4528-5ac5-5d34-8a28-f03877f152b0")
-	)
-	(label "LIM2_RAW"
-		(at 124.46 109.22 180)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify right bottom)
-		)
-		(uuid "3bef740e-1723-5555-a29f-742fb1a3b626")
-	)
-	(no_connect (at 129.54 111.76) (uuid "f570d50d-af3a-5e90-9d42-d9bcde5476b1"))
-	(symbol
-		(lib_id "Connector_Generic:Conn_01x02")
-		(at 160.02 109.22 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "cf119f9e-4209-5df9-a579-ed704f6bc0ac")
-		(property "Reference" "J9"
-			(at 158.75 105.05 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "LIM3"
-			(at 158.75 107.05 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical"
-			(at 160.02 109.22 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 160.02 109.22 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "dec81746-aa58-58f1-87d9-14916f28c676"))
-		(pin "2" (uuid "9c223056-52af-5497-8c07-5ea58410a342"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "J9") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 154.94 109.22)
-			(xy 149.86 109.22)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "9142da33-307f-56e4-8035-b9ac46643949")
-	)
-	(label "LIM3_RAW"
-		(at 149.86 109.22 180)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify right bottom)
-		)
-		(uuid "a55e7d38-8855-5549-a2a0-9313ad9c7483")
-	)
-	(no_connect (at 154.94 111.76) (uuid "6842d533-cbdb-5b63-9825-ef930b4f49c1"))
-	(symbol
-		(lib_id "Device:R")
-		(at 170.18 114.3 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "55974946-0b62-5cfa-9b3c-442c72e84c89")
-		(property "Reference" "RF_E1A"
-			(at 172.38 113.3 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "1k"
-			(at 172.38 115.3 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 170.18 114.3 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 170.18 114.3 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "455f91ef-dd06-5abc-9564-7ea3f63f4604"))
-		(pin "2" (uuid "e68d6746-96ba-5e03-9ee8-863f9bedbfd6"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RF_E1A") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 170.18 110.49)
-			(xy 170.18 105.41)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "6f9f2d8e-bc11-50b6-9f8c-45a63cf95644")
-	)
-	(label "E1A_RAW"
-		(at 170.18 105.41 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "c10495ae-a445-5690-917d-652f34a21da5")
-	)
-	(wire
-		(pts
-			(xy 170.18 118.11)
-			(xy 170.18 123.19)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "3d6f94d2-b58f-582d-861f-7fc70317d00d")
-	)
-	(label "E1A"
-		(at 170.18 123.19 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "e2eb977b-4796-59ea-b733-aed244e2ffac")
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 185.42 114.3 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "eaedf46a-a007-5f95-8288-fdb78df6b5ba")
-		(property "Reference" "RF_E1B"
-			(at 187.62 113.3 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "1k"
-			(at 187.62 115.3 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 185.42 114.3 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 185.42 114.3 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "59bebd3a-e19e-5dab-bcd5-a21b44a2bee8"))
-		(pin "2" (uuid "36d0ece7-70c6-528d-9e8d-946bef6f6330"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RF_E1B") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 185.42 110.49)
-			(xy 185.42 105.41)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "1808a372-e147-5964-b94e-2dcbdf59d8de")
-	)
-	(label "E1B_RAW"
-		(at 185.42 105.41 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "2e62ccc4-3ebf-5726-a8ac-8b4c42fcad35")
-	)
-	(wire
-		(pts
-			(xy 185.42 118.11)
-			(xy 185.42 123.19)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "c0fc9342-bf56-58ab-98cc-d9655f38a64c")
-	)
-	(label "E1B"
-		(at 185.42 123.19 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "30064857-dcd4-58c4-9fb3-a39b4321eaa2")
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 17.78 139.7 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "991737ae-d8ab-56eb-85f2-027f9e6b5ad9")
-		(property "Reference" "RF_E2A"
-			(at 19.98 138.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "1k"
-			(at 19.98 140.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 17.78 139.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 17.78 139.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "14892ca9-ceae-5d69-92eb-6a523148f662"))
-		(pin "2" (uuid "d97bcb64-0be3-5d11-874c-e2214cc39ca5"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RF_E2A") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 17.78 135.89)
-			(xy 17.78 130.81)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "bad6e177-2340-57c6-bad7-569c36b31cd5")
-	)
-	(label "E2A_RAW"
-		(at 17.78 130.81 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "3f672300-ed5c-5d1b-8d3d-f4be4b610152")
-	)
-	(wire
-		(pts
-			(xy 17.78 143.51)
-			(xy 17.78 148.59)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "b54148a5-1f45-5c75-a4a7-4b2402a93b91")
-	)
-	(label "E2A"
-		(at 17.78 148.59 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "fb011f5a-7454-5ca3-af28-6875d0141e98")
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 33.02 139.7 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "aa9451f1-129a-5ddf-8aa5-e438cafc4aa2")
-		(property "Reference" "RF_E2B"
-			(at 35.22 138.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "1k"
-			(at 35.22 140.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 33.02 139.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 33.02 139.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "2d78bb64-fb88-5363-91e6-14a2b32d670c"))
-		(pin "2" (uuid "034ad0d0-85e9-5485-9f5f-cf446938fa76"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RF_E2B") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 33.02 135.89)
-			(xy 33.02 130.81)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "5b42df95-5a16-552b-b185-ea15fd9c2d14")
-	)
-	(label "E2B_RAW"
-		(at 33.02 130.81 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "6e64b418-5eb2-58c5-b05e-0935c0819a49")
-	)
-	(wire
-		(pts
-			(xy 33.02 143.51)
-			(xy 33.02 148.59)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "f2f83d17-ad1e-5fa2-ab2f-7aafdff2766f")
-	)
-	(label "E2B"
-		(at 33.02 148.59 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "13fea77c-cc3b-52fc-bd74-d8da608f4bf2")
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 48.26 139.7 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "45038575-a4b1-5536-84ed-b4ba632d1b1d")
-		(property "Reference" "RL1"
-			(at 50.46 138.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "1k"
-			(at 50.46 140.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 48.26 139.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 48.26 139.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "a09bdcdf-8751-5ad0-ba2d-4e5be6e2eac2"))
-		(pin "2" (uuid "d3f9497f-06ae-5e58-abd1-68b03e59edaf"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RL1") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 48.26 135.89)
-			(xy 48.26 130.81)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "b971f3b2-6de3-5440-9ee8-f17b96c91b51")
-	)
-	(label "LED_A"
-		(at 48.26 130.81 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "ee038263-f235-54a3-b552-eef618df7466")
-	)
-	(wire
-		(pts
-			(xy 48.26 143.51)
-			(xy 48.26 148.59)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "9dd55bf2-b2b0-5f97-a0d2-5f67a56d11d4")
-	)
-	(label "LED_M"
-		(at 48.26 148.59 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "11772a44-2dfb-5a5e-b1e3-f9f505fdfa4b")
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 60.96 139.7 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "544e8eaa-d5bc-5ab5-bc01-7cccd91e432a")
-		(property "Reference" "RP_DIR1"
-			(at 63.16 138.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "10k"
-			(at 63.16 140.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 60.96 139.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 60.96 139.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "f600fdf7-6942-5f5e-8787-1f59e41bf77c"))
-		(pin "2" (uuid "d85565af-6839-5737-9000-d397efd0dc27"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RP_DIR1") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 60.96 135.89)
-			(xy 60.96 130.81)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "a743374f-948d-5456-9da0-25ec2d3b3ed0")
-	)
-	(label "DIR1"
-		(at 60.96 130.81 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "9a67090a-9e26-503b-9978-74620bcf87c6")
-	)
-	(no_connect (at 60.96 143.51) (uuid "a3b63ea3-f903-54bb-b578-78145c28956f"))
-	(symbol
-		(lib_id "Device:R")
-		(at 76.2 139.7 0)
+		(at 152.4 137.16 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -3882,21 +4589,21 @@
 		(dnp no)
 		(uuid "e816ccb1-3357-5266-aad3-6390790e669a")
 		(property "Reference" "RP_DIR2"
-			(at 78.4 138.7 0)
+			(at 154.6 136.16 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
 		(property "Value" "10k"
-			(at 78.4 140.7 0)
+			(at 154.6 138.16 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
 		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 76.2 139.7 0)
+			(at 152.4 137.16 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -3904,7 +4611,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 76.2 139.7 0)
+			(at 152.4 137.16 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -3921,14 +4628,14 @@
 	)
 	(wire
 		(pts
-			(xy 76.2 135.89)
-			(xy 76.2 130.81)
+			(xy 152.4 133.35)
+			(xy 152.4 128.27)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "69a1434e-961b-5859-a0c5-ffacdea3297f")
 	)
 	(label "DIR2"
-		(at 76.2 130.81 0)
+		(at 152.4 128.27 0)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -3936,32 +4643,68 @@
 		)
 		(uuid "ae897ebf-5f9d-5674-a769-6e0c05eafc7a")
 	)
-	(no_connect (at 76.2 143.51) (uuid "255510f4-d037-58a7-a7c1-eb9c87e24cc6"))
+	(wire
+		(pts
+			(xy 152.4 140.97)
+			(xy 152.4 146.05)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "9ea4db5d-5f6c-5cad-b74b-6462b9cd2e84")
+	)
 	(symbol
-		(lib_id "Device:R")
-		(at 91.44 139.7 0)
+		(lib_id "power:GND")
+		(at 152.4 146.05 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "474a20ca-032d-5627-9549-e92372f81eab")
+		(property "Reference" "#PWR012"
+			(at 152.4 146.05 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 152.4 149.86 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "11525a04-5450-5900-a553-61215b446215"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR012") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x03")
+		(at 185.42 134.62 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "79a29c50-a03c-51a1-beb3-2f224afb2c55")
-		(property "Reference" "RP_PWM1"
-			(at 93.64 138.7 0)
+		(uuid "9acb0b7d-96e4-5a19-9010-b409c44d68dd")
+		(property "Reference" "J5"
+			(at 184.15 127.91 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
-		(property "Value" "10k"
-			(at 93.64 140.7 0)
+		(property "Value" "MOTOR1"
+			(at 184.15 129.91 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 91.44 139.7 0)
+		(property "Footprint" "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical"
+			(at 185.42 134.62 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -3969,7 +4712,134 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 91.44 139.7 0)
+			(at 185.42 134.62 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "020d2460-972d-532b-899f-b3903384550a"))
+		(pin "2" (uuid "4e48b129-ae2a-5202-94a6-9051c24983e3"))
+		(pin "3" (uuid "f75cead5-a01b-51d6-ac39-b3354f3865f0"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "J5") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 180.34 132.08)
+			(xy 175.26 132.08)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "d2141ee6-3820-5768-977e-da00fac5c9e5")
+	)
+	(label "PWM1"
+		(at 175.26 132.08 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "d7029390-ece1-5d62-8127-7fa3d7c1b7a1")
+	)
+	(wire
+		(pts
+			(xy 180.34 134.62)
+			(xy 175.26 134.62)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "c2309e56-221f-5fca-916d-7f6fa105ca8b")
+	)
+	(label "DIR1"
+		(at 175.26 134.62 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "8ea3c39b-683f-5276-ad39-56b8edc59e62")
+	)
+	(wire
+		(pts
+			(xy 180.34 137.16)
+			(xy 175.26 137.16)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "4493ce4a-1d9f-58d7-813a-58607777a97b")
+	)
+	(wire
+		(pts
+			(xy 175.26 137.16)
+			(xy 167.64 137.16)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "d378fcd2-659c-5d98-bd1a-f3a03bf3ff4c")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 167.64 137.16 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "60e05e25-f263-53d7-87b1-a9c53bec2690")
+		(property "Reference" "#PWR013"
+			(at 167.64 137.16 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 167.64 140.97 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "c5ba7eee-6c21-5dc3-bd55-7188c2c549ff"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR013") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 198.12 137.16 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "79a29c50-a03c-51a1-beb3-2f224afb2c55")
+		(property "Reference" "RP_PWM1"
+			(at 200.32 136.16 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "10k"
+			(at 200.32 138.16 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 198.12 137.16 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 198.12 137.16 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -3986,14 +4856,14 @@
 	)
 	(wire
 		(pts
-			(xy 91.44 135.89)
-			(xy 91.44 130.81)
+			(xy 198.12 133.35)
+			(xy 198.12 128.27)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "90686477-2b79-54c5-9ea0-45afc8651f09")
 	)
 	(label "PWM1"
-		(at 91.44 130.81 0)
+		(at 198.12 128.27 0)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -4001,32 +4871,84 @@
 		)
 		(uuid "caa90dc3-9cb5-502b-ae35-fee8bb589bc0")
 	)
-	(no_connect (at 91.44 143.51) (uuid "38f26a04-0bad-5b5a-84be-3f4e1c73f4e4"))
+	(wire
+		(pts
+			(xy 198.12 140.97)
+			(xy 198.12 146.05)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "33c414aa-35f1-5cd6-9c00-7e902b4c1ff5")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 198.12 146.05 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "bc399362-ede1-508a-8bcc-8b4d55b18409")
+		(property "Reference" "#PWR014"
+			(at 198.12 146.05 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 198.12 149.86 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "88228126-3078-52b1-a222-9558b367614b"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR014") (unit 1))
+			)
+		)
+	)
+	(rectangle
+		(start 12 161.29)
+		(end 144.592 282.07)
+		(stroke (width 0.254) (type dash))
+		(fill (type none))
+		(uuid "dc1dcdc5-45a7-5591-9c04-6f13ba80263c")
+	)
+	(text "ESP32 DevKitC L (J1) 2/2"
+		(exclude_from_sim no)
+		(at 14.54 165.49 0)
+		(effects
+			(font (size 2 2) (thickness 0.4) (bold yes))
+			(justify left bottom)
+		)
+		(uuid "52c1dae0-38ff-544b-8adc-d413a2cb53af")
+	)
 	(symbol
 		(lib_id "Device:R")
-		(at 106.68 139.7 0)
+		(at 20.32 180.34 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "5d42b83b-ff9b-5872-a5af-f2c37f6d8d8d")
-		(property "Reference" "RP_PWM2"
-			(at 108.88 138.7 0)
+		(uuid "544e8eaa-d5bc-5ab5-bc01-7cccd91e432a")
+		(property "Reference" "RP_DIR1"
+			(at 22.52 179.34 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
 		(property "Value" "10k"
-			(at 108.88 140.7 0)
+			(at 22.52 181.34 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
 		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 106.68 139.7 0)
+			(at 20.32 180.34 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -4034,7 +4956,108 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 106.68 139.7 0)
+			(at 20.32 180.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "f600fdf7-6942-5f5e-8787-1f59e41bf77c"))
+		(pin "2" (uuid "d85565af-6839-5737-9000-d397efd0dc27"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RP_DIR1") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 20.32 176.53)
+			(xy 20.32 171.45)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "a743374f-948d-5456-9da0-25ec2d3b3ed0")
+	)
+	(label "DIR1"
+		(at 20.32 171.45 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "9a67090a-9e26-503b-9978-74620bcf87c6")
+	)
+	(wire
+		(pts
+			(xy 20.32 184.15)
+			(xy 20.32 189.23)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "5e7e6dab-0eec-53a9-bbaf-aad63a7e4a4f")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 20.32 189.23 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "7a1121c3-683e-5f86-901b-c791f410a93f")
+		(property "Reference" "#PWR015"
+			(at 20.32 189.23 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 20.32 193.04 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "6e4c9793-3a74-5d32-a7d9-5795aeee69cb"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR015") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 35.56 180.34 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "5d42b83b-ff9b-5872-a5af-f2c37f6d8d8d")
+		(property "Reference" "RP_PWM2"
+			(at 37.76 179.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "10k"
+			(at 37.76 181.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 35.56 180.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 35.56 180.34 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -4051,14 +5074,14 @@
 	)
 	(wire
 		(pts
-			(xy 106.68 135.89)
-			(xy 106.68 130.81)
+			(xy 35.56 176.53)
+			(xy 35.56 171.45)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "1313af49-fb38-5ee8-b5b6-912b0f9d5300")
 	)
 	(label "PWM2"
-		(at 106.68 130.81 0)
+		(at 35.56 171.45 0)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -4066,32 +5089,68 @@
 		)
 		(uuid "21137206-5b15-5d7c-82b4-26b143f0b6ff")
 	)
-	(no_connect (at 106.68 143.51) (uuid "1df53579-a3f4-53e3-944c-4e4b2334c5ec"))
+	(wire
+		(pts
+			(xy 35.56 184.15)
+			(xy 35.56 189.23)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "db242dea-6f93-5420-9af4-7e77b915a792")
+	)
 	(symbol
-		(lib_id "Device:R")
-		(at 121.92 139.7 0)
+		(lib_id "power:GND")
+		(at 35.56 189.23 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "3137466f-83f9-58b5-a9f3-459f436e0668")
+		(property "Reference" "#PWR016"
+			(at 35.56 189.23 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 35.56 193.04 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "b252b760-05d7-5625-ad46-d9a4acbd8a8d"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR016") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 73.66 175.26 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "e4293882-9f77-5d94-a15a-ce6851f7d8d3")
-		(property "Reference" "RS_DIR1"
-			(at 124.12 138.7 0)
+		(uuid "c175e0a3-53d2-54f2-b4d8-fb67fdf00ce1")
+		(property "Reference" "J8"
+			(at 72.39 171.09 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
-		(property "Value" "220"
-			(at 124.12 140.7 0)
+		(property "Value" "LIM2"
+			(at 72.39 173.09 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 121.92 139.7 0)
+		(property "Footprint" "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical"
+			(at 73.66 175.26 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -4099,1096 +5158,86 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 121.92 139.7 0)
+			(at 73.66 175.26 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 				(hide yes)
 			)
 		)
-		(pin "1" (uuid "3c0000ef-7ed9-5b6c-b8cc-a72deefb90a8"))
-		(pin "2" (uuid "4ef86fba-6216-5e2b-93c4-5a885588c52a"))
+		(pin "1" (uuid "1c7cbfe9-bad7-5abc-9b8c-7ec51c718328"))
+		(pin "2" (uuid "9f777f73-1ec3-50e2-aca5-f4a26d07e592"))
 		(instances
 			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RS_DIR1") (unit 1))
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "J8") (unit 1))
 			)
 		)
 	)
 	(wire
 		(pts
-			(xy 121.92 135.89)
-			(xy 121.92 130.81)
+			(xy 68.58 175.26)
+			(xy 63.5 175.26)
 		)
 		(stroke (width 0.1524) (type default))
-		(uuid "db96601c-7d76-5c39-a5a1-92df84b92676")
-	)
-	(label "DIR1_MCU"
-		(at 121.92 130.81 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "74f1dcd4-283e-54d4-87b4-6bee52c52261")
-	)
-	(wire
-		(pts
-			(xy 121.92 143.51)
-			(xy 121.92 148.59)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "771dd176-3d97-5275-b2a9-07d1830a8aa1")
-	)
-	(label "DIR1"
-		(at 121.92 148.59 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "78e73c04-b0d8-59c5-9258-5c0948b00ed5")
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 137.16 139.7 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "6a9a800b-c5e0-5e59-8aa1-256f397ed8a8")
-		(property "Reference" "RS_DIR2"
-			(at 139.36 138.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "220"
-			(at 139.36 140.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 137.16 139.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 137.16 139.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "6d0f2219-e9c1-5965-a3c9-8aadfb1ff321"))
-		(pin "2" (uuid "10c81e3e-1fa7-53b8-b77b-1d74204aef5c"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RS_DIR2") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 137.16 135.89)
-			(xy 137.16 130.81)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "1a948687-0535-50bf-9419-5087e6b1d603")
-	)
-	(label "DIR2_MCU"
-		(at 137.16 130.81 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "fb038f0a-3d55-5e90-bd2d-61f904dc4ccd")
-	)
-	(wire
-		(pts
-			(xy 137.16 143.51)
-			(xy 137.16 148.59)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "a50dce03-4dd3-51e9-90f4-3ba6f284f333")
-	)
-	(label "DIR2"
-		(at 137.16 148.59 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "6deb41c5-ebf6-5078-a7e0-0531a32a5be5")
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 152.4 139.7 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "980bf557-8993-5927-a95a-c9e85d70d8ad")
-		(property "Reference" "RS_ESTOP"
-			(at 154.6 138.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "1k"
-			(at 154.6 140.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 152.4 139.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 152.4 139.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "dfb045ce-f99d-553b-8eda-95037e9a0923"))
-		(pin "2" (uuid "2445f773-450c-515a-b095-c380ec512e6d"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RS_ESTOP") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 152.4 135.89)
-			(xy 152.4 130.81)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "8de79dcc-f443-5bb3-9c13-4abba798381e")
-	)
-	(label "ESTOP_RAW"
-		(at 152.4 130.81 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "ff243b6a-0780-5c3b-b728-5fef3d14f472")
-	)
-	(wire
-		(pts
-			(xy 152.4 143.51)
-			(xy 152.4 148.59)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "c112091f-af4f-5234-968a-0b8c134d3893")
-	)
-	(label "ESTOP"
-		(at 152.4 148.59 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "2481cd42-2d89-53b2-9a6e-eb4f67c86a9f")
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 170.18 139.7 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "abd8ab17-75a2-5442-987d-64c2f2ffb0ba")
-		(property "Reference" "RS_LIM1"
-			(at 172.38 138.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "1k"
-			(at 172.38 140.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 170.18 139.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 170.18 139.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "618b4903-c72c-58ba-b4eb-a088b9efe345"))
-		(pin "2" (uuid "1afca839-4f43-5761-b72c-72198d06fd86"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RS_LIM1") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 170.18 135.89)
-			(xy 170.18 130.81)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "855c475b-cd26-516d-99da-0548575a97e6")
-	)
-	(label "LIM1_RAW"
-		(at 170.18 130.81 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "255dd681-4246-5a2a-95bb-2e056ef4307a")
-	)
-	(wire
-		(pts
-			(xy 170.18 143.51)
-			(xy 170.18 148.59)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "f7cb9f19-f2fa-56e1-81c1-09212459b111")
-	)
-	(label "LIM1"
-		(at 170.18 148.59 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "06ee4789-f651-5cc8-ba98-e1ac9abf3252")
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 185.42 139.7 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "7a07b713-3191-5ca6-b735-5d98e2ee3c7b")
-		(property "Reference" "RS_LIM2"
-			(at 187.62 138.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "1k"
-			(at 187.62 140.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 185.42 139.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 185.42 139.7 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "10aa7a74-91ce-52a5-af4d-1170e74d7dbe"))
-		(pin "2" (uuid "869f746c-bb77-55b7-82bd-aee7f8f62a34"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RS_LIM2") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 185.42 135.89)
-			(xy 185.42 130.81)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "a8117207-a0d9-5844-a2cd-b4b1c19e3173")
+		(uuid "16de4528-5ac5-5d34-8a28-f03877f152b0")
 	)
 	(label "LIM2_RAW"
-		(at 185.42 130.81 0)
+		(at 63.5 175.26 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
-			(justify left bottom)
+			(justify right bottom)
 		)
-		(uuid "ed7a6ebf-f2c6-5b36-bfb0-f01bdc8da660")
+		(uuid "3bef740e-1723-5555-a29f-742fb1a3b626")
 	)
 	(wire
 		(pts
-			(xy 185.42 143.51)
-			(xy 185.42 148.59)
+			(xy 68.58 177.8)
+			(xy 63.5 177.8)
 		)
 		(stroke (width 0.1524) (type default))
-		(uuid "3a6a2657-6c07-5f7e-956d-8fb1aa9c7f22")
+		(uuid "c17bfd79-93fe-5db5-8e54-5d61d4e98c4c")
 	)
-	(label "LIM2"
-		(at 185.42 148.59 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
+	(wire
+		(pts
+			(xy 63.5 177.8)
+			(xy 50.8 177.8)
 		)
-		(uuid "6f220a6b-50b2-5256-9431-5b96941245d3")
+		(stroke (width 0.1524) (type default))
+		(uuid "c8e5e8e1-7a2b-59f2-a404-72fe4b6400b7")
 	)
 	(symbol
-		(lib_id "Device:R")
-		(at 17.78 165.1 0)
+		(lib_id "power:GND")
+		(at 50.8 177.8 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
+		(in_bom no)
+		(on_board no)
 		(dnp no)
-		(uuid "20ad721c-58f5-5981-945e-68ab5bdc96a5")
-		(property "Reference" "RS_LIM3"
-			(at 19.98 164.1 0)
+		(uuid "8efb61e9-533c-525f-9c79-6f1b955651c1")
+		(property "Reference" "#PWR017"
+			(at 50.8 177.8 0)
 			(effects
 				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "1k"
-			(at 19.98 166.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 17.78 165.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
-			(at 17.78 165.1 0)
+		(property "Value" "GND"
+			(at 50.8 181.61 0)
 			(effects
 				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
 			)
 		)
-		(pin "1" (uuid "079b4833-294c-5c9d-b78a-f38eca62fd11"))
-		(pin "2" (uuid "d88e0846-6bb1-509e-ac8e-a28276271785"))
+		(pin "1" (uuid "d4d34458-517c-54f0-87db-7f5ad8c2c6fd"))
 		(instances
 			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RS_LIM3") (unit 1))
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR017") (unit 1))
 			)
 		)
-	)
-	(wire
-		(pts
-			(xy 17.78 161.29)
-			(xy 17.78 156.21)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "c2d4b7c0-04f2-5a82-9701-2af8743c0224")
-	)
-	(label "LIM3_RAW"
-		(at 17.78 156.21 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "e309a773-694e-5e2d-abf2-a76603d7737d")
-	)
-	(wire
-		(pts
-			(xy 17.78 168.91)
-			(xy 17.78 173.99)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "907e3325-b4b0-54bc-81a1-03ad7f00ca8d")
-	)
-	(label "LIM3"
-		(at 17.78 173.99 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "3f8af321-792e-5854-ae29-540cbcf0aa61")
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 33.02 165.1 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "0e390ff3-7625-5192-acdc-a9396a909b81")
-		(property "Reference" "RS_LIM4"
-			(at 35.22 164.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "1k"
-			(at 35.22 166.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 33.02 165.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 33.02 165.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "653e4ffe-5db7-571e-9134-1e9ed46cd54e"))
-		(pin "2" (uuid "a1a0f8d7-86b1-5e95-b3d0-519fb899e587"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RS_LIM4") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 33.02 161.29)
-			(xy 33.02 156.21)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "e55418b8-8bc2-5d35-a9fa-1f8c95813a0e")
-	)
-	(label "LIM4_RAW"
-		(at 33.02 156.21 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "7edaf952-47b4-566b-aa42-43ef4efe3a2e")
-	)
-	(wire
-		(pts
-			(xy 33.02 168.91)
-			(xy 33.02 173.99)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "094b1d82-3b13-51bd-84ec-690ac03080cb")
-	)
-	(label "LIM4"
-		(at 33.02 173.99 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "b919612d-1d9b-52e2-96fe-4d9b8785f31e")
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 48.26 165.1 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "1233d43f-d671-5857-9452-b3bf48a35d52")
-		(property "Reference" "RS_PWM1"
-			(at 50.46 164.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "220"
-			(at 50.46 166.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 48.26 165.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 48.26 165.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "58b6ab9f-8738-5f0e-91ac-970b40126ad1"))
-		(pin "2" (uuid "334e3adb-e277-5342-a60e-e7b8a42c855c"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RS_PWM1") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 48.26 161.29)
-			(xy 48.26 156.21)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "a50c2332-7a08-5877-ba09-976994a83058")
-	)
-	(label "PWM1_MCU"
-		(at 48.26 156.21 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "b8fa6871-9e36-56cf-9d22-1451dfed7985")
-	)
-	(wire
-		(pts
-			(xy 48.26 168.91)
-			(xy 48.26 173.99)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "05440f92-1e15-5448-bf50-e2a1c68655b6")
-	)
-	(label "PWM1"
-		(at 48.26 173.99 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "8b669e3f-23a4-57e5-83d7-6598c666c7eb")
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 63.5 165.1 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "96f6fa94-abd7-5659-8459-933fc8656f78")
-		(property "Reference" "RS_PWM2"
-			(at 65.7 164.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "220"
-			(at 65.7 166.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 63.5 165.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 63.5 165.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "8f0a919a-ac51-5619-b03f-479a7853a41a"))
-		(pin "2" (uuid "281bbe93-1a16-5d3c-8ec8-04e6fe2c7fb5"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RS_PWM2") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 63.5 161.29)
-			(xy 63.5 156.21)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "00631160-7175-511a-b51b-694e2ce7d62a")
-	)
-	(label "PWM2_MCU"
-		(at 63.5 156.21 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "46038e1a-ba00-5413-9ddd-ef8008cf5100")
-	)
-	(wire
-		(pts
-			(xy 63.5 168.91)
-			(xy 63.5 173.99)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "9b2102c7-1f97-5a58-862d-d8d2a4f2149b")
-	)
-	(label "PWM2"
-		(at 63.5 173.99 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "a0685417-61a8-55fa-a14d-faf6f4d021a3")
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 78.74 165.1 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "e79d0760-cbd1-584b-a01b-d9d3cecbe3a9")
-		(property "Reference" "RU_E1A"
-			(at 80.94 164.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "4.7k"
-			(at 80.94 166.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 78.74 165.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 78.74 165.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "0c4ae4d9-3d2f-5421-ae19-d50d8d7698e7"))
-		(pin "2" (uuid "4c334855-2d59-567d-af29-9a82ffba485a"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RU_E1A") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 78.74 161.29)
-			(xy 78.74 156.21)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "9f0178d4-a7a9-5a22-add6-4022d7d671ec")
-	)
-	(label "E1A_RAW"
-		(at 78.74 156.21 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "4d22daab-4ce0-5b40-aef5-970955460b62")
-	)
-	(no_connect (at 78.74 168.91) (uuid "362038ca-71a1-5512-8579-151bff370cbb"))
-	(symbol
-		(lib_id "Device:R")
-		(at 93.98 165.1 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "40195924-981b-50f7-8841-db2d43d9f1e5")
-		(property "Reference" "RU_E1B"
-			(at 96.18 164.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "4.7k"
-			(at 96.18 166.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 93.98 165.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 93.98 165.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "d0b21109-7629-506b-84c0-c022cc02072c"))
-		(pin "2" (uuid "92fa490e-9387-54f5-9b95-fb1454aab7d3"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RU_E1B") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 93.98 161.29)
-			(xy 93.98 156.21)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "30b5082b-c742-5411-a34a-a1f56ca6485a")
-	)
-	(label "E1B_RAW"
-		(at 93.98 156.21 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "d6f01096-e82b-5883-ae0d-85f58c35f17f")
-	)
-	(no_connect (at 93.98 168.91) (uuid "4e1175d8-b0e6-5b6e-9dc5-a9d1f2eabe4e"))
-	(symbol
-		(lib_id "Device:R")
-		(at 109.22 165.1 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "95b2e66a-fa4a-59ef-9673-4b7393a48b45")
-		(property "Reference" "RU_E2A"
-			(at 111.42 164.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "4.7k"
-			(at 111.42 166.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 109.22 165.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 109.22 165.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "63aa033c-e09d-502f-bc35-355c75fee38a"))
-		(pin "2" (uuid "974a5120-f771-523d-85e8-1e162d435f25"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RU_E2A") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 109.22 161.29)
-			(xy 109.22 156.21)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "fbf97496-b02a-5b7e-8d59-9704a2f130c7")
-	)
-	(label "E2A_RAW"
-		(at 109.22 156.21 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "73fb66a9-ec8a-5d51-ad04-1e2477e1acdf")
-	)
-	(no_connect (at 109.22 168.91) (uuid "e244fe56-e0bb-5431-b841-e62d5db7bd29"))
-	(symbol
-		(lib_id "Device:R")
-		(at 124.46 165.1 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "4355d110-0eec-5e7b-b0c6-9806dca7ec70")
-		(property "Reference" "RU_E2B"
-			(at 126.66 164.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "4.7k"
-			(at 126.66 166.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 124.46 165.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 124.46 165.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "c06a4d05-1b53-5383-a91e-44b985050a39"))
-		(pin "2" (uuid "e9e37ae6-40f0-5e5d-810f-3ce850080945"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RU_E2B") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 124.46 161.29)
-			(xy 124.46 156.21)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "25f98663-abc3-5b78-8cee-cb2f6f25c714")
-	)
-	(label "E2B_RAW"
-		(at 124.46 156.21 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "349de1a5-a8d5-5133-82dd-c96ca9926b55")
-	)
-	(no_connect (at 124.46 168.91) (uuid "27c55880-7262-5627-8fbc-55552c511da7"))
-	(symbol
-		(lib_id "Device:R")
-		(at 139.7 165.1 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "c8be20d8-d0a4-57f5-a598-fabff9b4a853")
-		(property "Reference" "RU_ESTOP"
-			(at 141.9 164.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "10k"
-			(at 141.9 166.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 139.7 165.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 139.7 165.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "5dbe68ad-669a-5b4d-af73-0813247226c3"))
-		(pin "2" (uuid "65c2b0a2-7bc9-5adf-872d-fde2ef7adc94"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RU_ESTOP") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 139.7 161.29)
-			(xy 139.7 156.21)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "25ab36a6-19eb-54fd-ae5f-ad5bfd1520c2")
-	)
-	(label "ESTOP_RAW"
-		(at 139.7 156.21 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "6cecd66a-eeb6-5f32-a281-47c51bc31914")
-	)
-	(no_connect (at 139.7 168.91) (uuid "3d1d4732-b415-5f1f-87da-03e2b2eb8519"))
-	(symbol
-		(lib_id "Device:R")
-		(at 157.48 165.1 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "172ec8fc-38a0-53eb-974f-cccbeb6e9d05")
-		(property "Reference" "RU_LIM1"
-			(at 159.68 164.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "10k"
-			(at 159.68 166.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 157.48 165.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 157.48 165.1 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "4b94ad67-0e43-5a1b-a929-9231633a1407"))
-		(pin "2" (uuid "ce844bcc-5aec-5acf-9dba-d2b02fdbdd89"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RU_LIM1") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 157.48 161.29)
-			(xy 157.48 156.21)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "db66bb35-8b1d-5634-bd58-205482b82198")
-	)
-	(label "LIM1_RAW"
-		(at 157.48 156.21 0)
-		(fields_autoplaced yes)
-		(effects
-			(font (size 1.27 1.27))
-			(justify left bottom)
-		)
-		(uuid "0bf77dae-107c-5965-99aa-47b328fde4bb")
-	)
-	(no_connect (at 157.48 168.91) (uuid "475e2dad-cd76-5cd8-ad87-ce3d6b4fac97"))
-	(symbol
-		(lib_id "Device:R")
-		(at 172.72 165.1 0)
+		(at 83.82 180.34 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -5196,21 +5245,21 @@
 		(dnp no)
 		(uuid "e0f51571-ffc9-5da4-9080-93004f824bfb")
 		(property "Reference" "RU_LIM2"
-			(at 174.92 164.1 0)
+			(at 86.02 179.34 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
 		(property "Value" "10k"
-			(at 174.92 166.1 0)
+			(at 86.02 181.34 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
 		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 172.72 165.1 0)
+			(at 83.82 180.34 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -5218,7 +5267,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 172.72 165.1 0)
+			(at 83.82 180.34 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -5235,14 +5284,14 @@
 	)
 	(wire
 		(pts
-			(xy 172.72 161.29)
-			(xy 172.72 156.21)
+			(xy 83.82 176.53)
+			(xy 83.82 171.45)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "3b3f4dfd-c06c-53e9-8c57-d1ac16c27c32")
 	)
 	(label "LIM2_RAW"
-		(at 172.72 156.21 0)
+		(at 83.82 171.45 0)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -5250,32 +5299,48 @@
 		)
 		(uuid "580ef5bc-bf25-5768-81c1-93ea291c8742")
 	)
-	(no_connect (at 172.72 168.91) (uuid "633f817e-d9a9-5ca2-9195-2f87e29d1f90"))
+	(wire
+		(pts
+			(xy 83.82 184.15)
+			(xy 83.82 189.23)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "d179de93-6d57-5734-9a21-0c1e004b9a9c")
+	)
+	(label "V3"
+		(at 83.82 189.23 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "e2d5143f-c427-5413-8e35-f59316f4e1f8")
+	)
 	(symbol
-		(lib_id "Device:R")
-		(at 187.96 165.1 0)
+		(lib_id "Device:C")
+		(at 104.14 180.34 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "81cfb858-f0eb-514d-b40f-2a42a7ddc067")
-		(property "Reference" "RU_LIM3"
-			(at 190.16 164.1 0)
+		(uuid "01f6df13-759b-536e-8eb2-c47dc28a2218")
+		(property "Reference" "CE1"
+			(at 106.772 179.34 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
-		(property "Value" "10k"
-			(at 190.16 166.1 0)
+		(property "Value" "100nF"
+			(at 106.772 181.34 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 187.96 165.1 0)
+		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
+			(at 104.14 180.34 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -5283,7 +5348,1425 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 187.96 165.1 0)
+			(at 104.14 180.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "9e9672ad-1a1a-54c2-8f81-2b946e930a87"))
+		(pin "2" (uuid "bb80d175-2e82-5938-9831-07fe2513a2bd"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "CE1") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 104.14 176.53)
+			(xy 104.14 171.45)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "69012040-705a-53f0-9eaf-9d3fac6890c4")
+	)
+	(wire
+		(pts
+			(xy 104.14 184.15)
+			(xy 104.14 189.23)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "6873f7de-2151-52a4-beb5-170f642b0b64")
+	)
+	(label "ENCVCC"
+		(at 104.14 171.45 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "fdfa4626-1118-51a1-9f9c-0ed44077f2c6")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 104.14 189.23 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "781ecc17-49b8-5fc8-9366-c824ec5eda74")
+		(property "Reference" "#PWR018"
+			(at 104.14 189.23 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 104.14 193.04 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "d7c70001-ed17-5d73-9831-55c8870a5c2b"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR018") (unit 1))
+			)
+		)
+	)
+	(junction
+		(at 104.14 189.23)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "8afeb304-efeb-539f-98f4-0582bff71418")
+	)
+	(wire
+		(pts
+			(xy 104.14 171.45)
+			(xy 116.84 171.45)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "9107c98c-94bd-5ec5-be30-e2c86495bb77")
+	)
+	(wire
+		(pts
+			(xy 104.14 189.23)
+			(xy 116.84 189.23)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "a16048ef-b57a-5f61-a65a-3a7c5bf5f198")
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 116.84 180.34 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "7652edb2-f9a2-5bf3-9c17-b3f126fd34b3")
+		(property "Reference" "CE2"
+			(at 119.472 179.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "100nF"
+			(at 119.472 181.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
+			(at 116.84 180.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 116.84 180.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "ca293434-db14-5c4f-b8ba-5a396fb56b9e"))
+		(pin "2" (uuid "dd1bb473-116d-5ee8-b6c6-0fffeb15d6c7"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "CE2") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 116.84 176.53)
+			(xy 116.84 171.45)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "9bcb925d-c2fb-5090-9096-fd20a9a06028")
+	)
+	(wire
+		(pts
+			(xy 116.84 184.15)
+			(xy 116.84 189.23)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "fe5a00f6-cf89-51b4-a9d3-f1ad1048d73b")
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 132.08 180.34 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "e76ace37-3860-5849-942e-f89c8d878ee7")
+		(property "Reference" "CD_LIM1"
+			(at 134.712 179.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "100nF"
+			(at 134.712 181.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
+			(at 132.08 180.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 132.08 180.34 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "cfa987bf-6597-57ff-8a26-318bb93657eb"))
+		(pin "2" (uuid "dce50a1b-83ab-5144-ac22-cda626d7b007"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "CD_LIM1") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 132.08 176.53)
+			(xy 132.08 171.45)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "524cb62d-1884-5e82-a6fe-d68b9d84a8d1")
+	)
+	(label "LIM1"
+		(at 132.08 171.45 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "7fbc4a01-738c-5c0c-9ae4-aa98cd5a7114")
+	)
+	(wire
+		(pts
+			(xy 132.08 184.15)
+			(xy 132.08 189.23)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "71914f00-3c9a-51d6-adcc-99293afb1490")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 132.08 189.23 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "b2f5412e-7a54-59cf-8333-988be3657d41")
+		(property "Reference" "#PWR019"
+			(at 132.08 189.23 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 132.08 193.04 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "4352b7eb-2b03-58b9-99e4-86754df3dfce"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR019") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 25.4 208.28 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "abd8ab17-75a2-5442-987d-64c2f2ffb0ba")
+		(property "Reference" "RS_LIM1"
+			(at 27.6 207.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "1k"
+			(at 27.6 209.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 25.4 208.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 25.4 208.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "618b4903-c72c-58ba-b4eb-a088b9efe345"))
+		(pin "2" (uuid "1afca839-4f43-5761-b72c-72198d06fd86"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RS_LIM1") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 25.4 204.47)
+			(xy 25.4 199.39)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "855c475b-cd26-516d-99da-0548575a97e6")
+	)
+	(wire
+		(pts
+			(xy 25.4 212.09)
+			(xy 25.4 217.17)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "f7cb9f19-f2fa-56e1-81c1-09212459b111")
+	)
+	(label "LIM1"
+		(at 25.4 217.17 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "06ee4789-f651-5cc8-ba98-e1ac9abf3252")
+	)
+	(label "LIM1_RAW"
+		(at 25.4 199.39 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "255dd681-4246-5a2a-95bb-2e056ef4307a")
+	)
+	(wire
+		(pts
+			(xy 25.4 199.39)
+			(xy 40.64 199.39)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "d4a8fe2b-fdde-5888-a649-f3d6881c1ced")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 55.88 208.28 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "45038575-a4b1-5536-84ed-b4ba632d1b1d")
+		(property "Reference" "RL1"
+			(at 58.08 207.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "1k"
+			(at 58.08 209.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 55.88 208.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 55.88 208.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "a09bdcdf-8751-5ad0-ba2d-4e5be6e2eac2"))
+		(pin "2" (uuid "d3f9497f-06ae-5e58-abd1-68b03e59edaf"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RL1") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 55.88 204.47)
+			(xy 55.88 199.39)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "b971f3b2-6de3-5440-9ee8-f17b96c91b51")
+	)
+	(label "LED_A"
+		(at 55.88 199.39 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "ee038263-f235-54a3-b552-eef618df7466")
+	)
+	(wire
+		(pts
+			(xy 55.88 212.09)
+			(xy 55.88 217.17)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "9dd55bf2-b2b0-5f97-a0d2-5f67a56d11d4")
+	)
+	(label "LED_M"
+		(at 55.88 217.17 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "11772a44-2dfb-5a5e-b1e3-f9f505fdfa4b")
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 68.58 208.28 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "c65b73e5-e0d8-57e1-854a-eddd7450bd3b")
+		(property "Reference" "CD_LIM3"
+			(at 71.212 207.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "100nF"
+			(at 71.212 209.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
+			(at 68.58 208.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 68.58 208.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "93f47667-6f6d-5d94-874c-b59b62722616"))
+		(pin "2" (uuid "7f6982f4-aefd-585a-ab5c-75cf2fafb9a9"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "CD_LIM3") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 68.58 204.47)
+			(xy 68.58 199.39)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "af7df6dc-fce5-51e9-b553-9d98cc03e534")
+	)
+	(label "LIM3"
+		(at 68.58 199.39 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "778eb00c-14ed-50f0-b7c0-1824f1b0cbfe")
+	)
+	(wire
+		(pts
+			(xy 68.58 212.09)
+			(xy 68.58 217.17)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "e81ba422-b8ee-5532-a6fe-9e4fcc528e94")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 68.58 217.17 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "98817534-897f-5c7b-8061-ba4df263d92f")
+		(property "Reference" "#PWR020"
+			(at 68.58 217.17 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 68.58 220.98 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "62e5758f-9417-5504-8868-6f84b6c001e6"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR020") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 91.44 208.28 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "20ad721c-58f5-5981-945e-68ab5bdc96a5")
+		(property "Reference" "RS_LIM3"
+			(at 93.64 207.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "1k"
+			(at 93.64 209.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 91.44 208.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 91.44 208.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "079b4833-294c-5c9d-b78a-f38eca62fd11"))
+		(pin "2" (uuid "d88e0846-6bb1-509e-ac8e-a28276271785"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RS_LIM3") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 91.44 204.47)
+			(xy 91.44 199.39)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "c2d4b7c0-04f2-5a82-9701-2af8743c0224")
+	)
+	(wire
+		(pts
+			(xy 91.44 212.09)
+			(xy 91.44 217.17)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "907e3325-b4b0-54bc-81a1-03ad7f00ca8d")
+	)
+	(label "LIM3"
+		(at 91.44 217.17 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "3f8af321-792e-5854-ae29-540cbcf0aa61")
+	)
+	(label "LIM3_RAW"
+		(at 91.44 199.39 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "e309a773-694e-5e2d-abf2-a76603d7737d")
+	)
+	(wire
+		(pts
+			(xy 91.44 199.39)
+			(xy 106.68 199.39)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "0f931947-ab5e-50bf-a39a-ab159b1858b0")
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 121.92 208.28 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "441f68b4-f875-595d-bdfa-15ab6c79bada")
+		(property "Reference" "CD_LIM4"
+			(at 124.552 207.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "100nF"
+			(at 124.552 209.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
+			(at 121.92 208.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 121.92 208.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "bd958d6a-e9c1-556b-b80b-280464454f7e"))
+		(pin "2" (uuid "2f6db666-1fd3-553d-beac-52266c403b25"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "CD_LIM4") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 121.92 204.47)
+			(xy 121.92 199.39)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "40691298-c244-5b3b-9b85-62b5057c015f")
+	)
+	(label "LIM4"
+		(at 121.92 199.39 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "3abbb254-d884-5ed5-b772-ff833c33113d")
+	)
+	(wire
+		(pts
+			(xy 121.92 212.09)
+			(xy 121.92 217.17)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "4aa959cc-163e-53fd-8d5d-b72cc51f5b77")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 121.92 217.17 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "091151fd-38c5-57a8-a008-68f9caec02b8")
+		(property "Reference" "#PWR021"
+			(at 121.92 217.17 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 121.92 220.98 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "9b7d8b8a-1a75-5106-bd84-b8d6062d7e0f"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR021") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 25.4 236.22 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "0e390ff3-7625-5192-acdc-a9396a909b81")
+		(property "Reference" "RS_LIM4"
+			(at 27.6 235.22 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "1k"
+			(at 27.6 237.22 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 25.4 236.22 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 25.4 236.22 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "653e4ffe-5db7-571e-9134-1e9ed46cd54e"))
+		(pin "2" (uuid "a1a0f8d7-86b1-5e95-b3d0-519fb899e587"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RS_LIM4") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 25.4 232.41)
+			(xy 25.4 227.33)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "e55418b8-8bc2-5d35-a9fa-1f8c95813a0e")
+	)
+	(wire
+		(pts
+			(xy 25.4 240.03)
+			(xy 25.4 245.11)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "094b1d82-3b13-51bd-84ec-690ac03080cb")
+	)
+	(label "LIM4"
+		(at 25.4 245.11 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "b919612d-1d9b-52e2-96fe-4d9b8785f31e")
+	)
+	(label "LIM4_RAW"
+		(at 25.4 227.33 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "7edaf952-47b4-566b-aa42-43ef4efe3a2e")
+	)
+	(wire
+		(pts
+			(xy 25.4 227.33)
+			(xy 40.64 227.33)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "90c9db2f-041c-5fe9-95af-a31ee88f101e")
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 55.88 236.22 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "26f63e6d-f10c-5c05-8b8a-3433fae832bd")
+		(property "Reference" "CD_ESTOP"
+			(at 58.512 235.22 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "100nF"
+			(at 58.512 237.22 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
+			(at 55.88 236.22 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 55.88 236.22 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "9ccb7fa5-be02-593b-a56c-c0f57a5602b0"))
+		(pin "2" (uuid "0b270bdb-0ff0-500b-ac36-dbbe3b2d8c33"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "CD_ESTOP") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 55.88 232.41)
+			(xy 55.88 227.33)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "11235f56-71ae-5217-a35b-ad7b0beafe22")
+	)
+	(label "ESTOP"
+		(at 55.88 227.33 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "6064cb2d-566b-585b-98cd-abeeb8f6f415")
+	)
+	(wire
+		(pts
+			(xy 55.88 240.03)
+			(xy 55.88 245.11)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "22711307-59b8-5b39-92e2-e3d10a7b89f5")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 55.88 245.11 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "9e72e7c4-1b5d-59d5-8377-b4e484e3cff2")
+		(property "Reference" "#PWR022"
+			(at 55.88 245.11 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 55.88 248.92 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "9353c60f-f44a-5fd8-95f5-4202756b3761"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR022") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 81.28 236.22 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "980bf557-8993-5927-a95a-c9e85d70d8ad")
+		(property "Reference" "RS_ESTOP"
+			(at 83.48 235.22 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "1k"
+			(at 83.48 237.22 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 81.28 236.22 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 81.28 236.22 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "dfb045ce-f99d-553b-8eda-95037e9a0923"))
+		(pin "2" (uuid "2445f773-450c-515a-b095-c380ec512e6d"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RS_ESTOP") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 81.28 232.41)
+			(xy 81.28 227.33)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "8de79dcc-f443-5bb3-9c13-4abba798381e")
+	)
+	(wire
+		(pts
+			(xy 81.28 240.03)
+			(xy 81.28 245.11)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "c112091f-af4f-5234-968a-0b8c134d3893")
+	)
+	(label "ESTOP"
+		(at 81.28 245.11 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "2481cd42-2d89-53b2-9a6e-eb4f67c86a9f")
+	)
+	(label "ESTOP_RAW"
+		(at 81.28 227.33 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "ff243b6a-0780-5c3b-b728-5fef3d14f472")
+	)
+	(wire
+		(pts
+			(xy 81.28 227.33)
+			(xy 96.52 227.33)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "ee4b1d80-3f12-5a81-b4cd-ab876d883a36")
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 137.16 231.14 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "ab833d6e-9749-5004-b73c-9e9337b280e0")
+		(property "Reference" "J7"
+			(at 135.89 226.97 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "LIM1"
+			(at 135.89 228.97 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical"
+			(at 137.16 231.14 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 137.16 231.14 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "ac5e7369-25c6-5339-ad3d-5e58e6fdd2ed"))
+		(pin "2" (uuid "bb221a89-1b71-5387-a1a1-095deebe6474"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "J7") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 132.08 231.14)
+			(xy 127 231.14)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "0a3b1cba-5076-5142-bef4-5d4360f192ec")
+	)
+	(label "LIM1_RAW"
+		(at 127 231.14 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "ab2c1ec9-ebbd-5819-8356-2bc33afa2cdf")
+	)
+	(wire
+		(pts
+			(xy 132.08 233.68)
+			(xy 127 233.68)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "0f960bcb-0041-5616-a17f-49f2ac1b9f07")
+	)
+	(wire
+		(pts
+			(xy 127 233.68)
+			(xy 114.3 233.68)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "529b7eb6-fd12-5f10-9b60-78d0c7b5b535")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 114.3 233.68 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "d22bca07-63af-51de-a9a7-361760f0ed82")
+		(property "Reference" "#PWR023"
+			(at 114.3 233.68 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 114.3 237.49 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "17d1acbe-2a40-5894-9720-06f2a2f3ee32"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR023") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 40.64 208.28 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "172ec8fc-38a0-53eb-974f-cccbeb6e9d05")
+		(property "Reference" "RU_LIM1"
+			(at 42.84 207.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "10k"
+			(at 42.84 209.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 40.64 208.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 40.64 208.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "4b94ad67-0e43-5a1b-a929-9231633a1407"))
+		(pin "2" (uuid "ce844bcc-5aec-5acf-9dba-d2b02fdbdd89"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RU_LIM1") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 40.64 204.47)
+			(xy 40.64 199.39)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "db66bb35-8b1d-5634-bd58-205482b82198")
+	)
+	(wire
+		(pts
+			(xy 40.64 212.09)
+			(xy 40.64 217.17)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "bdd14ede-e86c-5d69-babc-af67b897406e")
+	)
+	(label "V3"
+		(at 40.64 217.17 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "cfa3018b-464f-5e09-aa1f-d7abfb8914df")
+	)
+	(symbol
+		(lib_id "Device:LED")
+		(at 20.32 264.16 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "fe9799c8-ba5e-52f4-8399-b653d6bc005c")
+		(property "Reference" "D1"
+			(at 23.206 263.541 270)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "GREEN"
+			(at 23.206 265.541 270)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "LED_THT:LED_D3.0mm"
+			(at 20.32 264.16 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 20.32 264.16 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "d09563da-85cc-54c4-9067-121a91b0fdc7"))
+		(pin "2" (uuid "ddf7f830-60d0-52fd-b96e-1989ec0e83a5"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "D1") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 20.32 267.97)
+			(xy 20.32 273.05)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "ffbd8b66-430c-5ebb-83c3-ccdb7a0a8a02")
+	)
+	(wire
+		(pts
+			(xy 20.32 260.35)
+			(xy 20.32 255.27)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "f819519a-d2f2-5593-980e-d471e0101930")
+	)
+	(label "LED_M"
+		(at 20.32 255.27 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "a478b5d2-5322-5640-996c-04a0cd18971f")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 20.32 273.05 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "ddca9efd-cf52-5c3e-9f3f-26b1e5b72611")
+		(property "Reference" "#PWR024"
+			(at 20.32 273.05 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 20.32 276.86 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "295cacd0-2465-581a-8ddb-93d18f743ec4"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR024") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 58.42 259.08 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "cf119f9e-4209-5df9-a579-ed704f6bc0ac")
+		(property "Reference" "J9"
+			(at 57.15 254.91 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "LIM3"
+			(at 57.15 256.91 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical"
+			(at 58.42 259.08 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 58.42 259.08 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "dec81746-aa58-58f1-87d9-14916f28c676"))
+		(pin "2" (uuid "9c223056-52af-5497-8c07-5ea58410a342"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "J9") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 53.34 259.08)
+			(xy 48.26 259.08)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "9142da33-307f-56e4-8035-b9ac46643949")
+	)
+	(label "LIM3_RAW"
+		(at 48.26 259.08 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "a55e7d38-8855-5549-a2a0-9313ad9c7483")
+	)
+	(wire
+		(pts
+			(xy 53.34 261.62)
+			(xy 48.26 261.62)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "9804ae43-5ad7-5823-8908-b0294cc79d3e")
+	)
+	(wire
+		(pts
+			(xy 48.26 261.62)
+			(xy 35.56 261.62)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "89d54d26-ce6a-5a78-a5c5-37ed08c79221")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 35.56 261.62 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "b8fd90c3-d717-5e79-9dc4-60b8ca2e8ac4")
+		(property "Reference" "#PWR025"
+			(at 35.56 261.62 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 35.56 265.43 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "5134544b-2c14-5f98-924f-00ab699a4462"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR025") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 106.68 208.28 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "81cfb858-f0eb-514d-b40f-2a42a7ddc067")
+		(property "Reference" "RU_LIM3"
+			(at 108.88 207.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "10k"
+			(at 108.88 209.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 106.68 208.28 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 106.68 208.28 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -5300,47 +6783,54 @@
 	)
 	(wire
 		(pts
-			(xy 187.96 161.29)
-			(xy 187.96 156.21)
+			(xy 106.68 204.47)
+			(xy 106.68 199.39)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "2206d984-7b9f-5186-9d98-7286cb515cf3")
 	)
-	(label "LIM3_RAW"
-		(at 187.96 156.21 0)
+	(wire
+		(pts
+			(xy 106.68 212.09)
+			(xy 106.68 217.17)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "7a3fe859-539b-5fd5-86f3-ebb502e8c553")
+	)
+	(label "V3"
+		(at 106.68 217.17 0)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
 			(justify left bottom)
 		)
-		(uuid "35db4b16-b497-56d3-ba17-1bb524477890")
+		(uuid "ecf38bde-ad8e-5cf4-8820-0e1447835239")
 	)
-	(no_connect (at 187.96 168.91) (uuid "fb735bba-5e98-5cdf-8adc-0e39acf31905"))
 	(symbol
-		(lib_id "Device:R")
-		(at 17.78 190.5 0)
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 91.44 259.08 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "d52a03ca-b734-5290-8e5c-b7ea1179c520")
-		(property "Reference" "RU_LIM4"
-			(at 19.98 189.5 0)
+		(uuid "0b5465aa-8698-563c-97f6-531047cb3623")
+		(property "Reference" "J10"
+			(at 90.17 254.91 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
-		(property "Value" "10k"
-			(at 19.98 191.5 0)
+		(property "Value" "LIM4"
+			(at 90.17 256.91 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-			(at 17.78 190.5 0)
+		(property "Footprint" "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical"
+			(at 91.44 259.08 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -5348,7 +6838,116 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 17.78 190.5 0)
+			(at 91.44 259.08 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "9364fb3b-f401-56ea-9776-b3fc973632f3"))
+		(pin "2" (uuid "a1140156-97a6-521c-a512-3756b5e9c24a"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "J10") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 86.36 259.08)
+			(xy 81.28 259.08)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "e89a7d74-b1c0-52d7-a454-ac8b2581d50c")
+	)
+	(label "LIM4_RAW"
+		(at 81.28 259.08 180)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify right bottom)
+		)
+		(uuid "91b6133d-1685-56bd-a69d-0f2899b95a88")
+	)
+	(wire
+		(pts
+			(xy 86.36 261.62)
+			(xy 81.28 261.62)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "b2126915-f72f-58bd-a4ef-5dbc87d0395c")
+	)
+	(wire
+		(pts
+			(xy 81.28 261.62)
+			(xy 68.58 261.62)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "69f6852a-2131-5d4e-b821-8785aaf83d76")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 68.58 261.62 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "6e640b83-cd59-5f7f-92a8-3cb534ae578a")
+		(property "Reference" "#PWR026"
+			(at 68.58 261.62 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 68.58 265.43 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "ce155e50-54f5-5074-b997-d1d66272e7dd"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR026") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 40.64 236.22 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "d52a03ca-b734-5290-8e5c-b7ea1179c520")
+		(property "Reference" "RU_LIM4"
+			(at 42.84 235.22 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "10k"
+			(at 42.84 237.22 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 40.64 236.22 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 40.64 236.22 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -5365,63 +6964,54 @@
 	)
 	(wire
 		(pts
-			(xy 17.78 186.69)
-			(xy 17.78 181.61)
+			(xy 40.64 232.41)
+			(xy 40.64 227.33)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "176a9b70-6d78-5347-a066-eb0019623c8a")
 	)
-	(label "LIM4_RAW"
-		(at 17.78 181.61 0)
+	(wire
+		(pts
+			(xy 40.64 240.03)
+			(xy 40.64 245.11)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "ae9c59b2-d532-52b2-922c-4ca072359365")
+	)
+	(label "V3"
+		(at 40.64 245.11 0)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
 			(justify left bottom)
 		)
-		(uuid "c485e22c-8ab1-59ae-a08d-bdccdbb86740")
-	)
-	(no_connect (at 17.78 194.31) (uuid "b4d80025-a62f-5282-912c-f0836f0756f8"))
-	(rectangle
-		(start 211.73 18)
-		(end 248.568 68.644)
-		(stroke (width 0.254) (type dash))
-		(fill (type none))
-		(uuid "6e74a326-022e-5c04-9c00-f8282fbcf314")
-	)
-	(text "Other"
-		(exclude_from_sim no)
-		(at 214.27 22.2 0)
-		(effects
-			(font (size 2 2) (thickness 0.4) (bold yes))
-			(justify left bottom)
-		)
-		(uuid "06878a6b-0847-5fc0-aa3c-2a0965207afb")
+		(uuid "a84f99bd-383d-5d0a-866b-f290a572e0d8")
 	)
 	(symbol
-		(lib_id "Connector_Generic:Conn_01x03")
-		(at 231.14 35.56 0)
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 124.46 259.08 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "286b476f-7108-54c2-8963-157d3ad66249")
-		(property "Reference" "JP1"
-			(at 229.87 28.85 0)
+		(uuid "e54da24b-4c64-5a73-a42f-345ab5bba1e8")
+		(property "Reference" "J11"
+			(at 123.19 254.91 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
-		(property "Value" "ENC_VCC"
-			(at 229.87 30.85 0)
+		(property "Value" "ESTOP"
+			(at 123.19 256.91 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical"
-			(at 231.14 35.56 0)
+		(property "Footprint" "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical"
+			(at 124.46 259.08 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -5429,52 +7019,158 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 231.14 35.56 0)
+			(at 124.46 259.08 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C49257"
-			(at 231.14 35.56 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "57a8ce4f-526d-5ed3-b85e-83d2af14e8f6"))
-		(pin "2" (uuid "3d8e37fd-27fc-521c-9726-d627cee44a91"))
-		(pin "3" (uuid "7e065b91-893f-5b71-94d2-5411e49e5ba9"))
+		(pin "1" (uuid "2da78087-42ef-5f51-b3c3-66bc3158c22c"))
+		(pin "2" (uuid "31b7c0f8-17b5-5c7b-bc9b-ff50f1d7be25"))
 		(instances
 			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "JP1") (unit 1))
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "J11") (unit 1))
 			)
 		)
 	)
-	(no_connect (at 226.06 33.02) (uuid "d1f9e4fd-36fb-54be-bf9a-011aff66a4f2"))
 	(wire
 		(pts
-			(xy 226.06 35.56)
-			(xy 220.98 35.56)
+			(xy 119.38 259.08)
+			(xy 114.3 259.08)
 		)
 		(stroke (width 0.1524) (type default))
-		(uuid "5c41adfe-24cd-5b74-9ee7-8539693bb5d1")
+		(uuid "3f9c31fe-ef76-58bd-b70a-2f27eda79529")
 	)
-	(label "ENCVCC"
-		(at 220.98 35.56 180)
+	(label "ESTOP_RAW"
+		(at 114.3 259.08 180)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
 			(justify right bottom)
 		)
-		(uuid "022d93cf-5de3-558e-886c-99bdfef466db")
+		(uuid "fa108bfe-616e-5e06-8b5c-18dd191ac168")
 	)
-	(no_connect (at 226.06 38.1) (uuid "52118b3b-6a09-5c74-9d4d-1a84328b5f5f"))
+	(wire
+		(pts
+			(xy 119.38 261.62)
+			(xy 114.3 261.62)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "2fbe5805-4461-5394-97ad-d973fb846cf6")
+	)
+	(wire
+		(pts
+			(xy 114.3 261.62)
+			(xy 101.6 261.62)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "ce14e857-c597-5658-996c-185451df76c9")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 101.6 261.62 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "eec74a25-2d4a-5c07-aed5-791f44874491")
+		(property "Reference" "#PWR027"
+			(at 101.6 261.62 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 101.6 265.43 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(pin "1" (uuid "bbea1e6b-a822-5e28-a241-12b4503dadbb"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR027") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 96.52 236.22 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "c8be20d8-d0a4-57f5-a598-fabff9b4a853")
+		(property "Reference" "RU_ESTOP"
+			(at 98.72 235.22 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "10k"
+			(at 98.72 237.22 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+			(at 96.52 236.22 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 96.52 236.22 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "5dbe68ad-669a-5b4d-af73-0813247226c3"))
+		(pin "2" (uuid "65c2b0a2-7bc9-5adf-872d-fde2ef7adc94"))
+		(instances
+			(project "airhockey_breakout"
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "RU_ESTOP") (unit 1))
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 96.52 232.41)
+			(xy 96.52 227.33)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "25ab36a6-19eb-54fd-ae5f-ad5bfd1520c2")
+	)
+	(wire
+		(pts
+			(xy 96.52 240.03)
+			(xy 96.52 245.11)
+		)
+		(stroke (width 0.1524) (type default))
+		(uuid "a3c17290-6a63-5585-88e8-26a17ab81ac9")
+	)
+	(label "V3"
+		(at 96.52 245.11 0)
+		(fields_autoplaced yes)
+		(effects
+			(font (size 1.27 1.27))
+			(justify left bottom)
+		)
+		(uuid "27ac12cc-38f7-5cc9-89fe-13681242b312")
+	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 241.3 35.56 0)
+		(at 134.62 261.62 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -5482,21 +7178,21 @@
 		(dnp no)
 		(uuid "3eb2af80-b572-5705-aaa2-e1a6d77503e7")
 		(property "Reference" "TP1"
-			(at 240.538 28.596 0)
+			(at 133.858 254.656 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
 		(property "Value" "V3"
-			(at 240.538 30.596 0)
+			(at 133.858 256.656 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_THTPad_D2.0mm_Drill1.0mm"
-			(at 241.3 35.56 0)
+			(at 134.62 261.62 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -5504,7 +7200,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 241.3 35.56 0)
+			(at 134.62 261.62 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -5520,14 +7216,14 @@
 	)
 	(wire
 		(pts
-			(xy 241.3 35.56)
-			(xy 241.3 40.64)
+			(xy 134.62 261.62)
+			(xy 134.62 266.7)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "5d148998-7fd6-5c8f-9a1b-ef05aef69c2b")
 	)
 	(label "V3"
-		(at 241.3 40.64 270)
+		(at 134.62 266.7 270)
 		(fields_autoplaced yes)
 		(effects
 			(font (size 1.27 1.27))
@@ -5535,72 +7231,25 @@
 		)
 		(uuid "4f7a934e-1ecb-52fa-92c0-41d7dcc01f4f")
 	)
-	(symbol
-		(lib_id "Connector:TestPoint")
-		(at 215.9 55.88 0)
-		(unit 1)
+	(rectangle
+		(start 150.592 161.29)
+		(end 162.71 191.614)
+		(stroke (width 0.254) (type dash))
+		(fill (type none))
+		(uuid "6e74a326-022e-5c04-9c00-f8282fbcf314")
+	)
+	(text "Other"
 		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "4ec5f7ca-a0fe-5288-8f08-aa68f4c3d62a")
-		(property "Reference" "TP2"
-			(at 215.138 48.916 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Value" "V5"
-			(at 215.138 50.916 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-			)
-		)
-		(property "Footprint" "TestPoint:TestPoint_THTPad_D2.0mm_Drill1.0mm"
-			(at 215.9 55.88 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 215.9 55.88 0)
-			(effects
-				(font (size 1.27 1.27))
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1" (uuid "0d84b4b0-a4a2-57fa-b407-b13981b03a3b"))
-		(instances
-			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "TP2") (unit 1))
-			)
-		)
-	)
-	(wire
-		(pts
-			(xy 215.9 55.88)
-			(xy 215.9 60.96)
-		)
-		(stroke (width 0.1524) (type default))
-		(uuid "576ae376-7eb0-5976-b943-de92464c861c")
-	)
-	(label "V5"
-		(at 215.9 60.96 270)
-		(fields_autoplaced yes)
+		(at 153.132 165.49 0)
 		(effects
-			(font (size 1.27 1.27))
-			(justify right bottom)
+			(font (size 2 2) (thickness 0.4) (bold yes))
+			(justify left bottom)
 		)
-		(uuid "79a6c802-1acc-57c5-9569-45ab2c374749")
+		(uuid "06878a6b-0847-5fc0-aa3c-2a0965207afb")
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 226.06 55.88 0)
+		(at 157.48 177.8 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -5608,21 +7257,21 @@
 		(dnp no)
 		(uuid "39833a60-d364-5c14-9049-d330f9a96a2d")
 		(property "Reference" "TP3"
-			(at 225.298 48.916 0)
+			(at 156.718 170.836 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
 		(property "Value" "GND"
-			(at 225.298 50.916 0)
+			(at 156.718 172.836 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_THTPad_D2.0mm_Drill1.0mm"
-			(at 226.06 55.88 0)
+			(at 157.48 177.8 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -5630,7 +7279,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 226.06 55.88 0)
+			(at 157.48 177.8 0)
 			(effects
 				(font (size 1.27 1.27))
 				(justify left)
@@ -5646,30 +7295,30 @@
 	)
 	(wire
 		(pts
-			(xy 226.06 55.88)
-			(xy 226.06 60.96)
+			(xy 157.48 177.8)
+			(xy 157.48 182.88)
 		)
 		(stroke (width 0.1524) (type default))
 		(uuid "82376382-7e02-5954-a258-26db744c0785")
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 226.06 60.96 0)
+		(at 157.48 182.88 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom no)
 		(on_board no)
 		(dnp no)
 		(uuid "3df6ee2f-70c0-5bc6-b12b-54cca0e246ac")
-		(property "Reference" "#PWR001"
-			(at 226.06 60.96 0)
+		(property "Reference" "#PWR028"
+			(at 157.48 182.88 0)
 			(effects
 				(font (size 1.27 1.27))
 				(hide yes)
 			)
 		)
 		(property "Value" "GND"
-			(at 226.06 64.77 0)
+			(at 157.48 186.69 0)
 			(effects
 				(font (size 1.27 1.27))
 			)
@@ -5677,7 +7326,7 @@
 		(pin "1" (uuid "4ca77550-4210-5284-8f6d-1cffebe4bcc2"))
 		(instances
 			(project "airhockey_breakout"
-				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR001") (unit 1))
+				(path "/d4fb4ff4-dd38-5261-8706-99b5fa4a720a" (reference "#PWR028") (unit 1))
 			)
 		)
 	)

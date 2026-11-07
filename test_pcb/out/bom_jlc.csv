@@ -6,6 +6,7 @@ ESP32 DevKitC L,J1,PinSocket_1x19_P2.54mm_Vertical,
 LIM4,J10,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,
 ESTOP,J11,JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical,
 SPARE,J12,PinHeader_1x06_P2.54mm_Vertical,C37208
+DRV_5V,J13,PinSocket_1x01_P2.54mm_Vertical,
 ESP32 DevKitC R,J2,PinSocket_1x19_P2.54mm_Vertical,
 ENC1,J3,JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical,
 ENC2,J4,JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical,

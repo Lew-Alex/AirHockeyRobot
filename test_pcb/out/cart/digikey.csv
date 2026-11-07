@@ -6,6 +6,7 @@ Quantity,Manufacturer Part Number,Manufacturer,Customer Reference,Description
 6,LIM4 JST connector,,J10,LIM4 JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical
 6,ESTOP JST connector,,J11,ESTOP JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical
 6,1x06 2.54mm pin header,,J12,SPARE PinHeader_1x06_P2.54mm_Vertical
+6,1x01 2.54mm pin socket,,J13,DRV_5V PinSocket_1x01_P2.54mm_Vertical
 6,1x19 2.54mm pin socket,,J2,ESP32 DevKitC R PinSocket_1x19_P2.54mm_Vertical
 6,ENC1 JST connector,,J3,ENC1 JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical
 6,ENC2 JST connector,,J4,ENC2 JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical

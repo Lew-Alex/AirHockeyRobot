@@ -9,7 +9,7 @@
         "min_clearance": 0.2,
         "min_track_width": 0.2,
         "min_via_diameter": 0.6,
-        "min_through_hole_diameter": 0.8,
+        "min_through_hole_diameter": 0.3,
         "min_copper_edge_clearance": 0.3,
         "min_hole_clearance": 0.25
       }
@@ -160,15 +160,15 @@
       },
       {
         "netclass": "W0.20mm",
-        "pattern": "SPARE_IO13"
+        "pattern": "SPARE_IO14"
+      },
+      {
+        "netclass": "W0.20mm",
+        "pattern": "SPARE_IO16"
       },
       {
         "netclass": "W0.20mm",
         "pattern": "SPARE_IO21"
-      },
-      {
-        "netclass": "W0.20mm",
-        "pattern": "SPARE_IO23"
       },
       {
         "netclass": "W0.20mm",
@@ -214,9 +214,9 @@
       "PWM1_MCU": "W0.20mm",
       "PWM2": "W0.20mm",
       "PWM2_MCU": "W0.20mm",
-      "SPARE_IO13": "W0.20mm",
+      "SPARE_IO14": "W0.20mm",
+      "SPARE_IO16": "W0.20mm",
       "SPARE_IO21": "W0.20mm",
-      "SPARE_IO23": "W0.20mm",
       "SPARE_IO32": "W0.20mm",
       "V3": "W0.20mm",
       "V5": "W0.20mm"
