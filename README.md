@@ -13,7 +13,7 @@ exists in this repository from what is only planned.
 |---|---|
 | Puck tracker (webcam, HSV yellow mask) | Prototype works on a webcam. No table calibration, filtering or bounce handling yet. |
 | Camera latency test (OpenCV) | Script exists. Results are not recorded in this repo. |
-| iPhone 120 fps camera test app | In progress (`src/iphone_camera_test`). Needs Xcode, which is not installed on the development Mac yet. |
+| iPhone 120 fps camera test app | Source written (`src/iphone_camera_test`), **not yet compiled or run**: Xcode is not installed on the development Mac. |
 | Simulation (Pygame) | Physics, scripted opponent and reward shaping exist. |
 | PPO training | Actor and critic exist. The trainer collects a short rollout only. GAE, the PPO update and the training loop are not written. |
 | Breakout PCB (ESP32 DevKitC V4) | Designed and passes Prometheus checks and KiCad DRC. **Not ordered, assembled or tested.** |
