@@ -9,9 +9,11 @@
 /* Begin PBXBuildFile section */
 		2651FE1BDC6B17304E5EFFDB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC1E035667EB624F9354ACF7 /* ContentView.swift */; };
 		8CCA4E39C53EF66AB3F35D6E /* Camera120App.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE84C3080069007B9203D5ED /* Camera120App.swift */; };
+		D37A46A1D3B5A43C730ED6D2 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107073D2BB2762D701688809 /* CameraController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		107073D2BB2762D701688809 /* CameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		188AD87934437A79BD6C02B0 /* Camera120.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Camera120.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EB7C07C1E49C376057200B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		AE84C3080069007B9203D5ED /* Camera120App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera120App.swift; sourceTree = "<group>"; };
@@ -39,6 +41,7 @@
 			isa = PBXGroup;
 			children = (
 				AE84C3080069007B9203D5ED /* Camera120App.swift */,
+				107073D2BB2762D701688809 /* CameraController.swift */,
 				CC1E035667EB624F9354ACF7 /* ContentView.swift */,
 				7EB7C07C1E49C376057200B8 /* Info.plist */,
 			);
@@ -104,6 +107,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8CCA4E39C53EF66AB3F35D6E /* Camera120App.swift in Sources */,
+				D37A46A1D3B5A43C730ED6D2 /* CameraController.swift in Sources */,
 				2651FE1BDC6B17304E5EFFDB /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
