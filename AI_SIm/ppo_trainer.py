@@ -30,9 +30,11 @@ for i in range(20): # 20 steps of training for now
     policy_observation = torch.Tensor(observation)
     states.append(observation)
 
-    action, log_probability, critic_value = policy.act(policy_observation)
 
-    actions.append(action)
+    with torch.no_grad():
+        raw_action, action, log_probability, critic_value = policy.act(policy_observation)
+
+    actions.append(raw_action)
     log_probs.append(log_probability)
 
     next_observation, reward, terminated, truncated, info = enviorment.step(action)

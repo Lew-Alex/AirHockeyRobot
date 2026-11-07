@@ -98,4 +98,4 @@ class ActorCritic(nn.Module):
         log_probability = action_distribution.log_prob(raw_action).sum(dim=-1)
         value = self.critic(observation)
 
-        return action, log_probability, value
+        return raw_action, action, log_probability, value
