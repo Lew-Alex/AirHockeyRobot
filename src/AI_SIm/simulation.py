@@ -1,18 +1,13 @@
 #!/usr/bin/env python3
-"""Air-hockey physics, Pygame demo, and PPO training environment."""
-
-from __future__ import annotations
 
 import math
 import random
 from collections import deque
-from collections.abc import Sequence
-from typing import Any
 
 import pygame
 
 
-# -------------------- Simulation Constants --------------------
+# Sim constants
 
 WINDOW_WIDTH  = 700
 WINDOW_HEIGHT = 900
@@ -46,16 +41,22 @@ OBSERVATION_POSITION_NOISE = 2.5
 OBSERVATION_VELOCITY_NOISE = 12.0
 
 
+
 # PPO reward shaping
 GOAL_REWARD             = 10.0
 CONCEDED_GOAL_REWARD    = -10.0
 RETURN_SHOT_REWARD      = 0.20
 CONTACT_REWARD          = 0.05
 TIME_PENALTY            = -0.001
-MOVEMENT_PENALTY        = -0.0001
+MOVEMENT_PENALTY        = 0.000001
 FORWARD_PROGRESS_REWARD = 0.0002
-MALLET_POSITION_REWARD  = 0.001
-APPROACH_REWARD         = 0.0005
+MALLET_POSITION_REWARD  = 0.00075
+APPROACH_REWARD         = 0.00125
+HIT_DIRECTION_REWARD    = 0.20
+HIT_BACKWARD_PENALTY    = -0.50
+MISSED_PASS_PENALTY     = -0.50
+MISSED_PASS_X_RANGE     = 100.0
+PUCK_IN_FRONT_REWARD    = 0.0005
 
 
 # Display colors
@@ -68,18 +69,14 @@ ROBOT_COLOR = (65, 153, 255)
 TEXT_COLOR  = (240, 245, 247)
 
 
-# -------------------- Physics Helpers --------------------
+# Physics stuff
 
-def clamp(value: float, minimum: float, maximum: float) -> float:
+def clamp(value, minimum, maximum):
     return max(minimum, min(value, maximum))
 
 
-def reset_puck(
-    direction: int | None = None,
-    *,
-    rng: random.Random | None = None,
-) -> tuple[pygame.Vector2, pygame.Vector2]:
-    """Launch a puck from table center toward either player."""
+# Launches the puck from the center toward one of the players
+def reset_puck(direction=None, rng=None):
     random_source = rng or random
 
     if direction is None:
@@ -97,22 +94,14 @@ def reset_puck(
     return puck_position, puck_velocity
 
 
-def get_observation(
-    puck_position: pygame.Vector2,
-    puck_velocity: pygame.Vector2,
-    robot_position: pygame.Vector2,
-    robot_velocity: pygame.Vector2,
-    *,
-    add_noise: bool = True,
-    rng: random.Random | None = None,
-) -> tuple[float, float, float, float, float, float, float, float]:
-    """Return raw puck/robot measurements before PPO normalization."""
+# Raw puck + robot numbers before normalizing
+def get_observation(puck_position, puck_velocity, robot_position, robot_velocity, add_noise=True, rng=None):
     random_source = rng or random
     position_noise = OBSERVATION_POSITION_NOISE if add_noise else 0.0
     velocity_noise = OBSERVATION_VELOCITY_NOISE if add_noise else 0.0
 
-    # Simulates error from the camera tracker and motor encoders.
-    def measure(value: float, standard_deviation: float) -> float:
+    # Adds error like the camera tracker + encoders would
+    def measure(value, standard_deviation):
         return value + random_source.gauss(0.0, standard_deviation)
 
     return (
@@ -127,8 +116,8 @@ def get_observation(
     )
 
 
-def keep_mallet_on_half(position: pygame.Vector2, *, top_half: bool) -> None:
-    """Constrain a mallet to its own side of the centre line."""
+# Keeps a mallet on its own side of the center line
+def keep_mallet_on_half(position, top_half):
     position.x = clamp(
         position.x,
         TABLE_RECT.left + MALLET_RADIUS,
@@ -149,28 +138,20 @@ def keep_mallet_on_half(position: pygame.Vector2, *, top_half: bool) -> None:
         )
 
 
-def apply_robot_velocity(
-    position: pygame.Vector2,
-    actual_velocity: pygame.Vector2,
-    velocity_x: float,
-    velocity_y: float,
-    dt: float,
-    *,
-    rng: random.Random | None = None,
-) -> None:
-    """Move the top-side robot from an imperfect X/Y velocity command."""
+# Moves the top robot from a velocity command (not perfect on purpose)
+def apply_robot_velocity(position, actual_velocity, velocity_x, velocity_y, dt, rng=None):
     random_source = rng or random
     command = pygame.Vector2(velocity_x, velocity_y)
 
     if command.length() > MALLET_SPEED:
         command.scale_to_length(MALLET_SPEED)
 
-    # The real robot will not follow commands perfectly.
+    # Real robot won't follow commands perfectly
     if command.length_squared() > 0:
         command.x += random_source.gauss(0.0, MALLET_VELOCITY_NOISE)
         command.y += random_source.gauss(0.0, MALLET_VELOCITY_NOISE)
 
-    # Acceleration limit prevents instantaneous direction changes.
+    # Acceleration limit so it can't turn instantly
     velocity_change = command - actual_velocity
     maximum_change = MALLET_ACCELERATION * dt
 
@@ -180,7 +161,7 @@ def apply_robot_velocity(
     actual_velocity += velocity_change
     position += actual_velocity * dt
 
-    # Stop the corresponding axis when the mallet hits a table boundary.
+    # Stops that axis if the mallet hits a wall
     unconstrained_position = position.copy()
     keep_mallet_on_half(position, top_half=True)
 
@@ -191,14 +172,8 @@ def apply_robot_velocity(
         actual_velocity.y = 0.0
 
 
-def apply_user_velocity(
-    position: pygame.Vector2,
-    actual_velocity: pygame.Vector2,
-    velocity_x: float,
-    velocity_y: float,
-    dt: float,
-) -> None:
-    """Move the bottom-side user mallet perfectly for manual testing."""
+# Moves the bottom (user) mallet perfectly
+def apply_user_velocity(position, actual_velocity, velocity_x, velocity_y, dt):
     command = pygame.Vector2(velocity_x, velocity_y)
 
     if command.length() > MALLET_SPEED:
@@ -217,13 +192,8 @@ def apply_user_velocity(
         actual_velocity.y = 0.0
 
 
-def collide_puck_with_mallet(
-    puck_position: pygame.Vector2,
-    puck_velocity: pygame.Vector2,
-    mallet_position: pygame.Vector2,
-    mallet_velocity: pygame.Vector2,
-) -> bool:
-    """Resolve a collision and return whether the puck was actively struck."""
+# Handles a puck + mallet collision, returns True if the puck was actually hit
+def collide_puck_with_mallet(puck_position, puck_velocity, mallet_position, mallet_velocity):
     offset = puck_position - mallet_position
     minimum_distance = PUCK_RADIUS + MALLET_RADIUS
     distance_squared = offset.length_squared()
@@ -237,7 +207,7 @@ def collide_puck_with_mallet(
         distance = math.sqrt(distance_squared)
         normal = offset / distance
 
-    # Separate overlapping objects before calculating their new velocities.
+    # Push them apart first
     puck_position += normal * (minimum_distance - distance)
 
     relative_velocity = puck_velocity - mallet_velocity
@@ -246,7 +216,7 @@ def collide_puck_with_mallet(
     if speed_into_mallet >= 0:
         return False
 
-    # Reflect the puck and transfer some mallet velocity into the shot.
+    # Bounce the puck + add some of the mallet's speed
     puck_velocity -= 1.92 * speed_into_mallet * normal
     puck_velocity += mallet_velocity * 0.30
 
@@ -256,11 +226,11 @@ def collide_puck_with_mallet(
     return True
 
 
-def update_puck(position: pygame.Vector2, velocity: pygame.Vector2, dt: float) -> int:
-    """Advance puck physics. Return +1 for a user goal, -1 for a robot goal."""
+# Moves the puck, returns 1 if the user scored, -1 if the robot scored, 0 otherwise
+def update_puck(position, velocity, dt):
     position += velocity * dt
 
-    # Linear drag lets a puck eventually come fully to rest.
+    # Drag so the puck can stop eventually
     speed = velocity.length()
 
     if speed <= PUCK_DRAG * dt:
@@ -268,7 +238,7 @@ def update_puck(position: pygame.Vector2, velocity: pygame.Vector2, dt: float) -
     elif speed > 0:
         velocity.scale_to_length(speed - PUCK_DRAG * dt)
 
-    # Side-wall bounces.
+    # Side wall bounces
     if position.x - PUCK_RADIUS < TABLE_RECT.left:
         position.x = TABLE_RECT.left + PUCK_RADIUS
         velocity.x = abs(velocity.x)
@@ -276,7 +246,7 @@ def update_puck(position: pygame.Vector2, velocity: pygame.Vector2, dt: float) -
         position.x = TABLE_RECT.right - PUCK_RADIUS
         velocity.x = -abs(velocity.x)
 
-    # Top goal belongs to the user. Bottom goal belongs to the robot.
+    # Top goal is the user's, bottom goal is the robot's
     inside_goal = GOAL_LEFT < position.x < GOAL_RIGHT
 
     if position.y - PUCK_RADIUS < TABLE_RECT.top:
@@ -293,8 +263,8 @@ def update_puck(position: pygame.Vector2, velocity: pygame.Vector2, dt: float) -
     return 0
 
 
-def reflect_x_at_table_walls(x_position: float) -> float:
-    """Fold an X position back into the table as if it bounced off side walls."""
+# Folds an x position back into the table like it bounced off the side walls
+def reflect_x_at_table_walls(x_position):
     left = TABLE_RECT.left + PUCK_RADIUS
     right = TABLE_RECT.right - PUCK_RADIUS
     span = right - left
@@ -302,10 +272,9 @@ def reflect_x_at_table_walls(x_position: float) -> float:
     return left + wrapped if wrapped <= span else right - (wrapped - span)
 
 
-# -------------------- Baseline Controller --------------------
 
-def simple_defence_action(environment: "AirHockeyEnv") -> pygame.Vector2:
-    """Move only to protect the robot goal. Used as a simple PPO baseline."""
+# Basic defender, only protects the robot goal
+def simple_defence_action(environment):
     home = pygame.Vector2(TABLE_RECT.centerx, TABLE_RECT.top + 90)
     target = home
 
@@ -323,7 +292,7 @@ def simple_defence_action(environment: "AirHockeyEnv") -> pygame.Vector2:
             )
             target.x = reflect_x_at_table_walls(projected_x)
 
-    # The returned value is a normalized velocity action in [-1, 1].
+    # Returned value is a velocity action between -1 and 1
     direction = target - environment.robot_position
 
     if direction.length() < 4:
@@ -332,24 +301,13 @@ def simple_defence_action(environment: "AirHockeyEnv") -> pygame.Vector2:
     return direction.normalize()
 
 
-# -------------------- PPO Environment --------------------
 
+# Training environment
+# reset() gives the first observation
+# step(action) takes a robot velocity [x, y] between -1 and 1 and gives back observation, reward, terminated, truncated, info
 class AirHockeyEnv:
-    """One-step-at-a-time environment for the hand-written PPO trainer.
 
-    ``reset()`` returns a normalized noisy observation. ``step(action)`` takes
-    a two-value robot velocity action in [-1, 1] and returns:
-    ``observation, reward, terminated, truncated, info``.
-    """
-
-    def __init__(
-        self,
-        *,
-        dt: float = 1 / 60,
-        max_steps: int = 1_800,
-        add_observation_noise: bool = True,
-        seed: int | None = None,
-    ) -> None:
+    def __init__(self, dt=1 / 60, max_steps=1_800, add_observation_noise=True, seed=None):
         self.dt = dt
         self.max_steps = max_steps
         self.add_observation_noise = add_observation_noise
@@ -367,15 +325,15 @@ class AirHockeyEnv:
         self.user_velocity = pygame.Vector2()
         self.reset()
 
-    def reset(self, *, seed: int | None = None) -> tuple[float, ...]:
-        """Start a randomized round and return its first policy observation."""
+    # Starts a new round and returns the first observation
+    def reset(self, seed=None):
         if seed is not None:
             self.rng.seed(seed)
 
         self.step_count = 0
         self.puck_position, self.puck_velocity = reset_puck(rng=self.rng)
 
-        # Robot starts at the top. User starts at the bottom.
+        # Robot starts at the top, user at the bottom
         self.robot_position.update(TABLE_RECT.centerx, TABLE_RECT.top + 90)
         self.robot_velocity.update(0.0, 0.0)
         self.user_position.update(TABLE_RECT.centerx, TABLE_RECT.bottom - 90)
@@ -383,8 +341,8 @@ class AirHockeyEnv:
 
         return self.observation()
 
-    def observation(self) -> tuple[float, ...]:
-        """Return the normalized, noisy eight-value state seen by the policy."""
+    # The 8 numbers the policy sees (normalized + noisy)
+    def observation(self):
         raw = get_observation(
             self.puck_position,
             self.puck_velocity,
@@ -394,7 +352,7 @@ class AirHockeyEnv:
             rng=self.rng,
         )
 
-        # Normalize positions and velocities so neural-network inputs stay small.
+        # Normalize so the network inputs stay small
         half_width = TABLE_RECT.width / 2
         half_height = TABLE_RECT.height / 2
 
@@ -409,8 +367,8 @@ class AirHockeyEnv:
             raw[7] / MALLET_SPEED,
         )
 
-    def scripted_user_action(self) -> pygame.Vector2:
-        """A basic opponent that defends its own goal and follows incoming pucks."""
+    # Basic opponent, defends its goal and follows the puck
+    def scripted_user_action(self):
         home = pygame.Vector2(TABLE_RECT.centerx, TABLE_RECT.bottom - 90)
         target = home
 
@@ -431,18 +389,9 @@ class AirHockeyEnv:
 
         return direction.normalize() * 0.82
 
-    def _reward(
-        self,
-        *,
-        goal: int,
-        robot_hit: bool,
-        puck_y_before_step: float,
-        robot_dy: float,
-        puck_distance_closed: float,
-        action: pygame.Vector2,
-    ) -> tuple[float, dict[str, float]]:
-        """Reward one policy decision. Goal rewards dominate all shaping."""
-        parts: dict[str, float] = {"time": TIME_PENALTY}
+    # Reward for one step, goals are way bigger than the shaping stuff
+    def _reward(self, goal, robot_hit, puck_y_before_step, robot_dy, puck_distance_closed, action):
+        parts = {"time": TIME_PENALTY}
 
         if goal == -1:
             parts["goal"] = GOAL_REWARD
@@ -452,10 +401,14 @@ class AirHockeyEnv:
             if robot_hit:
                 parts["contact"] = CONTACT_REWARD
 
+                # After a hit, faster toward the other goal = more reward, backwards costs a tiny bit
                 if self.puck_velocity.y > 0:
                     parts["return_shot"] = RETURN_SHOT_REWARD
+                    parts["hit_direction"] = HIT_DIRECTION_REWARD * self.puck_velocity.y / PUCK_MAX_SPEED
+                else:
+                    parts["hit_direction"] = HIT_BACKWARD_PENALTY
 
-            # Positive Y is toward the user goal because the robot is on top.
+            # Positive y is toward the user's goal (robot is on top)
             parts["forward_progress"] = FORWARD_PROGRESS_REWARD * (
                 self.puck_position.y - puck_y_before_step
             )
@@ -465,17 +418,24 @@ class AirHockeyEnv:
             )
             if puck_on_our_side:
                 parts["approach"] = APPROACH_REWARD * puck_distance_closed
+
+            # Puck and mallet swapped y order this step, lined up in x, and never touched
+            robot_y_before_step = self.robot_position.y - robot_dy
+            swapped_y = (puck_y_before_step - robot_y_before_step) * (self.puck_position.y - self.robot_position.y) < 0
+            lined_up = abs(self.puck_position.x - self.robot_position.x) < MISSED_PASS_X_RANGE
+            touching = self.robot_position.distance_to(self.puck_position) <= PUCK_RADIUS + MALLET_RADIUS
+            if swapped_y and lined_up and not robot_hit and not touching:
+                parts["missed_pass"] = MISSED_PASS_PENALTY
+
+            # Puck in front of the mallet (toward the user's goal) gets a small reward every step, behind gets nothing
+            if self.puck_position.y > self.robot_position.y:
+                parts["puck_in_front"] = PUCK_IN_FRONT_REWARD
             parts["movement"] = MOVEMENT_PENALTY * action.length_squared()
 
         return sum(parts.values()), parts
 
-    def step(
-        self,
-        action: Sequence[float],
-        *,
-        user_action: Sequence[float] | None = None,
-    ) -> tuple[tuple[float, ...], float, bool, bool, dict[str, Any]]:
-        """Advance one fixed step using a normalized [velocity_x, velocity_y] action."""
+    # Plays one step
+    def step(self, action, user_action=None):
         if len(action) != 2:
             raise ValueError("Robot action must contain exactly [velocity_x, velocity_y].")
 
@@ -489,7 +449,7 @@ class AirHockeyEnv:
 
         robot_command = clipped_action * MALLET_SPEED
 
-        # Use a scripted opponent during training unless a manual action is given.
+        # Scripted opponent for training unless a user action is given
         if user_action is None:
             normalized_user_action = self.scripted_user_action()
         else:
@@ -504,7 +464,7 @@ class AirHockeyEnv:
             if normalized_user_action.length() > 1:
                 normalized_user_action.scale_to_length(1)
 
-        # Update both mallets.
+        # Moves both mallets
         robot_y_before_step = self.robot_position.y
         puck_distance_before_step = self.robot_position.distance_to(self.puck_position)
         apply_robot_velocity(
@@ -525,7 +485,7 @@ class AirHockeyEnv:
             self.dt,
         )
 
-        # Resolve hits, then update puck motion and goal state.
+        # Hits first, then puck movement + goals
         puck_y_before_step = self.puck_position.y
         robot_hit = collide_puck_with_mallet(
             self.puck_position,
@@ -559,7 +519,7 @@ class AirHockeyEnv:
         elif goal == 1:
             self.user_score += 1
 
-        info: dict[str, Any] = {
+        info = {
             "goal": goal,
             "robot_hit": robot_hit,
             "user_hit": user_hit,
@@ -569,8 +529,8 @@ class AirHockeyEnv:
 
         return self.observation(), reward, terminated, truncated, info
 
-    def render(self, surface: pygame.Surface, font: pygame.font.Font) -> None:
-        """Draw the current environment state. Rendering is separate from training."""
+    # Draws everything
+    def render(self, surface, font):
         surface.fill(BACKGROUND)
         draw_table(surface)
         pygame.draw.circle(surface, PUCK_COLOR, self.puck_position, PUCK_RADIUS)
@@ -586,14 +546,14 @@ class AirHockeyEnv:
         )
         surface.blit(score, (TABLE_RECT.left, 10))
 
-    def close(self) -> None:
-        """Reserved for future resources; the trainer gets a standard API now."""
+    # Nothing to close yet
+    def close(self):
+        pass
 
 
-# -------------------- Pygame Display --------------------
 
-def draw_table(surface: pygame.Surface) -> None:
-    """Draw table geometry only. Game objects are drawn by AirHockeyEnv.render."""
+# Draws the table only
+def draw_table(surface):
     pygame.draw.rect(surface, TABLE_COLOR, TABLE_RECT, border_radius=26)
     pygame.draw.rect(surface, LINE_COLOR, TABLE_RECT, width=4, border_radius=26)
     pygame.draw.line(
@@ -620,7 +580,27 @@ def draw_table(surface: pygame.Surface) -> None:
     )
 
 
-def reward_test() -> int:
+# Mallet chases the mouse, slows down when it's close so it doesn't jitter
+def mouse_action(position):
+    if not pygame.mouse.get_focused():
+        return pygame.Vector2()
+
+    action = (pygame.Vector2(pygame.mouse.get_pos()) - position) / 30
+
+    if action.length() > 1:
+        action.scale_to_length(1)
+
+    return action
+
+
+# Prints how the round ended + the reward total with each part
+def print_round_summary(info, round_parts):
+    outcome = {-1: "robot scored", 1: "robot conceded", 0: "time ran out"}[info["goal"]]
+    print(f"round over ({outcome}): {sum(round_parts.values()):+.3f}", {n: round(v, 3) for n, v in round_parts.items()})
+
+
+# You control blue vs the scripted opponent, no AI at all
+def reward_test(keyboard=False):
     pygame.init()
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     pygame.display.set_caption("Air Hockey reward test")
@@ -629,6 +609,7 @@ def reward_test() -> int:
     environment = AirHockeyEnv()
     environment.reset()
     recent_parts = deque(maxlen=50)
+    round_parts = {}
     running = True
 
     while running:
@@ -643,14 +624,21 @@ def reward_test() -> int:
                 elif event.key == pygame.K_SPACE:
                     environment.reset()
                     recent_parts.clear()
+                    round_parts = {}
 
-        keys = pygame.key.get_pressed()
-        robot_action = pygame.Vector2(
-            int(keys[pygame.K_d] or keys[pygame.K_RIGHT]) - int(keys[pygame.K_a] or keys[pygame.K_LEFT]),
-            int(keys[pygame.K_s] or keys[pygame.K_DOWN]) - int(keys[pygame.K_w] or keys[pygame.K_UP]),
-        )
+        if keyboard:
+            keys = pygame.key.get_pressed()
+            robot_action = pygame.Vector2(
+                int(keys[pygame.K_d] or keys[pygame.K_RIGHT]) - int(keys[pygame.K_a] or keys[pygame.K_LEFT]),
+                int(keys[pygame.K_s] or keys[pygame.K_DOWN]) - int(keys[pygame.K_w] or keys[pygame.K_UP]),
+            )
+        else:
+            robot_action = mouse_action(environment.robot_position)
 
         _, reward, terminated, truncated, info = environment.step(robot_action)
+
+        for name, value in info["reward_parts"].items():
+            round_parts[name] = round_parts.get(name, 0) + value
 
         recent_parts.append(info["reward_parts"])
         recent_by_part = {}
@@ -664,14 +652,16 @@ def reward_test() -> int:
 
         environment.render(screen, font)
         total_text = font.render(f"reward, last {len(recent_parts)} steps: {recent_total:+.3f}", True, TEXT_COLOR)
-        step_text = font.render(f"you (blue): ({robot_action.x:+.2f}, {robot_action.y:+.2f})  reward={reward:+.3f}", True, TEXT_COLOR)
-        controls = font.render("Reward test: WASD or arrows   Space: reset   Esc: quit", True, TEXT_COLOR)
+        step_text = font.render(f"you: ({robot_action.x:+.2f}, {robot_action.y:+.2f})  step={reward:+.3f}  round={sum(round_parts.values()):+.2f}", True, TEXT_COLOR)
+        controls = font.render(f"Reward test: {'WASD or arrows' if keyboard else 'mouse'}   Space: reset   Esc: quit", True, TEXT_COLOR)
         screen.blit(total_text, (GOAL_LEFT, 12))
         screen.blit(step_text, (TABLE_RECT.left, WINDOW_HEIGHT - 55))
         screen.blit(controls, (TABLE_RECT.left, WINDOW_HEIGHT - 29))
         pygame.display.flip()
 
         if terminated or truncated:
+            print_round_summary(info, round_parts)
+            round_parts = {}
             environment.reset()
 
     environment.close()
@@ -679,8 +669,9 @@ def reward_test() -> int:
     return 0
 
 
-def main() -> int:
-    """Run a visual test with an untrained policy or arrow-key robot control."""
+
+# Visual demo (random policy, basic defender, or manual arrows)
+def main():
     import argparse
 
     parser = argparse.ArgumentParser()
@@ -692,8 +683,17 @@ def main() -> int:
         type=lambda value: value.lower() in ("true", "1", "yes"),
         help="Control the blue mallet yourself against the scripted opponent and see its reward. No AI is used.",
     )
-    if parser.parse_args().test_rewards:
-        return reward_test()
+    parser.add_argument(
+        "--view_model",
+        nargs="?",
+        const="ppo_policy.pt",
+        default=None,
+        help="Watch a saved policy (default ppo_policy.pt) play as the blue robot. No training.",
+    )
+    parser.add_argument("--keyboard", action="store_true", help="Use WASD instead of the mouse for the mallet you control")
+    args = parser.parse_args()
+    if args.test_rewards:
+        return reward_test(args.keyboard)
 
     import torch
 
@@ -707,15 +707,21 @@ def main() -> int:
     environment = AirHockeyEnv()
     observation = environment.reset()
     policy = ActorCritic()
+    round_parts = {}
 
-    # Modes: random NN output, rule-based defender, or manual arrow control.
+    # Loads the saved model when viewing
+    viewing = args.view_model is not None
+    if viewing:
+        policy.load_state_dict(torch.load(args.view_model))
+
+    # Modes: random policy, basic defender, or manual arrows
     control_mode = "untrained_actor"
     running = True
 
     while running:
         clock.tick(FPS)
 
-        # Window and mode controls.
+        # Window + mode keys
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -724,6 +730,7 @@ def main() -> int:
                     running = False
                 elif event.key == pygame.K_SPACE:
                     observation = environment.reset()
+                    round_parts = {}
                 elif event.key == pygame.K_n:
                     control_mode = (
                         "basic_defence"
@@ -733,21 +740,24 @@ def main() -> int:
                 elif event.key == pygame.K_m:
                     control_mode = "manual"
 
-        # Red player is always perfect WASD control in the visual demo.
+        # Red player follows the mouse (or wasd with --keyboard)
         keys = pygame.key.get_pressed()
-        user_action = pygame.Vector2(
-            int(keys[pygame.K_d]) - int(keys[pygame.K_a]),
-            int(keys[pygame.K_s]) - int(keys[pygame.K_w]),
-        )
+        if args.keyboard:
+            user_action = pygame.Vector2(
+                int(keys[pygame.K_d]) - int(keys[pygame.K_a]),
+                int(keys[pygame.K_s]) - int(keys[pygame.K_w]),
+            )
+        else:
+            user_action = mouse_action(environment.user_position)
 
-        # Choose the blue robot's source of velocity commands.
+        # Picks what controls the blue robot
         if control_mode == "untrained_actor":
             with torch.no_grad():
                 policy_input = torch.tensor(observation, dtype=torch.float32)
-                _, policy_action, _, _ = policy.act(policy_input, explore=True)
+                _, policy_action, _, _ = policy.act(policy_input, explore=not viewing)
 
             robot_action = pygame.Vector2(policy_action.tolist())
-            control_name = "untrained PPO (random exploration)"
+            control_name = f"trained PPO ({args.view_model})" if viewing else "untrained PPO (random exploration)"
         elif control_mode == "basic_defence":
             robot_action = simple_defence_action(environment)
             control_name = "basic defender"
@@ -758,10 +768,13 @@ def main() -> int:
             )
             control_name = "arrow-key robot"
 
-        observation, reward, terminated, truncated, _ = environment.step(
+        observation, reward, terminated, truncated, info = environment.step(
             robot_action,
             user_action=user_action,
         )
+
+        for name, value in info["reward_parts"].items():
+            round_parts[name] = round_parts.get(name, 0) + value
 
         environment.render(screen, font)
         command_text = font.render(
@@ -770,15 +783,19 @@ def main() -> int:
             TEXT_COLOR,
         )
         controls = font.render(
-            "User: WASD   N: actor/defender   M: manual arrows   Space: reset",
+            f"User: {'WASD' if args.keyboard else 'mouse'}   N: actor/defender   M: manual arrows   Space: reset",
             True,
             TEXT_COLOR,
         )
         screen.blit(command_text, (TABLE_RECT.left, WINDOW_HEIGHT - 55))
         screen.blit(controls, (TABLE_RECT.left, WINDOW_HEIGHT - 29))
+        round_text = font.render(f"round reward: {sum(round_parts.values()):+.3f}", True, TEXT_COLOR)
+        screen.blit(round_text, (GOAL_LEFT, 12))
         pygame.display.flip()
 
         if terminated or truncated:
+            print_round_summary(info, round_parts)
+            round_parts = {}
             observation = environment.reset()
 
     environment.close()
