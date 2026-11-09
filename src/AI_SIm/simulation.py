@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import math
 import random
+from collections import deque
 from collections.abc import Sequence
 from typing import Any
 
@@ -51,8 +52,10 @@ CONCEDED_GOAL_REWARD    = -10.0
 RETURN_SHOT_REWARD      = 0.20
 CONTACT_REWARD          = 0.05
 TIME_PENALTY            = -0.001
-MOVEMENT_PENALTY        = -0.0005
-FORWARD_PROGRESS_REWARD = 0.0004
+MOVEMENT_PENALTY        = -0.0001
+FORWARD_PROGRESS_REWARD = 0.0002
+MALLET_POSITION_REWARD  = 0.001
+APPROACH_REWARD         = 0.0005
 
 
 # Display colors
@@ -434,6 +437,8 @@ class AirHockeyEnv:
         goal: int,
         robot_hit: bool,
         puck_y_before_step: float,
+        robot_dy: float,
+        puck_distance_closed: float,
         action: pygame.Vector2,
     ) -> tuple[float, dict[str, float]]:
         """Reward one policy decision. Goal rewards dominate all shaping."""
@@ -454,6 +459,12 @@ class AirHockeyEnv:
             parts["forward_progress"] = FORWARD_PROGRESS_REWARD * (
                 self.puck_position.y - puck_y_before_step
             )
+            puck_on_our_side = puck_y_before_step < TABLE_RECT.centery
+            parts["mallet_position"] = MALLET_POSITION_REWARD * (
+                robot_dy if puck_on_our_side else -robot_dy
+            )
+            if puck_on_our_side:
+                parts["approach"] = APPROACH_REWARD * puck_distance_closed
             parts["movement"] = MOVEMENT_PENALTY * action.length_squared()
 
         return sum(parts.values()), parts
@@ -494,6 +505,8 @@ class AirHockeyEnv:
                 normalized_user_action.scale_to_length(1)
 
         # Update both mallets.
+        robot_y_before_step = self.robot_position.y
+        puck_distance_before_step = self.robot_position.distance_to(self.puck_position)
         apply_robot_velocity(
             self.robot_position,
             self.robot_velocity,
@@ -533,6 +546,8 @@ class AirHockeyEnv:
             goal=goal,
             robot_hit=robot_hit,
             puck_y_before_step=puck_y_before_step,
+            robot_dy=self.robot_position.y - robot_y_before_step,
+            puck_distance_closed=puck_distance_before_step - self.robot_position.distance_to(self.puck_position),
             action=clipped_action,
         )
 
@@ -605,8 +620,81 @@ def draw_table(surface: pygame.Surface) -> None:
     )
 
 
+def reward_test() -> int:
+    pygame.init()
+    screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    pygame.display.set_caption("Air Hockey reward test")
+    clock = pygame.time.Clock()
+    font = pygame.font.Font(None, 29)
+    environment = AirHockeyEnv()
+    environment.reset()
+    recent_parts = deque(maxlen=50)
+    running = True
+
+    while running:
+        clock.tick(FPS)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+                elif event.key == pygame.K_SPACE:
+                    environment.reset()
+                    recent_parts.clear()
+
+        keys = pygame.key.get_pressed()
+        robot_action = pygame.Vector2(
+            int(keys[pygame.K_d] or keys[pygame.K_RIGHT]) - int(keys[pygame.K_a] or keys[pygame.K_LEFT]),
+            int(keys[pygame.K_s] or keys[pygame.K_DOWN]) - int(keys[pygame.K_w] or keys[pygame.K_UP]),
+        )
+
+        _, reward, terminated, truncated, info = environment.step(robot_action)
+
+        recent_parts.append(info["reward_parts"])
+        recent_by_part = {}
+        for parts in recent_parts:
+            for name, value in parts.items():
+                recent_by_part[name] = recent_by_part.get(name, 0) + value
+        recent_total = sum(recent_by_part.values())
+
+        if environment.step_count % 50 == 0:
+            print(f"last 50 steps: {recent_total:+.3f}", {n: round(v, 3) for n, v in recent_by_part.items()})
+
+        environment.render(screen, font)
+        total_text = font.render(f"reward, last {len(recent_parts)} steps: {recent_total:+.3f}", True, TEXT_COLOR)
+        step_text = font.render(f"you (blue): ({robot_action.x:+.2f}, {robot_action.y:+.2f})  reward={reward:+.3f}", True, TEXT_COLOR)
+        controls = font.render("Reward test: WASD or arrows   Space: reset   Esc: quit", True, TEXT_COLOR)
+        screen.blit(total_text, (GOAL_LEFT, 12))
+        screen.blit(step_text, (TABLE_RECT.left, WINDOW_HEIGHT - 55))
+        screen.blit(controls, (TABLE_RECT.left, WINDOW_HEIGHT - 29))
+        pygame.display.flip()
+
+        if terminated or truncated:
+            environment.reset()
+
+    environment.close()
+    pygame.quit()
+    return 0
+
+
 def main() -> int:
     """Run a visual test with an untrained policy or arrow-key robot control."""
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--test_rewards",
+        nargs="?",
+        const=True,
+        default=False,
+        type=lambda value: value.lower() in ("true", "1", "yes"),
+        help="Control the blue mallet yourself against the scripted opponent and see its reward. No AI is used.",
+    )
+    if parser.parse_args().test_rewards:
+        return reward_test()
+
     import torch
 
     from policy import ActorCritic
