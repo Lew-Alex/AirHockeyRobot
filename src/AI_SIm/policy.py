@@ -99,3 +99,14 @@ class ActorCritic(nn.Module):
         value = self.critic(observation)
 
         return raw_action, action, log_probability, value
+
+    def evaluate(
+        self, observations: torch.Tensor, raw_actions: torch.Tensor
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        action_distribution = self.actor.distribution(observations)
+
+        log_probability = action_distribution.log_prob(raw_actions).sum(dim=-1)
+        entropy = action_distribution.entropy().sum(dim=-1)
+        value = self.critic(observations)
+
+        return log_probability, entropy, value
