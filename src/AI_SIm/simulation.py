@@ -26,13 +26,17 @@ GOAL_LEFT  = WINDOW_WIDTH // 2 - GOAL_WIDTH // 2
 GOAL_RIGHT = GOAL_LEFT + GOAL_WIDTH
 
 
+# Real world scale, sim table length (810 px) = real table length (54 in)
+PIXELS_PER_METER = TABLE_RECT.height / (54 * 0.0254)
+
+
 # Puck / mallet physics
 PUCK_RADIUS              = 18
 MALLET_RADIUS            = 30
 PUCK_DRAG                = 32.0
 PUCK_MAX_SPEED           = 500.0
-MALLET_SPEED             = 520.0
-MALLET_ACCELERATION      = 2_200.0
+MALLET_SPEED             = 2.0 * PIXELS_PER_METER
+MALLET_ACCELERATION      = 10.0 * PIXELS_PER_METER
 MALLET_VELOCITY_NOISE    = 22.0
 
 
@@ -40,6 +44,12 @@ MALLET_VELOCITY_NOISE    = 22.0
 OBSERVATION_POSITION_NOISE = 2.5
 OBSERVATION_VELOCITY_NOISE = 12.0
 
+
+# Puck prediction (the two lines it predicts for + the longest time it reports)
+PREDICTION_TIME_CAP = 2.0
+HOME_LINE_Y         = TABLE_RECT.top + 90
+FRONT_LINE_Y        = TABLE_RECT.centery - MALLET_RADIUS
+USER_GOAL_LINE_Y    = TABLE_RECT.bottom - PUCK_RADIUS
 
 
 # PPO reward shaping
@@ -57,6 +67,7 @@ HIT_BACKWARD_PENALTY    = -0.50
 MISSED_PASS_PENALTY     = -0.50
 MISSED_PASS_X_RANGE     = 100.0
 PUCK_IN_FRONT_REWARD    = 0.0005
+SHOT_ON_GOAL_REWARD     = 1.50
 
 
 # Display colors
@@ -273,6 +284,32 @@ def reflect_x_at_table_walls(x_position):
 
 
 
+# Predicts where the puck crosses a horizontal line (y), counting drag + side wall bounces
+# Gives back (x, seconds, arrives), if it never gets there it gives the puck's current x, the max time and False
+def predict_puck_at_line(puck_x, puck_y, velocity_x, velocity_y, line_y):
+    speed = math.hypot(velocity_x, velocity_y)
+
+    # Not moving up or down so it never gets there
+    if speed < 1e-6 or velocity_y == 0:
+        return puck_x, PREDICTION_TIME_CAP, False
+
+    # How far along its path it has to travel to reach the line
+    distance = (line_y - puck_y) * speed / velocity_y
+
+    # Moving away from the line, or drag stops it first (it can only go speed^2 / (2 * drag))
+    if distance < 0 or distance > speed * speed / (2 * PUCK_DRAG):
+        return puck_x, PREDICTION_TIME_CAP, False
+
+    # Solves speed * t - drag * t^2 / 2 = distance for the smaller t
+    arrival_time = (speed - math.sqrt(max(speed * speed - 2 * PUCK_DRAG * distance, 0.0))) / PUCK_DRAG
+
+    # Unfolds x along the path, then folds it back in for the wall bounces
+    predicted_x = reflect_x_at_table_walls(puck_x + velocity_x / speed * distance)
+
+    return predicted_x, min(arrival_time, PREDICTION_TIME_CAP), True
+
+
+
 # Basic defender, only protects the robot goal
 def simple_defence_action(environment):
     home = pygame.Vector2(TABLE_RECT.centerx, TABLE_RECT.top + 90)
@@ -331,6 +368,7 @@ class AirHockeyEnv:
             self.rng.seed(seed)
 
         self.step_count = 0
+        self.robot_was_hitting = False
         self.puck_position, self.puck_velocity = reset_puck(rng=self.rng)
 
         # Robot starts at the top, user at the bottom
@@ -341,7 +379,7 @@ class AirHockeyEnv:
 
         return self.observation()
 
-    # The 8 numbers the policy sees (normalized + noisy)
+    # The 12 numbers the policy sees (normalized + noisy), the last 4 are the predicted puck x + time at the 2 lines
     def observation(self):
         raw = get_observation(
             self.puck_position,
@@ -356,7 +394,7 @@ class AirHockeyEnv:
         half_width = TABLE_RECT.width / 2
         half_height = TABLE_RECT.height / 2
 
-        return (
+        base = (
             (raw[0] - TABLE_RECT.centerx) / half_width,
             (raw[1] - TABLE_RECT.centery) / half_height,
             raw[2] / PUCK_MAX_SPEED,
@@ -366,6 +404,15 @@ class AirHockeyEnv:
             raw[6] / MALLET_SPEED,
             raw[7] / MALLET_SPEED,
         )
+
+        # Predicted puck x + arrival time at the home line and the front line (from the same noisy numbers)
+        predicted = []
+        for line_y in (HOME_LINE_Y, FRONT_LINE_Y):
+            predicted_x, predicted_time, _ = predict_puck_at_line(raw[0], raw[1], raw[2], raw[3], line_y)
+            predicted.append((predicted_x - TABLE_RECT.centerx) / half_width)
+            predicted.append(predicted_time / PREDICTION_TIME_CAP)
+
+        return base + tuple(predicted)
 
     # Basic opponent, defends its goal and follows the puck
     def scripted_user_action(self):
@@ -407,6 +454,12 @@ class AirHockeyEnv:
                     parts["hit_direction"] = HIT_DIRECTION_REWARD * self.puck_velocity.y / PUCK_MAX_SPEED
                 else:
                     parts["hit_direction"] = HIT_BACKWARD_PENALTY
+
+                # First step of a hit only, if the puck is now headed into the user's goal that's a shot on goal
+                if not self.robot_was_hitting:
+                    goal_x, _, arrives = predict_puck_at_line(self.puck_position.x, self.puck_position.y, self.puck_velocity.x, self.puck_velocity.y, USER_GOAL_LINE_Y)
+                    if arrives and GOAL_LEFT < goal_x < GOAL_RIGHT:
+                        parts["shot_on_goal"] = SHOT_ON_GOAL_REWARD
 
             # Positive y is toward the user's goal (robot is on top)
             parts["forward_progress"] = FORWARD_PROGRESS_REWARD * (
@@ -510,6 +563,7 @@ class AirHockeyEnv:
             puck_distance_closed=puck_distance_before_step - self.robot_position.distance_to(self.puck_position),
             action=clipped_action,
         )
+        self.robot_was_hitting = robot_hit
 
         terminated = goal != 0
         truncated = self.step_count >= self.max_steps

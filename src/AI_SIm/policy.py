@@ -3,8 +3,8 @@ from torch import nn
 from torch.distributions import Normal
 
 
-# Obs = puck x/y, puck vx/vy, robot x/y, robot vx/vy
-OBSERVATION_SIZE = 8
+# Obs = puck x/y, puck vx/vy, robot x/y, robot vx/vy, then predicted puck x + arrival time at the home line and the front line
+OBSERVATION_SIZE = 12
 
 # Action = robot velocity x, y (between -1 and 1)
 ACTION_SIZE = 2
