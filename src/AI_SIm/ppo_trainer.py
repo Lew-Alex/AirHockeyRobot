@@ -6,20 +6,36 @@ enviorment = AirHockeyEnv()
 
 policy = ActorCritic()
 
+# --resume loads the saved policy so training keeps going from there
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("--resume", nargs="?", const="ppo_policy.pt", default=None, help="Continue training from a saved policy (default ppo_policy.pt)")
 
-GAMMA = 0.95
-LAMBDA = 0.95
-NUM_UPDATES = 1000
-ROLLOUT_STEPS = 2048
-EPOCHS = 10
-MINIBATCH_SIZE = 256
+# Hyperparameters, each one works like --updates=1000 or --UPDATES=1000
+for name, default in [("updates", 1000), ("rollout_steps", 2048), ("epochs", 10), ("minibatch_size", 256), ("gamma", 0.95), ("lambda", 0.95), ("lr", 3e-4), ("clip", 0.2), ("value_coef", 0.5), ("entropy_coef", 0.01), ("max_grad_norm", 0.5)]:
+    parser.add_argument(f"--{name}", f"--{name.upper()}", type=type(default), default=default)
+
+args = parser.parse_args()
+print("settings:", vars(args))
+
+if args.resume:
+    policy.load_state_dict(torch.load(args.resume))
+    print("resumed from", args.resume)
+
+
+GAMMA = args.gamma
+LAMBDA = getattr(args, "lambda")
+NUM_UPDATES = args.updates
+ROLLOUT_STEPS = args.rollout_steps
+EPOCHS = args.epochs
+MINIBATCH_SIZE = args.minibatch_size
 
 # Obvs = puck_x, puck_y, puck_vx, puck_vy, robot_x, robot_y, robot_vx, robot_vy
 # Act = action, log_probability, critic_value
 # Sample test or wtv
 
 
-optimizer = torch.optim.Adam(policy.parameters(), lr=3e-4)
+optimizer = torch.optim.Adam(policy.parameters(), lr=args.lr)
 observation = enviorment.reset()
 
 for update in range(NUM_UPDATES):
@@ -125,17 +141,17 @@ for update in range(NUM_UPDATES):
             # Actor loss
             ratio = torch.exp(new_log_probs - old_log_probs[idx])
             unclipped = ratio * normalized_advantages[idx]
-            clipped = torch.clamp(ratio, 0.8, 1.2) * normalized_advantages[idx]
+            clipped = torch.clamp(ratio, 1 - args.clip, 1 + args.clip) * normalized_advantages[idx]
             actor_loss = -torch.min(unclipped, clipped).mean()
 
             # Calculates total loss + entropy(for exploration)
             entropy_loss = entropy.mean()
-            total_loss = actor_loss + 0.5 * critic_loss - 0.01 * entropy_loss
+            total_loss = actor_loss + args.value_coef * critic_loss - args.entropy_coef * entropy_loss
 
             # Now actually calc grad + adam optimizer
             optimizer.zero_grad() # Resets previous grads
             total_loss.backward()
-            torch.nn.utils.clip_grad_norm_(policy.parameters(), 0.5)
+            torch.nn.utils.clip_grad_norm_(policy.parameters(), args.max_grad_norm)
             optimizer.step()
 
     print(update, total_reward, actor_loss.item(), critic_loss.item(), {k: round(v, 2) for k, v in reward_parts_total.items()})
