@@ -35,9 +35,16 @@ PUCK_RADIUS              = 18
 MALLET_RADIUS            = 30
 PUCK_DRAG                = 32.0
 PUCK_MAX_SPEED           = 500.0
+PUCK_SPEED_SCALE         = 500.0   # puck speeds are divided by this for the observation and the hit reward
 MALLET_SPEED             = 2.0 * PIXELS_PER_METER
 MALLET_ACCELERATION      = 10.0 * PIXELS_PER_METER
 MALLET_VELOCITY_NOISE    = 22.0
+SCRIPTED_OPPONENT_SPEED  = 0.20
+ACTION_REPEAT            = 4
+
+# A puck slower than STALL_SPEED for STALL_STEPS steps (2 s) gets served again from the center
+STALL_SPEED              = 20.0
+STALL_STEPS              = 120
 
 
 # Simulated perception error
@@ -55,18 +62,10 @@ USER_GOAL_LINE_Y    = TABLE_RECT.bottom - PUCK_RADIUS
 # PPO reward shaping
 GOAL_REWARD             = 10.0
 CONCEDED_GOAL_REWARD    = -10.0
-RETURN_SHOT_REWARD      = 0.20
-CONTACT_REWARD          = 0.05
-TIME_PENALTY            = -0.001
-MOVEMENT_PENALTY        = 0.000001
-FORWARD_PROGRESS_REWARD = 0.0002
-MALLET_POSITION_REWARD  = 0.00075
 APPROACH_REWARD         = 0.00125
 HIT_DIRECTION_REWARD    = 0.20
-HIT_BACKWARD_PENALTY    = -0.50
-MISSED_PASS_PENALTY     = -0.50
-MISSED_PASS_X_RANGE     = 100.0
-PUCK_IN_FRONT_REWARD    = 0.0005
+HIT_BACKWARD_PENALTY    = -0.10
+PUCK_BEHIND_PENALTY     = -0.001
 SHOT_ON_GOAL_REWARD     = 1.50
 
 
@@ -369,6 +368,7 @@ class AirHockeyEnv:
 
         self.step_count = 0
         self.robot_was_hitting = False
+        self.stalled_steps = 0
         self.puck_position, self.puck_velocity = reset_puck(rng=self.rng)
 
         # Robot starts at the top, user at the bottom
@@ -397,8 +397,8 @@ class AirHockeyEnv:
         base = (
             (raw[0] - TABLE_RECT.centerx) / half_width,
             (raw[1] - TABLE_RECT.centery) / half_height,
-            raw[2] / PUCK_MAX_SPEED,
-            raw[3] / PUCK_MAX_SPEED,
+            raw[2] / PUCK_SPEED_SCALE,
+            raw[3] / PUCK_SPEED_SCALE,
             (raw[4] - TABLE_RECT.centerx) / half_width,
             (raw[5] - TABLE_RECT.centery) / half_height,
             raw[6] / MALLET_SPEED,
@@ -434,56 +434,37 @@ class AirHockeyEnv:
         if direction.length() < 5:
             return pygame.Vector2()
 
-        return direction.normalize() * 0.82
+        return direction.normalize() * SCRIPTED_OPPONENT_SPEED
 
     # Reward for one step, goals are way bigger than the shaping stuff
     def _reward(self, goal, robot_hit, puck_y_before_step, robot_dy, puck_distance_closed, action):
-        parts = {"time": TIME_PENALTY}
+        parts = {}
 
         if goal == -1:
             parts["goal"] = GOAL_REWARD
         elif goal == 1:
             parts["goal"] = CONCEDED_GOAL_REWARD
         else:
-            if robot_hit:
-                parts["contact"] = CONTACT_REWARD
-
-                # After a hit, faster toward the other goal = more reward, backwards costs a tiny bit
+            # First step of a hit only
+            if robot_hit and not self.robot_was_hitting:
+                # Faster toward the other goal = more reward, backwards costs a little
                 if self.puck_velocity.y > 0:
-                    parts["return_shot"] = RETURN_SHOT_REWARD
-                    parts["hit_direction"] = HIT_DIRECTION_REWARD * self.puck_velocity.y / PUCK_MAX_SPEED
+                    parts["hit_direction"] = HIT_DIRECTION_REWARD * self.puck_velocity.y / PUCK_SPEED_SCALE
                 else:
                     parts["hit_direction"] = HIT_BACKWARD_PENALTY
 
-                # First step of a hit only, if the puck is now headed into the user's goal that's a shot on goal
-                if not self.robot_was_hitting:
-                    goal_x, _, arrives = predict_puck_at_line(self.puck_position.x, self.puck_position.y, self.puck_velocity.x, self.puck_velocity.y, USER_GOAL_LINE_Y)
-                    if arrives and GOAL_LEFT < goal_x < GOAL_RIGHT:
-                        parts["shot_on_goal"] = SHOT_ON_GOAL_REWARD
+                # If the puck is now headed into the user's goal that's a shot on goal
+                goal_x, _, arrives = predict_puck_at_line(self.puck_position.x, self.puck_position.y, self.puck_velocity.x, self.puck_velocity.y, USER_GOAL_LINE_Y)
+                if arrives and GOAL_LEFT < goal_x < GOAL_RIGHT:
+                    parts["shot_on_goal"] = SHOT_ON_GOAL_REWARD
 
-            # Positive y is toward the user's goal (robot is on top)
-            parts["forward_progress"] = FORWARD_PROGRESS_REWARD * (
-                self.puck_position.y - puck_y_before_step
-            )
-            puck_on_our_side = puck_y_before_step < TABLE_RECT.centery
-            parts["mallet_position"] = MALLET_POSITION_REWARD * (
-                robot_dy if puck_on_our_side else -robot_dy
-            )
-            if puck_on_our_side:
+            # Puck on our half, getting closer to it is rewarded
+            if puck_y_before_step < TABLE_RECT.centery:
                 parts["approach"] = APPROACH_REWARD * puck_distance_closed
 
-            # Puck and mallet swapped y order this step, lined up in x, and never touched
-            robot_y_before_step = self.robot_position.y - robot_dy
-            swapped_y = (puck_y_before_step - robot_y_before_step) * (self.puck_position.y - self.robot_position.y) < 0
-            lined_up = abs(self.puck_position.x - self.robot_position.x) < MISSED_PASS_X_RANGE
-            touching = self.robot_position.distance_to(self.puck_position) <= PUCK_RADIUS + MALLET_RADIUS
-            if swapped_y and lined_up and not robot_hit and not touching:
-                parts["missed_pass"] = MISSED_PASS_PENALTY
-
-            # Puck in front of the mallet (toward the user's goal) gets a small reward every step, behind gets nothing
-            if self.puck_position.y > self.robot_position.y:
-                parts["puck_in_front"] = PUCK_IN_FRONT_REWARD
-            parts["movement"] = MOVEMENT_PENALTY * action.length_squared()
+            # Puck behind the mallet (toward the robot's own goal) costs a little every step
+            if self.puck_position.y <= self.robot_position.y:
+                parts["puck_behind"] = PUCK_BEHIND_PENALTY
 
         return sum(parts.values()), parts
 
@@ -564,6 +545,16 @@ class AirHockeyEnv:
             action=clipped_action,
         )
         self.robot_was_hitting = robot_hit
+
+        # A puck that has nearly stopped for a while gets served again, otherwise nobody plays it
+        if self.puck_velocity.length() < STALL_SPEED:
+            self.stalled_steps += 1
+        else:
+            self.stalled_steps = 0
+
+        if self.stalled_steps >= STALL_STEPS and goal == 0:
+            self.puck_position, self.puck_velocity = reset_puck(rng=self.rng)
+            self.stalled_steps = 0
 
         terminated = goal != 0
         truncated = self.step_count >= self.max_steps
@@ -762,6 +753,8 @@ def main():
     observation = environment.reset()
     policy = ActorCritic()
     round_parts = {}
+    held_action = None
+    frames_held = 0
 
     # Loads the saved model when viewing
     viewing = args.view_model is not None
@@ -785,6 +778,7 @@ def main():
                 elif event.key == pygame.K_SPACE:
                     observation = environment.reset()
                     round_parts = {}
+                    held_action = None
                 elif event.key == pygame.K_n:
                     control_mode = (
                         "basic_defence"
@@ -806,11 +800,16 @@ def main():
 
         # Picks what controls the blue robot
         if control_mode == "untrained_actor":
-            with torch.no_grad():
-                policy_input = torch.tensor(observation, dtype=torch.float32)
-                _, policy_action, _, _ = policy.act(policy_input, explore=not viewing)
+            # The policy only picks a new action every ACTION_REPEAT steps, same as in training
+            if held_action is None or frames_held >= ACTION_REPEAT:
+                with torch.no_grad():
+                    policy_input = torch.tensor(observation, dtype=torch.float32)
+                    _, policy_action, _, _ = policy.act(policy_input, explore=not viewing)
+                held_action = pygame.Vector2(policy_action.tolist())
+                frames_held = 0
+            frames_held += 1
 
-            robot_action = pygame.Vector2(policy_action.tolist())
+            robot_action = held_action
             control_name = f"trained PPO ({args.view_model})" if viewing else "untrained PPO (random exploration)"
         elif control_mode == "basic_defence":
             robot_action = simple_defence_action(environment)
@@ -851,6 +850,7 @@ def main():
             print_round_summary(info, round_parts)
             round_parts = {}
             observation = environment.reset()
+            held_action = None
 
     environment.close()
     pygame.quit()
