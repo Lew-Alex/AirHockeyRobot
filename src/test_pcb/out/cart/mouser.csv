@@ -16,10 +16,10 @@ LIM1 JST connector,,6,J7,LIM1 JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical
 LIM2 JST connector,,6,J8,LIM2 JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical
 LIM3 JST connector,,6,J9,LIM3 JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical
 1x03 2.54mm pin header,,6,JP1,ENC_VCC PinHeader_1x03_P2.54mm_Vertical
-1k R resistor,,55,"RF_E1A,RF_E2A,RF_E1B,RF_E2B,RL1,RS_ESTOP,RS_LIM1,RS_LIM2,RS_LIM3,RS_LIM4",1k R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical
-10k R resistor,,50,"RP_DIR1,RP_DIR2,RP_PWM1,RP_PWM2,RU_ESTOP,RU_LIM1,RU_LIM2,RU_LIM3,RU_LIM4",10k R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical
-220 R resistor,,22,"RS_DIR1,RS_DIR2,RS_PWM1,RS_PWM2",220 R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical
-4.7k R resistor,,22,"RU_E1A,RU_E2A,RU_E1B,RU_E2B",4.7k R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical
+1k R resistor,,55,"RF_E1A,RF_E2A,RF_E1B,RF_E2B,RL1,RS_ESTOP,RS_LIM1,RS_LIM2,RS_LIM3,RS_LIM4",1k R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal
+10k R resistor,,50,"RP_DIR1,RP_DIR2,RP_PWM1,RP_PWM2,RU_ESTOP,RU_LIM1,RU_LIM2,RU_LIM3,RU_LIM4",10k R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal
+220 R resistor,,22,"RS_DIR1,RS_DIR2,RS_PWM1,RS_PWM2",220 R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal
+4.7k R resistor,,22,"RU_E1A,RU_E2A,RU_E1B,RU_E2B",4.7k R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal
 V3 TestPoint,,6,TP1,V3 TestPoint_THTPad_D2.0mm_Drill1.0mm
 V5 TestPoint,,6,TP2,V5 TestPoint_THTPad_D2.0mm_Drill1.0mm
 GND TestPoint,,6,TP3,GND TestPoint_THTPad_D2.0mm_Drill1.0mm

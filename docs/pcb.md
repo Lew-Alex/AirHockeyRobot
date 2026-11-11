@@ -1,7 +1,8 @@
 # Breakout PCB
 
 `src/test_pcb/board.py` defines a 86 x 64 mm, 2-layer, through-hole board for
-JLCPCB. It is a **signal-only** breakout: an ESP32-DevKitC V4 plugs into two
+JLCPCB. It is a **signal-only** breakout: a Freenove ESP32-WROVER CAM board (camera unused,
+ribbon unplugged; laid out like a DevKitC V4) plugs into two
 sockets, and the laptop's USB powers it. There is no 24 V on this board. The 24 V
 supply goes straight to the motor drivers.
 
@@ -24,11 +25,11 @@ All JST XH connectors are vertical through-hole headers (B2B, B3B, B4B-XH-A).
 | J9 | LIM3 | XH 2-pin | 1 signal, 2 GND | IO19 |
 | J10 | LIM4 | XH 2-pin | 1 signal, 2 GND | IO18 |
 | J11 | ESTOP | XH 2-pin | 1 signal, 2 GND | IO4 |
-| J12 | SPARE | 1x6 header | GND, 3V3, IO21, IO32, IO14, IO16 | as listed |
+| J12 | SPARE | 1x6 header | GND, 3V3, IO21, IO32, IO14, GND | as listed |
 | J13 | DRV_5V | 1x1 female socket | 5 V (USB) | none |
 | JP1 | ENC_VCC | 1x3 header | 1 = 3V3, 2 = encoder VCC, 3 = 5V | none |
 | D1 | status LED | 3 mm LED | via 1 kOhm | IO22 |
-| J1, J2 | ESP32 | 2 x 1x19 sockets | DevKitC V4 | n/a |
+| J1, J2 | ESP32 | 2 x 1x19 sockets | Freenove ESP32-WROVER CAM | n/a |
 
 ## Circuits
 
@@ -53,8 +54,11 @@ All JST XH connectors are vertical through-hole headers (B2B, B3B, B4B-XH-A).
 ## Pin choices
 
 GPIO 0, 2, 5, 12 and 15 (strapping) and 6 to 11 (flash) are unused. IO16 and IO17
-are PSRAM pins on WROVER-based DevKitC boards, so only IO16 is exposed, on the
-spare header, and works only on WROOM boards. IO14 toggles at boot.
+are PSRAM pins and are not broken out on the Freenove board (those two right-row
+positions are GND), so the spare header's sixth pin is a second GND. The camera uses
+most of the GPIOs this board uses, which is fine only because the camera is unused and
+its ribbon is unplugged. IO14, IO15 and IO2 also go to the microSD slot: keep it empty.
+IO14 toggles at boot.
 
 ## Build and order
 
@@ -70,8 +74,9 @@ BOM and CPL files are for JLCPCB assembly and are not needed for hand soldering.
 
 ## Open items before ordering
 
-1. **DevKitC V4 pin order and the 25.4 mm row spacing are assumptions** taken from
-   memory of the pinout. Check them against the actual board.
+1. **The Freenove pin order and 25.4 mm row spacing are read from a product photo.**
+   Measure the real board (row spacing, 19 pins per row) and compare the silkscreen
+   before ordering.
 2. **Encoder supply voltage and output type** (decides JP1 and whether the inputs
    need protection).
 3. **Motor driver choice** (see `hardware.md`). Check logic level, input pins and

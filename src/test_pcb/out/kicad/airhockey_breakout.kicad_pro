@@ -164,10 +164,6 @@
       },
       {
         "netclass": "W0.20mm",
-        "pattern": "SPARE_IO16"
-      },
-      {
-        "netclass": "W0.20mm",
         "pattern": "SPARE_IO21"
       },
       {
@@ -215,7 +211,6 @@
       "PWM2": "W0.20mm",
       "PWM2_MCU": "W0.20mm",
       "SPARE_IO14": "W0.20mm",
-      "SPARE_IO16": "W0.20mm",
       "SPARE_IO21": "W0.20mm",
       "SPARE_IO32": "W0.20mm",
       "V3": "W0.20mm",

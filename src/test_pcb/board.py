@@ -1,9 +1,14 @@
-"""Air-hockey robot: ESP32-DevKitC V4 signal breakout (signal only; 24 V stays off-board).
+"""Air-hockey robot: ESP32 signal breakout (signal only; 24 V stays off-board).
+Target board: Freenove ESP32-WROVER CAM (2 x 19 pins, laid out like a DevKitC V4). The camera
+is NOT used and its ribbon stays unplugged, so its GPIOs are free.
 
-ASSUMED (not from a datasheet page; verify against your DevKitC V4 silkscreen before ordering):
-  - DevKitC V4 38-pin header order (see L / R below) and 25.4 mm (1000 mil) row spacing.
-  - Pin choices avoid strapping (0,2,5,12,15) and flash (6-11) GPIOs, and IO16/IO17
-    (wired to PSRAM on WROVER-based DevKitC boards; only IO16 is broken out, on the spare header).
+ASSUMED (read from a product photo, not a datasheet; measure your board before ordering):
+  - 19-pin rows, pin 1 = antenna end, 25.4 mm (1000 mil) row spacing (estimated from the photo).
+  - Left row: 3V3 EN VP VN 34 35 32 33 25 26 27 14 12 GND 13 3V3 3V3 5V 5V.
+    Right row: GND 23 22 TX RX 21 GND 19 18 5 GND GND 4 0 2 15 GND GND GND.
+    Positions 11-12 on the right are GND (IO17/IO16 on a DevKitC), so IO16 is not available.
+  - Pin choices avoid strapping (0,2,5,12,15) and flash (6-11) GPIOs.
+  - IO14/IO15/IO2 also go to the board's microSD slot; leave the slot empty (or accept IO14 loading).
   - JP1 needs a 2.54 mm jumper shunt (not in the BOM): 1-2 = 3V3, 2-3 = 5V encoder supply.
   - J13 is an optional 5 V (USB) tap for a driver's logic supply; leave it unwired unless the
     driver's 5V pin is confirmed to be an input.
@@ -19,19 +24,19 @@ from pcb import Board
 W, H = 86.0, 64.0
 OUT = [(0, 0), (W, 0), (W, H), (0, H)]
 
-R = "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
-C = "Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
+R = "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
+C ="Capacitor_THT:C_Disc_D3.0mm_W2.0mm_P2.50mm"
 SOCK = "Connector_PinSocket_2.54mm:PinSocket_1x19_P2.54mm_Vertical"
 XH = "Connector_JST:JST_XH_B{n}B-XH-A_1x0{n}_P2.50mm_Vertical"
 HDR = "Connector_PinHeader_2.54mm:PinHeader_1x0{n}_P2.54mm_Vertical"
 
-# DevKitC V4, pin 1 = antenna end. name -> socket pin number.
-# J1 (left): 3V3 EN IO36 IO39 IO34 IO35 IO32 IO33 IO25 IO26 IO27 IO14 IO12 GND IO13 SD2 SD3 CMD 5V
-# J2 (right): GND IO23 IO22 TX RX IO21 GND IO19 IO18 IO5 IO17 IO16 IO4 IO0 IO2 IO15 SD1 SD0 CLK
+# Freenove ESP32-WROVER CAM, pin 1 = antenna end. name -> socket pin number.
+# J1 (left): 3V3 EN IO36 IO39 IO34 IO35 IO32 IO33 IO25 IO26 IO27 IO14 IO12 GND IO13 3V3 3V3 5V 5V
+# J2 (right): GND IO23 IO22 TX RX IO21 GND IO19 IO18 IO5 GND GND IO4 IO0 IO2 IO15 GND GND GND
 L = dict(V3="1", IO36="3", IO39="4", IO34="5", IO35="6", IO32="7", IO33="8", IO25="9",
          IO26="10", IO27="11", IO14="12", GND="14", IO13="15", V5="19")
 Rt = dict(GND1="1", IO23="2", IO22="3", IO21="6", GND2="7", IO19="8", IO18="9",
-          IO16="12", IO4="13")
+          IO4="13")
 
 # Shared nets: created once, after every section has added its pins.
 SHARED = {
@@ -137,10 +142,11 @@ def build():
     net("LED_M", [("RL1", "2"), ("D1", "2")])
     join("GND", ("D1", "1"))
 
-    # --- spare header: GND 3V3 IO21 IO32 IO14 IO16 (IO16: WROOM only; IO14 toggles at boot)
-    join("GND", ("J12", "1"))
+    # --- spare header: GND 3V3 IO21 IO32 IO14 GND (IO14 toggles at boot; pin 6 is a second GND
+    # because IO16 is not broken out on the Freenove board)
+    join("GND", ("J12", "1"), ("J12", "6"))
     join("V3", ("J12", "2"))
-    for pin, gpio in (("3", "IO21"), ("4", "IO32"), ("5", "IO14"), ("6", "IO16")):
+    for pin, gpio in (("3", "IO21"), ("4", "IO32"), ("5", "IO14")):
         net(f"SPARE_{gpio}", [("J12", pin), sockpin(gpio)])
 
     # --- sockets: power and ground
