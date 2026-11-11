@@ -9,6 +9,9 @@ OBSERVATION_SIZE = 12
 # Action = robot velocity x, y (between -1 and 1)
 ACTION_SIZE = 2
 
+# The actions never get less random than this
+MIN_STANDARD_DEVIATION = 0.2
+
 
 # Actor, picks the action
 class Actor(nn.Module):
@@ -31,8 +34,8 @@ class Actor(nn.Module):
     def forward(self, observation):
         mean = self.network(observation)
 
-        # exp makes sure the std is always positive
-        standard_deviation = self.log_standard_deviation.exp().expand_as(mean)
+        # exp makes sure the std is always positive, the floor stops the noise from collapsing to nothing
+        standard_deviation = self.log_standard_deviation.exp().clamp(min=MIN_STANDARD_DEVIATION).expand_as(mean)
 
         return mean, standard_deviation
 
