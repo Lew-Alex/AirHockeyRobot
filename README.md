@@ -12,6 +12,7 @@ exists in this repository from what is only planned.
 | Area | Status |
 |---|---|
 | Puck tracker (webcam, HSV yellow mask) | Prototype works on a webcam. No table calibration, filtering or bounce handling yet. |
+| Android App Perception Test | High-speed recorder with an integrated Python tracking toggle, live green overlay and local TCP XY output on port 8765. APK build and on-device validation pending; see `src/AndroidApp/README.md`. |
 | Camera latency test (OpenCV) | Script exists. Results are not recorded in this repo. |
 | iPhone 120 fps camera test app | Source written (`src/iphone_camera_test`), **not yet compiled or run**: Xcode is not installed on the development Mac. |
 | Simulation (Pygame) | Physics, scripted opponent and reward shaping exist. |

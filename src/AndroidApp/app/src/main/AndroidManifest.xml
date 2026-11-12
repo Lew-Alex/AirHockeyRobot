@@ -2,10 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-feature android:name="android.hardware.camera.any" android:required="true" />
 
     <application
-        android:label="FastCam"
+        android:label="Android App Perception Test"
         android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
 
         <activity

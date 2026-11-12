@@ -6,11 +6,24 @@
     android:fitsSystemWindows="true"
     android:keepScreenOn="true">
 
-    <TextureView
-        android:id="@+id/preview"
+    <FrameLayout
+        android:id="@+id/previewContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center" />
+        android:layout_height="match_parent">
+
+        <TextureView
+            android:id="@+id/preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+
+        <com.example.fastcam.PuckOverlayView
+            android:id="@+id/puckOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/info"
@@ -23,6 +36,23 @@
         android:textColor="#FFFFFF"
         android:textSize="13sp" />
 
+    <com.example.fastcam.FastTrackingOverlay
+        android:id="@+id/fastTrackingOverlay"
+        android:layout_width="210dp"
+        android:layout_height="160dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="108dp"
+        android:layout_marginEnd="8dp"
+        android:visibility="gone"
+        android:importantForAccessibility="no" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="330dp"
+        android:layout_gravity="bottom"
+        android:fillViewport="true"
+        android:background="#99000000">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,10 +61,73 @@
         android:orientation="vertical"
         android:padding="8dp">
 
+        <Switch
+            android:id="@+id/fastTrackingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:checked="false"
+            android:text="USB tracking test (GPU; no recording)"
+            android:textColor="#FFFFFF" />
+
+        <Switch
+            android:id="@+id/trackingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:checked="false"
+            android:text="Track yellow puck (Python)"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/trackingStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tracking off | XY output: TCP 8765"
+            android:textSize="12sp"
+            android:textColor="#FFFFFF" />
+
+        <Switch
+            android:id="@+id/embedTrackingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:checked="false"
+            android:text="Embed green circle in MP4 (after Stop)"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/exportStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MP4 overlay off"
+            android:textSize="12sp"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/cancelExportButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:visibility="gone"
+            android:text="Cancel MP4 overlay export" />
+
         <Spinner
             android:id="@+id/modeSpinner"
             android:layout_width="match_parent"
             android:layout_height="48dp" />
+
+        <TextView
+            android:id="@+id/shutterStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Shutter: Auto"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+
+        <SeekBar
+            android:id="@+id/shutterSlider"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:contentDescription="Exposure time: left Auto, right faster shutter"
+            android:max="1000"
+            android:progress="0" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -60,4 +153,5 @@
                 android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>
+    </ScrollView>
 </FrameLayout>

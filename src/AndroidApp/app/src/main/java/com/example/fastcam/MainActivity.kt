@@ -6,6 +6,7 @@ import android.app.Activity
 import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.graphics.SurfaceTexture
+import android.graphics.Matrix
 import android.hardware.camera2.CameraCaptureSession
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraConstrainedHighSpeedCaptureSession
@@ -20,6 +21,7 @@ import android.media.MediaCodec
 import android.media.MediaRecorder
 import android.net.Uri
 import android.os.Bundle
+import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.ParcelFileDescriptor
@@ -37,6 +39,8 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Switch
+import android.widget.SeekBar
 import android.widget.Toast
 import java.io.File
 import java.io.FileDescriptor
@@ -44,6 +48,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.Executor
+import kotlin.math.roundToInt
 
 /**
  * FastCam: records high frame rate video (120/240fps "high-speed" modes, or 60fps standard modes)
@@ -67,11 +72,6 @@ class MainActivity : Activity() {
     companion object {
         private const val REQ_CAMERA = 1
         private const val REC_TAG = "record"
-        // Shutter options for standard (60fps) modes. null = auto exposure.
-        private val SHUTTER_OPTIONS: List<Long?> = listOf(
-            null, 1_000_000_000L / 250, 1_000_000_000L / 500, 1_000_000_000L / 1000,
-            1_000_000_000L / 2000, 1_000_000_000L / 4000
-        )
     }
 
     // UI
@@ -79,7 +79,24 @@ class MainActivity : Activity() {
     private lateinit var modeSpinner: Spinner
     private lateinit var recordButton: Button
     private lateinit var shutterButton: Button
+    private lateinit var shutterSlider: SeekBar
+    private lateinit var shutterStatus: TextView
+    private lateinit var fastSwitch: Switch
+    private lateinit var trackingSwitch: Switch
+    private lateinit var fastOverlay: FastTrackingOverlay
+    @Volatile private var fastTracking = false
+    @Volatile private var fastPipeline: FastPuckPipeline? = null
     private lateinit var infoText: TextView
+    private lateinit var tracking: LivePuckTracking
+    private lateinit var puckOverlay: PuckOverlayView
+    private lateinit var embedTrackingSwitch: Switch
+    private lateinit var exportStatus: TextView
+    private lateinit var cancelExportButton: Button
+    private lateinit var videoExporter: TrackedVideoExporter
+    @Volatile private var activityResumed = false
+    @Volatile private var embedTrackingInMp4 = false
+    private var embedThisRecording = false
+    private var recordedFps = 30
 
     // Camera setup
     private lateinit var cameraManager: CameraManager
@@ -89,7 +106,9 @@ class MainActivity : Activity() {
     private var manualSensorSupported = false
     private var modes: List<Mode> = emptyList()
     @Volatile private var currentMode: Mode? = null
-    @Volatile private var shutterIndex = 0
+    @Volatile private var shutterProgress = 0
+    @Volatile private var manualIso = 100
+    private val applyShutter = Runnable { startRepeating(recording) }
 
     // Camera runtime (touched only on the camera thread, except where noted)
     private var cameraThread: HandlerThread? = null
@@ -97,10 +116,11 @@ class MainActivity : Activity() {
     private var cameraExecutor: Executor? = null
     private var camera: CameraDevice? = null
     private var opening = false
+    private var cameraGeneration = 0
     private var session: CameraCaptureSession? = null
     private var previewSurface: Surface? = null
     private var recorderSurface: Surface? = null
-    private var sessionGeneration = 0
+    @Volatile private var sessionGeneration = 0
     @Volatile private var useHevc = true
 
     // Recording
@@ -120,8 +140,7 @@ class MainActivity : Activity() {
     @Volatile private var fpsEma = 0.0
     private var lastTimestamp = 0L
     private var lastUiUpdateMs = 0L
-    // Remembered auto-exposure values, used to pick an ISO when switching to a fast manual shutter.
-    @Volatile private var autoExposureNs = 10_000_000L
+    // Snapshot the last auto ISO once when entering manual shutter mode.
     @Volatile private var autoIso = 100
 
     // ---------------------------------------------------------------- lifecycle
@@ -132,8 +151,55 @@ class MainActivity : Activity() {
         textureView = findViewById(R.id.preview)
         modeSpinner = findViewById(R.id.modeSpinner)
         recordButton = findViewById(R.id.recordButton)
+        recordButton.isEnabled = false // wait for a configured camera session
         shutterButton = findViewById(R.id.shutterButton)
+        shutterSlider = findViewById(R.id.shutterSlider)
+        shutterStatus = findViewById(R.id.shutterStatus)
+        fastSwitch = findViewById(R.id.fastTrackingSwitch)
+        fastOverlay = findViewById(R.id.fastTrackingOverlay)
         infoText = findViewById(R.id.info)
+        puckOverlay = findViewById(R.id.puckOverlay)
+        val trackingStatus = findViewById<TextView>(R.id.trackingStatus)
+        trackingSwitch = findViewById(R.id.trackingSwitch)
+        tracking = LivePuckTracking(this, textureView, puckOverlay, { trackingSwitch.isChecked = false }) {
+            trackingStatus.text = it
+        }
+        trackingSwitch.setOnCheckedChangeListener { _, checked ->
+            tracking.setEnabled(checked)
+        }
+        fastSwitch.setOnCheckedChangeListener { _, checked ->
+            fastTracking = checked
+            if (!checked) fastPipeline?.stopStreaming() // release TCP before Python restarts; close camera before GL
+            tracking.setCameraReady(false)
+            tracking.setResumed(activityResumed && !checked && !videoExporter.isRunning)
+            if (checked) trackingStatus.text = "GPU tracking test | TCP 8765 | Python paused"
+            trackingSwitch.isEnabled = !checked
+            embedTrackingSwitch.isEnabled = !checked && !videoExporter.isRunning
+            fastOverlay.visibility = if (checked) View.VISIBLE else View.GONE
+            fastOverlay.clear()
+            puckOverlay.clear()
+            recordButton.isEnabled = false
+            exportStatus.text = if (checked) "Starting GPU test; MP4 recording disabled"
+                else if (embedTrackingInMp4) "After Stop: save an additional MP4 with the tracked circle" else "MP4 overlay off"
+            updatePreviewLayout()
+            cameraHandler?.post { restartCamera() }
+        }
+        embedTrackingSwitch = findViewById(R.id.embedTrackingSwitch)
+        exportStatus = findViewById(R.id.exportStatus)
+        cancelExportButton = findViewById(R.id.cancelExportButton)
+        videoExporter = TrackedVideoExporter(this,
+            onStatus = { exportStatus.text = it },
+            onFinished = { uri, error ->
+                setExportUi(false)
+                if (uri != null) toast("Saved MP4 with green circle in Movies/FastCam")
+                else if (error != "Cancelled") toast("MP4 overlay failed: $error. Original recording kept.")
+            })
+        embedTrackingSwitch.setOnCheckedChangeListener { _, checked ->
+            embedTrackingInMp4 = checked
+            exportStatus.text = if (checked) "After Stop: save an additional MP4 with the tracked circle"
+                                else "MP4 overlay off"
+        }
+        cancelExportButton.setOnClickListener { videoExporter.cancel() }
 
         cameraManager = getSystemService(CameraManager::class.java)
         if (!pickCamera()) {
@@ -157,30 +223,61 @@ class MainActivity : Activity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val m = modes[position]
                 if (m == currentMode) return
+                recordButton.isEnabled = false
+                tracking.setCameraReady(false)
                 currentMode = m
                 updatePreviewLayout()
                 updateShutterButton()
-                cameraHandler?.post { startSession() }
+                cameraHandler?.post { restartCamera() }
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
         recordButton.setOnClickListener {
             recordButton.isEnabled = false // re-enabled once start/stop finishes
+            embedTrackingSwitch.isEnabled = false
+            fastSwitch.isEnabled = false
+            modeSpinner.isEnabled = false
             cameraHandler?.post { if (recording) stopRecording() else startRecording() }
         }
-        shutterButton.setOnClickListener {
-            shutterIndex = (shutterIndex + 1) % SHUTTER_OPTIONS.size
-            updateShutterButton()
-            cameraHandler?.post { startRepeating(recording) }
-        }
+        shutterSlider.max = ExposureControl.MANUAL_PROGRESS_MAX
+        shutterSlider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(bar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (shutterProgress == 0 && progress > 0) {
+                    // Freeze one AE baseline on manual entry. Slider changes cannot compound ISO.
+                    manualIso = characteristics.get(CameraCharacteristics.SENSOR_INFO_SENSITIVITY_RANGE)
+                        ?.clamp(autoIso) ?: autoIso
+                }
+                shutterProgress = progress
+                updateShutterButton()
+                cameraHandler?.let { h -> if (!h.hasCallbacks(applyShutter)) h.postDelayed(applyShutter, 60) }
+            }
+            override fun onStartTrackingTouch(bar: SeekBar?) {}
+            override fun onStopTrackingTouch(bar: SeekBar?) {
+                cameraHandler?.let { h -> h.removeCallbacks(applyShutter); h.post(applyShutter) }
+            }
+        })
+        shutterButton.setOnClickListener { shutterSlider.progress = 0 }
         updateShutterButton()
 
         textureView.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
-            override fun onSurfaceTextureAvailable(st: SurfaceTexture, w: Int, h: Int) = tryOpenCamera()
-            override fun onSurfaceTextureSizeChanged(st: SurfaceTexture, w: Int, h: Int) {}
-            override fun onSurfaceTextureDestroyed(st: SurfaceTexture) = true
-            override fun onSurfaceTextureUpdated(st: SurfaceTexture) {}
+            override fun onSurfaceTextureAvailable(st: SurfaceTexture, w: Int, h: Int) {
+                updatePreviewLayout()
+                tryOpenCamera()
+            }
+            override fun onSurfaceTextureSizeChanged(st: SurfaceTexture, w: Int, h: Int) {
+                updatePreviewLayout()
+            }
+            override fun onSurfaceTextureDestroyed(st: SurfaceTexture): Boolean {
+                tracking.setCameraReady(false)
+                fastPipeline?.stopStreaming()
+                cameraHandler?.post { closeCamera() }
+                return true
+            }
+            override fun onSurfaceTextureUpdated(st: SurfaceTexture) { if (!fastTracking) tracking.onPreviewFrame() }
+        }
+        findViewById<View>(R.id.previewContainer).addOnLayoutChangeListener { _, l, t, r, b, ol, ot, or, ob ->
+            if (r - l != or - ol || b - t != ob - ot) updatePreviewLayout()
         }
         textureView.post { updatePreviewLayout() }
 
@@ -191,16 +288,23 @@ class MainActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
+        activityResumed = true
         if (modes.isEmpty()) return
         val t = HandlerThread("camera").also { it.start() }
         cameraThread = t
         val h = Handler(t.looper)
         cameraHandler = h
         cameraExecutor = Executor { h.post(it) }
+        tracking.setResumed(!videoExporter.isRunning && !fastTracking)
         tryOpenCamera()
     }
 
     override fun onPause() {
+        activityResumed = false
+        tracking.setResumed(false)
+        fastPipeline?.stopStreaming()
+        fastOverlay.clear()
+        puckOverlay.clear()
         val h = cameraHandler
         val t = cameraThread
         if (h != null && t != null) {
@@ -215,6 +319,13 @@ class MainActivity : Activity() {
         cameraThread = null
         cameraExecutor = null
         super.onPause()
+    }
+
+    override fun onDestroy() {
+        videoExporter.close()
+        tracking.close()
+        fastPipeline?.close()
+        super.onDestroy()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -267,16 +378,20 @@ class MainActivity : Activity() {
             }
         }
 
-        // Standard 60fps modes (these allow manual fast shutter).
+        // Standard 30/60fps modes stay available even on high-speed cameras. Some
+        // devices also advertise regular 120fps, where manual exposure can still work.
         val aeRanges = characteristics.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES) ?: emptyArray()
-        val range60 = aeRanges.firstOrNull { it.lower == 60 && it.upper == 60 }
-            ?: aeRanges.filter { it.upper == 60 }.maxByOrNull { it.lower }
-        if (range60 != null) {
+        val previewSizes = map.getOutputSizes(SurfaceTexture::class.java)?.toSet() ?: emptySet()
+        for (fps in listOf(120, 60, 30)) {
+            val range = aeRanges.firstOrNull { it.lower == fps && it.upper == fps }
+                ?: aeRanges.filter { it.upper == fps }.maxByOrNull { it.lower } ?: continue
             val recSizes = map.getOutputSizes(MediaRecorder::class.java)?.toSet() ?: emptySet()
-            for (size in listOf(Size(3840, 2160), Size(1920, 1080), Size(1280, 720))) {
-                if (size !in recSizes) continue
+            for (size in listOf(Size(3840, 2160), Size(1920, 1080), Size(1280, 720), Size(640, 480))) {
+                if (size !in recSizes || size !in previewSizes) continue
                 val minFrame = map.getOutputMinFrameDuration(MediaRecorder::class.java, size)
-                if (minFrame in 1..16_700_000L) out += Mode(size, 60, range60, false)
+                val textureMin = map.getOutputMinFrameDuration(SurfaceTexture::class.java, size)
+                val limit = 1_000_000_000L / fps + 100_000L
+                if (minFrame in 1..limit && textureMin in 0..limit) out += Mode(size, fps, range, false)
             }
         }
 
@@ -300,28 +415,36 @@ class MainActivity : Activity() {
 
     @SuppressLint("MissingPermission")
     private fun tryOpenCamera() {
+        if (videoExporter.isRunning) return
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) return
         if (!textureView.isAvailable) return
         val h = cameraHandler ?: return
         h.post {
+            if (!activityResumed) return@post
             if (camera != null || opening) return@post
             opening = true
+            val generation = cameraGeneration
             try {
                 cameraManager.openCamera(cameraId, object : CameraDevice.StateCallback() {
                     override fun onOpened(c: CameraDevice) {
+                        if (generation != cameraGeneration || !activityResumed) { c.close(); return }
                         opening = false
                         camera = c
                         startSession()
                     }
                     override fun onDisconnected(c: CameraDevice) {
+                        if (generation != cameraGeneration) { c.close(); return }
+                        runOnUiThread { tracking.setCameraReady(false) }
                         opening = false
                         c.close()
-                        if (camera == c) camera = null
+                        if (camera == c) closeCamera()
                     }
                     override fun onError(c: CameraDevice, error: Int) {
+                        if (generation != cameraGeneration) { c.close(); return }
+                        runOnUiThread { tracking.setCameraReady(false) }
                         opening = false
                         c.close()
-                        if (camera == c) camera = null
+                        if (camera == c) closeCamera()
                         toast("Camera error $error")
                     }
                 }, h)
@@ -340,11 +463,26 @@ class MainActivity : Activity() {
         val executor = cameraExecutor ?: return
         if (recording) return
 
+        runOnUiThread { tracking.setCameraReady(false) }
+        val generation = ++sessionGeneration
         session?.close()
         session = null
+        val previousPipeline = fastPipeline
+        previousPipeline?.close()
+        if (previousPipeline != null && !previousPipeline.awaitReleased()) {
+            toast("Previous GPU test is still stopping; try changing mode again shortly")
+            return
+        }
+        fastPipeline = null
         previewSurface?.release()
         recorderSurface?.release()
-        val generation = ++sessionGeneration
+        previewSurface = null
+        recorderSurface = null
+
+        if (fastTracking) {
+            startFastSession(cam, mode, st, executor, generation)
+            return
+        }
 
         // Preview buffers must match the video size in high-speed sessions.
         st.setDefaultBufferSize(mode.size.width, mode.size.height)
@@ -379,12 +517,15 @@ class MainActivity : Activity() {
             executor,
             object : CameraCaptureSession.StateCallback() {
                 override fun onConfigured(s: CameraCaptureSession) {
-                    if (generation != sessionGeneration) { s.close(); return }
+                    if (generation != sessionGeneration || fastTracking || !activityResumed) { s.close(); return }
                     session = s
                     lastTimestamp = 0
                     fpsEma = 0.0
                     startRepeating(false)
-                    runOnUiThread { recordButton.isEnabled = true }
+                    runOnUiThread {
+                        recordButton.isEnabled = !videoExporter.isRunning && !fastTracking
+                        tracking.setCameraReady(true)
+                    }
                 }
                 override fun onConfigureFailed(s: CameraCaptureSession) {
                     toast("Camera refused ${mode.label}. Pick another mode.")
@@ -398,18 +539,81 @@ class MainActivity : Activity() {
         }
     }
 
+    /** One camera output. The GL consumer draws the preview itself at a lower UI rate. */
+    private fun startFastSession(cam: CameraDevice, mode: Mode, st: SurfaceTexture, executor: Executor, generation: Int) {
+        val handler = cameraHandler ?: return
+        val realtime = characteristics.get(CameraCharacteristics.SENSOR_INFO_TIMESTAMP_SOURCE) ==
+            CameraCharacteristics.SENSOR_INFO_TIMESTAMP_SOURCE_REALTIME
+        val pipeline = FastPuckPipeline(mode.size.width, mode.size.height, previewRotation(), displayRotationDegrees(),
+            realtime, mode.fps, st, { fpsEma },
+            onReady = { surface -> handler.post {
+                if (generation == sessionGeneration && fastTracking && activityResumed && camera === cam && fastPipeline?.isRunning == true) {
+                    previewSurface = surface
+                    val outputConfig = OutputConfiguration(surface).apply {
+                        // Make the texture timestamp explicitly use the sensor clock on newer Android.
+                        if (Build.VERSION.SDK_INT >= 33) setTimestampBase(OutputConfiguration.TIMESTAMP_BASE_SENSOR)
+                    }
+                    val config = SessionConfiguration(
+                        if (mode.highSpeed) SessionConfiguration.SESSION_HIGH_SPEED else SessionConfiguration.SESSION_REGULAR,
+                        listOf(outputConfig), executor, object : CameraCaptureSession.StateCallback() {
+                            override fun onConfigured(s: CameraCaptureSession) {
+                                if (generation != sessionGeneration || !fastTracking || !activityResumed || fastPipeline?.isRunning != true) { s.close(); return }
+                                session = s
+                                lastTimestamp = 0L
+                                fpsEma = 0.0
+                                startRepeating(false)
+                                runOnUiThread {
+                                    fastSwitch.isEnabled = true
+                                    recordButton.isEnabled = false
+                                    exportStatus.text = "USB tracking test: streaming on TCP 8765; MP4 recording disabled"
+                                }
+                            }
+                            override fun onConfigureFailed(s: CameraCaptureSession) {
+                                s.close()
+                                if (generation == sessionGeneration) {
+                                    fastPipeline?.close()
+                                    toast("Tracking test refused ${mode.label}; try a standard 720p mode")
+                                }
+                            }
+                        })
+                    try { cam.createCaptureSession(config) }
+                    catch (error: Exception) { fastPipeline?.close(); toast("Tracking session: ${error.message}") }
+                }
+            } },
+            onSample = { sample -> runOnUiThread {
+                if (generation == sessionGeneration && fastTracking && activityResumed) {
+                    fastOverlay.show(sample)
+                    if (sample.previewX != null && sample.previewY != null) {
+                        puckOverlay.show(sample.previewX, sample.previewY, sample.radiusX, sample.radiusY)
+                    } else puckOverlay.clear()
+                }
+            } },
+            onError = { error -> runOnUiThread {
+                if (generation == sessionGeneration && fastTracking) {
+                    fastOverlay.clear(); puckOverlay.clear()
+                    exportStatus.text = "Tracking test stopped: $error. Toggle off to restore recording."
+                    toast(error)
+                    cameraHandler?.post { if (generation == sessionGeneration) closeCamera() }
+                }
+            } })
+        fastPipeline = pipeline
+        pipeline.resize(textureView.width, textureView.height)
+        pipeline.start()
+    }
+
     /** Starts the repeating preview (or preview+record) request. Camera thread only. */
     private fun startRepeating(record: Boolean) {
         val s = session ?: return
         val cam = camera ?: return
         val mode = currentMode ?: return
         val preview = previewSurface ?: return
-        val rec = recorderSurface ?: return
+        val rec = recorderSurface
+        if (record && (rec == null || fastTracking)) return
         try {
             val b = cam.createCaptureRequest(if (record) CameraDevice.TEMPLATE_RECORD else CameraDevice.TEMPLATE_PREVIEW)
             b.addTarget(preview)
             if (record) {
-                b.addTarget(rec)
+                b.addTarget(rec!!)
                 b.setTag(REC_TAG)
             }
             b.set(CaptureRequest.CONTROL_MODE, CaptureRequest.CONTROL_MODE_AUTO)
@@ -419,13 +623,13 @@ class MainActivity : Activity() {
             if (!mode.highSpeed) {
                 // Electronic stabilization warps/crops frames, which would corrupt later processing.
                 b.set(CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE, CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE_OFF)
-                val exposure = SHUTTER_OPTIONS[shutterIndex]
+                val range = characteristics.get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE)
+                val exposure = range?.let { ExposureControl.exposureForProgress(shutterProgress,
+                    it.lower, it.upper, 1_000_000_000L / mode.fps) }
                 if (exposure != null && manualSensorSupported) {
-                    val expRange = characteristics.get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE)
-                    val exp = expRange?.clamp(exposure) ?: exposure
                     b.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_OFF)
-                    b.set(CaptureRequest.SENSOR_EXPOSURE_TIME, exp)
-                    b.set(CaptureRequest.SENSOR_SENSITIVITY, isoFor(exp))
+                    b.set(CaptureRequest.SENSOR_EXPOSURE_TIME, exposure)
+                    b.set(CaptureRequest.SENSOR_SENSITIVITY, manualIso)
                     b.set(CaptureRequest.SENSOR_FRAME_DURATION, 1_000_000_000L / mode.fps)
                 }
             }
@@ -441,31 +645,41 @@ class MainActivity : Activity() {
         }
     }
 
-    /** Keeps brightness roughly the same as auto exposure when using a faster shutter. */
-    private fun isoFor(exposureNs: Long): Int {
-        val target = autoIso.toDouble() * autoExposureNs / exposureNs
-        val range = characteristics.get(CameraCharacteristics.SENSOR_INFO_SENSITIVITY_RANGE)
-        val iso = target.toInt().coerceAtLeast(1)
-        return range?.clamp(iso) ?: iso
-    }
-
-    private fun closeCamera() {
+    private fun closeCamera(): Boolean {
+        runOnUiThread { tracking.setCameraReady(false) }
         sessionGeneration++
+        cameraGeneration++
         try { session?.close() } catch (_: Exception) {}
         session = null
+        // Disconnect Camera2 before releasing its SurfaceTexture or reconnecting
+        // the visible TextureView to an EGL producer.
         camera?.close()
         camera = null
+        val released = fastPipeline?.let { it.close(); it.awaitReleased() } ?: true
+        if (released) fastPipeline = null
         opening = false
         previewSurface?.release()
         previewSurface = null
         recorderSurface?.release()
         recorderSurface = null
+        return released
+    }
+
+    /** Camera-thread only. Switching Camera2/EGL producers needs a full disconnect. */
+    private fun restartCamera() {
+        if (recording) return
+        if (!closeCamera()) {
+            toast("GPU test is still stopping; change mode again shortly")
+            return
+        }
+        if (activityResumed) runOnUiThread { tryOpenCamera() }
     }
 
     // ---------------------------------------------------------------- per-frame metadata
 
     private val captureCallback = object : CameraCaptureSession.CaptureCallback() {
         override fun onCaptureCompleted(s: CameraCaptureSession, request: CaptureRequest, result: TotalCaptureResult) {
+            if (s !== session) return
             val ts = result.get(CaptureResult.SENSOR_TIMESTAMP) ?: return
             val skew = result.get(CaptureResult.SENSOR_ROLLING_SHUTTER_SKEW) ?: 0L
             val exposure = result.get(CaptureResult.SENSOR_EXPOSURE_TIME) ?: 0L
@@ -473,7 +687,6 @@ class MainActivity : Activity() {
             val frameDuration = result.get(CaptureResult.SENSOR_FRAME_DURATION) ?: 0L
 
             if (result.get(CaptureResult.CONTROL_AE_MODE) != CaptureResult.CONTROL_AE_MODE_OFF && exposure > 0 && iso > 0) {
-                autoExposureNs = exposure
                 autoIso = iso
             }
             lastSkewNs = skew
@@ -511,7 +724,7 @@ class MainActivity : Activity() {
             setVideoEncodingBitRate(bitrate)
             setVideoFrameRate(mode.fps)
             setVideoSize(mode.size.width, mode.size.height)
-            setOrientationHint(sensorOrientation)
+            setOrientationHint(previewRotation())
             setInputSurface(surface)
         }
     }
@@ -520,11 +733,18 @@ class MainActivity : Activity() {
     private fun startRecording() {
         val mode = currentMode
         val surface = recorderSurface
-        if (recording || session == null || mode == null || surface == null) {
-            runOnUiThread { recordButton.isEnabled = true }
+        if (recording || fastTracking || session == null || mode == null || surface == null) {
+            runOnUiThread {
+                recordButton.isEnabled = session != null && !fastTracking
+                embedTrackingSwitch.isEnabled = !recording && !fastTracking
+                fastSwitch.isEnabled = !recording
+                modeSpinner.isEnabled = !recording
+            }
             return
         }
         try {
+            embedThisRecording = embedTrackingInMp4
+            recordedFps = mode.fps
             baseName = "FASTCAM_" + SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date()) +
                 "_${mode.size.width}x${mode.size.height}_${mode.fps}fps"
             val values = ContentValues().apply {
@@ -559,6 +779,7 @@ class MainActivity : Activity() {
                 recordButton.text = "■ STOP"
                 recordButton.isEnabled = true
                 modeSpinner.isEnabled = false
+                fastSwitch.isEnabled = false
             }
         } catch (e: Exception) {
             recording = false
@@ -569,7 +790,12 @@ class MainActivity : Activity() {
             videoUri?.let { contentResolver.delete(it, null, null) }
             videoUri = null
             toast("Could not start recording: ${e.message}")
-            runOnUiThread { recordButton.isEnabled = true }
+            runOnUiThread {
+                recordButton.isEnabled = true
+                embedTrackingSwitch.isEnabled = true
+                fastSwitch.isEnabled = true
+                modeSpinner.isEnabled = true
+            }
         }
     }
 
@@ -610,11 +836,35 @@ class MainActivity : Activity() {
                 (if (csvSaved) "\n+ Download/FastCam/$baseName.csv ($framesLogged frames)" else "")
             else "Recording failed (no frames)"
         )
+        val annotate = ok && uri != null && embedThisRecording
+        val savedBaseName = baseName
+        val savedFps = recordedFps
         runOnUiThread {
             recordButton.text = "● REC"
             recordButton.isEnabled = true
             modeSpinner.isEnabled = true
+            embedTrackingSwitch.isEnabled = true
+            fastSwitch.isEnabled = true
+            if (annotate && uri != null && !isFinishing && !isDestroyed) {
+                setExportUi(true)
+                try { videoExporter.start(uri, savedBaseName, savedFps) }
+                catch (e: Exception) {
+                    setExportUi(false)
+                    exportStatus.text = "MP4 overlay failed: ${e.message}. Original recording kept."
+                }
+            }
         }
+    }
+
+    private fun setExportUi(busy: Boolean) {
+        recordButton.isEnabled = !busy && activityResumed && session != null && !fastTracking
+        modeSpinner.isEnabled = !busy && !recording
+        embedTrackingSwitch.isEnabled = !busy && !recording && !fastTracking
+        fastSwitch.isEnabled = !busy && !recording
+        cancelExportButton.visibility = if (busy) View.VISIBLE else View.GONE
+        // Export re-runs Python on every saved frame; suspend live sampling during that work.
+        tracking.setResumed(activityResumed && !busy && !fastTracking)
+        if (!busy && activityResumed) tryOpenCamera()
     }
 
     private fun saveCsv(name: String, text: String): Boolean = try {
@@ -634,24 +884,62 @@ class MainActivity : Activity() {
 
     // ---------------------------------------------------------------- UI helpers
 
-    /** Sizes the preview to the video's aspect ratio (portrait: sensor width maps to screen height). */
+    private fun displayRotationDegrees(): Int = when (display?.rotation) {
+            Surface.ROTATION_90 -> 90
+            Surface.ROTATION_180 -> 180
+            Surface.ROTATION_270 -> 270
+            else -> 0
+        }
+
+    private fun previewRotation(): Int = (sensorOrientation - displayRotationDegrees() + 360) % 360
+
+    /** Explicit rotation and aspect-fit: sampled pixels and the overlay share this geometry. */
     private fun updatePreviewLayout() {
         val mode = currentMode ?: return
-        val parentW = (textureView.parent as View).width.takeIf { it > 0 } ?: resources.displayMetrics.widthPixels
-        val h = parentW * mode.size.width / mode.size.height
-        textureView.layoutParams = FrameLayout.LayoutParams(parentW, h, Gravity.CENTER)
+        val parent = textureView.parent as View
+        if (parent.width == 0 || parent.height == 0) return
+        val angle = previewRotation()
+        val (displayW, displayH) = PreviewCoordinates.displaySize(mode.size.width, mode.size.height, angle)
+        val scale = minOf(parent.width.toDouble() / displayW, parent.height.toDouble() / displayH)
+        val w = (displayW * scale).roundToInt().coerceAtLeast(1)
+        val h = (displayH * scale).roundToInt().coerceAtLeast(1)
+        textureView.layoutParams = FrameLayout.LayoutParams(w, h, Gravity.CENTER)
+        puckOverlay.layoutParams = FrameLayout.LayoutParams(w, h, Gravity.CENTER)
+        // Camera2's SurfaceTexture producer transform already applies SENSOR_ORIENTATION.
+        // Applying `angle` here rotates the image twice (a sideways portrait preview).
+        // Only compensate the remaining display rotation, while `angle` above still
+        // controls the fitted aspect ratio and the tracker-to-recording coordinate map.
+        val source = floatArrayOf(0f, 0f, w.toFloat(), 0f, 0f, h.toFloat())
+        val target = when (PreviewCoordinates.textureRotation(displayRotationDegrees())) {
+            90 -> floatArrayOf(w.toFloat(), 0f, w.toFloat(), h.toFloat(), 0f, 0f)
+            180 -> floatArrayOf(w.toFloat(), h.toFloat(), 0f, h.toFloat(), w.toFloat(), 0f)
+            270 -> floatArrayOf(0f, h.toFloat(), 0f, 0f, w.toFloat(), h.toFloat())
+            else -> source
+        }
+        textureView.setTransform(if (fastTracking) Matrix() else Matrix().apply { setPolyToPoly(source, 0, target, 0, 3) })
+        fastPipeline?.resize(w, h)
+        tracking.configure(mode.size.width, mode.size.height, angle)
     }
 
     private fun updateShutterButton() {
         val mode = currentMode
-        if (mode == null || mode.highSpeed || !manualSensorSupported) {
+        val range = if (::characteristics.isInitialized) characteristics.get(CameraCharacteristics.SENSOR_INFO_EXPOSURE_TIME_RANGE) else null
+        if (mode == null || mode.highSpeed || !manualSensorSupported || range == null) {
             shutterButton.isEnabled = false
+            shutterSlider.isEnabled = false
             shutterButton.text = if (mode?.highSpeed == true) "Shutter: Auto\n(locked in high-speed)" else "Shutter: Auto"
+            shutterStatus.text = if (mode?.highSpeed == true) "Choose a standard mode for manual fast exposure"
+                                 else "Camera does not expose manual shutter control"
             return
         }
+        val exposure = ExposureControl.exposureForProgress(shutterProgress, range.lower, range.upper, 1_000_000_000L / mode.fps)
+        val shortest = ExposureControl.exposureForProgress(1000, range.lower, range.upper, 1_000_000_000L / mode.fps)
+        shutterSlider.isEnabled = shortest != null
         shutterButton.isEnabled = true
-        val exp = SHUTTER_OPTIONS[shutterIndex]
-        shutterButton.text = if (exp == null) "Shutter: Auto" else "Shutter: 1/${1_000_000_000L / exp}"
+        shutterButton.text = "Reset shutter\nto Auto"
+        shutterStatus.text = "Requested: ${ExposureControl.labelForExposureNs(exposure)}\n" +
+            "Right = faster; sensor limit ${ExposureControl.labelForExposureNs(shortest)}" +
+            if (exposure != null) "\nISO fixed at $manualIso; add light if the image is dark" else ""
     }
 
     private fun updateInfo() {
@@ -662,7 +950,7 @@ class MainActivity : Activity() {
         val sb = StringBuilder()
         sb.append(mode.label).append('\n')
         sb.append("Rolling shutter: ").append(if (lastSkewNs > 0) "%.2f ms".format(skewMs) else "not reported").append('\n')
-        sb.append("Exposure: $expText   ISO $lastIso   ").append("%.1f fps".format(fpsEma))
+        sb.append("Actual exposure: $expText   ISO $lastIso\n").append("Camera metadata: %.1f fps".format(fpsEma))
         if (recording) {
             val secs = (SystemClock.uptimeMillis() - recordStartMs) / 1000
             sb.append("\n● REC %d:%02d   %d frames logged".format(secs / 60, secs % 60, framesLogged))
