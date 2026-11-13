@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "FastCam"
+rootProject.name = "AndroidAppPerceptionTest"
 include(":app")

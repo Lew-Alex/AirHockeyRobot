@@ -6,6 +6,7 @@ import android.app.Activity
 import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.graphics.SurfaceTexture
+import android.graphics.Matrix
 import android.hardware.camera2.CameraCaptureSession
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraConstrainedHighSpeedCaptureSession
@@ -37,6 +38,7 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Switch
 import android.widget.Toast
 import java.io.File
 import java.io.FileDescriptor
@@ -44,6 +46,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.Executor
+import kotlin.math.roundToInt
 
 /**
  * FastCam: records high frame rate video (120/240fps "high-speed" modes, or 60fps standard modes)
@@ -80,6 +83,16 @@ class MainActivity : Activity() {
     private lateinit var recordButton: Button
     private lateinit var shutterButton: Button
     private lateinit var infoText: TextView
+    private lateinit var tracking: LivePuckTracking
+    private lateinit var puckOverlay: PuckOverlayView
+    private lateinit var embedTrackingSwitch: Switch
+    private lateinit var exportStatus: TextView
+    private lateinit var cancelExportButton: Button
+    private lateinit var videoExporter: TrackedVideoExporter
+    private var activityResumed = false
+    @Volatile private var embedTrackingInMp4 = false
+    private var embedThisRecording = false
+    private var recordedFps = 30
 
     // Camera setup
     private lateinit var cameraManager: CameraManager
@@ -132,8 +145,34 @@ class MainActivity : Activity() {
         textureView = findViewById(R.id.preview)
         modeSpinner = findViewById(R.id.modeSpinner)
         recordButton = findViewById(R.id.recordButton)
+        recordButton.isEnabled = false // wait for a configured camera session
         shutterButton = findViewById(R.id.shutterButton)
         infoText = findViewById(R.id.info)
+        puckOverlay = findViewById(R.id.puckOverlay)
+        val trackingStatus = findViewById<TextView>(R.id.trackingStatus)
+        val trackingSwitch = findViewById<Switch>(R.id.trackingSwitch)
+        tracking = LivePuckTracking(this, textureView, puckOverlay, { trackingSwitch.isChecked = false }) {
+            trackingStatus.text = it
+        }
+        trackingSwitch.setOnCheckedChangeListener { _, checked ->
+            tracking.setEnabled(checked)
+        }
+        embedTrackingSwitch = findViewById(R.id.embedTrackingSwitch)
+        exportStatus = findViewById(R.id.exportStatus)
+        cancelExportButton = findViewById(R.id.cancelExportButton)
+        videoExporter = TrackedVideoExporter(this,
+            onStatus = { exportStatus.text = it },
+            onFinished = { uri, error ->
+                setExportUi(false)
+                if (uri != null) toast("Saved MP4 with green circle in Movies/FastCam")
+                else if (error != "Cancelled") toast("MP4 overlay failed: $error. Original recording kept.")
+            })
+        embedTrackingSwitch.setOnCheckedChangeListener { _, checked ->
+            embedTrackingInMp4 = checked
+            exportStatus.text = if (checked) "After Stop: save an additional MP4 with the tracked circle"
+                                else "MP4 overlay off"
+        }
+        cancelExportButton.setOnClickListener { videoExporter.cancel() }
 
         cameraManager = getSystemService(CameraManager::class.java)
         if (!pickCamera()) {
@@ -157,6 +196,8 @@ class MainActivity : Activity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val m = modes[position]
                 if (m == currentMode) return
+                recordButton.isEnabled = false
+                tracking.setCameraReady(false)
                 currentMode = m
                 updatePreviewLayout()
                 updateShutterButton()
@@ -167,6 +208,7 @@ class MainActivity : Activity() {
 
         recordButton.setOnClickListener {
             recordButton.isEnabled = false // re-enabled once start/stop finishes
+            embedTrackingSwitch.isEnabled = false
             cameraHandler?.post { if (recording) stopRecording() else startRecording() }
         }
         shutterButton.setOnClickListener {
@@ -177,10 +219,21 @@ class MainActivity : Activity() {
         updateShutterButton()
 
         textureView.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
-            override fun onSurfaceTextureAvailable(st: SurfaceTexture, w: Int, h: Int) = tryOpenCamera()
-            override fun onSurfaceTextureSizeChanged(st: SurfaceTexture, w: Int, h: Int) {}
-            override fun onSurfaceTextureDestroyed(st: SurfaceTexture) = true
-            override fun onSurfaceTextureUpdated(st: SurfaceTexture) {}
+            override fun onSurfaceTextureAvailable(st: SurfaceTexture, w: Int, h: Int) {
+                updatePreviewLayout()
+                tryOpenCamera()
+            }
+            override fun onSurfaceTextureSizeChanged(st: SurfaceTexture, w: Int, h: Int) {
+                updatePreviewLayout()
+            }
+            override fun onSurfaceTextureDestroyed(st: SurfaceTexture): Boolean {
+                tracking.setCameraReady(false)
+                return true
+            }
+            override fun onSurfaceTextureUpdated(st: SurfaceTexture) { tracking.onPreviewFrame() }
+        }
+        findViewById<View>(R.id.previewContainer).addOnLayoutChangeListener { _, l, t, r, b, ol, ot, or, ob ->
+            if (r - l != or - ol || b - t != ob - ot) updatePreviewLayout()
         }
         textureView.post { updatePreviewLayout() }
 
@@ -191,16 +244,20 @@ class MainActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
+        activityResumed = true
         if (modes.isEmpty()) return
         val t = HandlerThread("camera").also { it.start() }
         cameraThread = t
         val h = Handler(t.looper)
         cameraHandler = h
         cameraExecutor = Executor { h.post(it) }
+        tracking.setResumed(!videoExporter.isRunning)
         tryOpenCamera()
     }
 
     override fun onPause() {
+        activityResumed = false
+        tracking.setResumed(false)
         val h = cameraHandler
         val t = cameraThread
         if (h != null && t != null) {
@@ -215,6 +272,12 @@ class MainActivity : Activity() {
         cameraThread = null
         cameraExecutor = null
         super.onPause()
+    }
+
+    override fun onDestroy() {
+        videoExporter.close()
+        tracking.close()
+        super.onDestroy()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -300,6 +363,7 @@ class MainActivity : Activity() {
 
     @SuppressLint("MissingPermission")
     private fun tryOpenCamera() {
+        if (videoExporter.isRunning) return
         if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) return
         if (!textureView.isAvailable) return
         val h = cameraHandler ?: return
@@ -314,11 +378,13 @@ class MainActivity : Activity() {
                         startSession()
                     }
                     override fun onDisconnected(c: CameraDevice) {
+                        runOnUiThread { tracking.setCameraReady(false) }
                         opening = false
                         c.close()
                         if (camera == c) camera = null
                     }
                     override fun onError(c: CameraDevice, error: Int) {
+                        runOnUiThread { tracking.setCameraReady(false) }
                         opening = false
                         c.close()
                         if (camera == c) camera = null
@@ -339,6 +405,8 @@ class MainActivity : Activity() {
         val st = textureView.surfaceTexture ?: return
         val executor = cameraExecutor ?: return
         if (recording) return
+
+        runOnUiThread { tracking.setCameraReady(false) }
 
         session?.close()
         session = null
@@ -384,7 +452,10 @@ class MainActivity : Activity() {
                     lastTimestamp = 0
                     fpsEma = 0.0
                     startRepeating(false)
-                    runOnUiThread { recordButton.isEnabled = true }
+                    runOnUiThread {
+                        recordButton.isEnabled = !videoExporter.isRunning
+                        tracking.setCameraReady(true)
+                    }
                 }
                 override fun onConfigureFailed(s: CameraCaptureSession) {
                     toast("Camera refused ${mode.label}. Pick another mode.")
@@ -450,6 +521,7 @@ class MainActivity : Activity() {
     }
 
     private fun closeCamera() {
+        runOnUiThread { tracking.setCameraReady(false) }
         sessionGeneration++
         try { session?.close() } catch (_: Exception) {}
         session = null
@@ -511,7 +583,7 @@ class MainActivity : Activity() {
             setVideoEncodingBitRate(bitrate)
             setVideoFrameRate(mode.fps)
             setVideoSize(mode.size.width, mode.size.height)
-            setOrientationHint(sensorOrientation)
+            setOrientationHint(previewRotation())
             setInputSurface(surface)
         }
     }
@@ -521,10 +593,15 @@ class MainActivity : Activity() {
         val mode = currentMode
         val surface = recorderSurface
         if (recording || session == null || mode == null || surface == null) {
-            runOnUiThread { recordButton.isEnabled = true }
+            runOnUiThread {
+                recordButton.isEnabled = session != null
+                embedTrackingSwitch.isEnabled = !recording
+            }
             return
         }
         try {
+            embedThisRecording = embedTrackingInMp4
+            recordedFps = mode.fps
             baseName = "FASTCAM_" + SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date()) +
                 "_${mode.size.width}x${mode.size.height}_${mode.fps}fps"
             val values = ContentValues().apply {
@@ -569,7 +646,10 @@ class MainActivity : Activity() {
             videoUri?.let { contentResolver.delete(it, null, null) }
             videoUri = null
             toast("Could not start recording: ${e.message}")
-            runOnUiThread { recordButton.isEnabled = true }
+            runOnUiThread {
+                recordButton.isEnabled = true
+                embedTrackingSwitch.isEnabled = true
+            }
         }
     }
 
@@ -610,11 +690,33 @@ class MainActivity : Activity() {
                 (if (csvSaved) "\n+ Download/FastCam/$baseName.csv ($framesLogged frames)" else "")
             else "Recording failed (no frames)"
         )
+        val annotate = ok && uri != null && embedThisRecording
+        val savedBaseName = baseName
+        val savedFps = recordedFps
         runOnUiThread {
             recordButton.text = "● REC"
             recordButton.isEnabled = true
             modeSpinner.isEnabled = true
+            embedTrackingSwitch.isEnabled = true
+            if (annotate && uri != null && !isFinishing && !isDestroyed) {
+                setExportUi(true)
+                try { videoExporter.start(uri, savedBaseName, savedFps) }
+                catch (e: Exception) {
+                    setExportUi(false)
+                    exportStatus.text = "MP4 overlay failed: ${e.message}. Original recording kept."
+                }
+            }
         }
+    }
+
+    private fun setExportUi(busy: Boolean) {
+        recordButton.isEnabled = !busy && activityResumed && session != null
+        modeSpinner.isEnabled = !busy && !recording
+        embedTrackingSwitch.isEnabled = !busy && !recording
+        cancelExportButton.visibility = if (busy) View.VISIBLE else View.GONE
+        // Export re-runs Python on every saved frame; suspend live sampling during that work.
+        tracking.setResumed(activityResumed && !busy)
+        if (!busy && activityResumed) tryOpenCamera()
     }
 
     private fun saveCsv(name: String, text: String): Boolean = try {
@@ -634,12 +736,40 @@ class MainActivity : Activity() {
 
     // ---------------------------------------------------------------- UI helpers
 
-    /** Sizes the preview to the video's aspect ratio (portrait: sensor width maps to screen height). */
+    private fun displayRotationDegrees(): Int = when (display?.rotation) {
+            Surface.ROTATION_90 -> 90
+            Surface.ROTATION_180 -> 180
+            Surface.ROTATION_270 -> 270
+            else -> 0
+        }
+
+    private fun previewRotation(): Int = (sensorOrientation - displayRotationDegrees() + 360) % 360
+
+    /** Explicit rotation and aspect-fit: sampled pixels and the overlay share this geometry. */
     private fun updatePreviewLayout() {
         val mode = currentMode ?: return
-        val parentW = (textureView.parent as View).width.takeIf { it > 0 } ?: resources.displayMetrics.widthPixels
-        val h = parentW * mode.size.width / mode.size.height
-        textureView.layoutParams = FrameLayout.LayoutParams(parentW, h, Gravity.CENTER)
+        val parent = textureView.parent as View
+        if (parent.width == 0 || parent.height == 0) return
+        val angle = previewRotation()
+        val (displayW, displayH) = PreviewCoordinates.displaySize(mode.size.width, mode.size.height, angle)
+        val scale = minOf(parent.width.toDouble() / displayW, parent.height.toDouble() / displayH)
+        val w = (displayW * scale).roundToInt().coerceAtLeast(1)
+        val h = (displayH * scale).roundToInt().coerceAtLeast(1)
+        textureView.layoutParams = FrameLayout.LayoutParams(w, h, Gravity.CENTER)
+        puckOverlay.layoutParams = FrameLayout.LayoutParams(w, h, Gravity.CENTER)
+        // Camera2's SurfaceTexture producer transform already applies SENSOR_ORIENTATION.
+        // Applying `angle` here rotates the image twice (a sideways portrait preview).
+        // Only compensate the remaining display rotation, while `angle` above still
+        // controls the fitted aspect ratio and the tracker-to-recording coordinate map.
+        val source = floatArrayOf(0f, 0f, w.toFloat(), 0f, 0f, h.toFloat())
+        val target = when (PreviewCoordinates.textureRotation(displayRotationDegrees())) {
+            90 -> floatArrayOf(w.toFloat(), 0f, w.toFloat(), h.toFloat(), 0f, 0f)
+            180 -> floatArrayOf(w.toFloat(), h.toFloat(), 0f, h.toFloat(), w.toFloat(), 0f)
+            270 -> floatArrayOf(0f, h.toFloat(), 0f, 0f, w.toFloat(), h.toFloat())
+            else -> source
+        }
+        textureView.setTransform(Matrix().apply { setPolyToPoly(source, 0, target, 0, 3) })
+        tracking.configure(mode.size.width, mode.size.height, angle)
     }
 
     private fun updateShutterButton() {

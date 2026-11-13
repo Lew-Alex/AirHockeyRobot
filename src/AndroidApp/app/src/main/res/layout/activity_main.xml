@@ -6,11 +6,24 @@
     android:fitsSystemWindows="true"
     android:keepScreenOn="true">
 
-    <TextureView
-        android:id="@+id/preview"
+    <FrameLayout
+        android:id="@+id/previewContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center" />
+        android:layout_height="match_parent">
+
+        <TextureView
+            android:id="@+id/preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+
+        <com.example.fastcam.PuckOverlayView
+            android:id="@+id/puckOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/info"
@@ -30,6 +43,45 @@
         android:background="#99000000"
         android:orientation="vertical"
         android:padding="8dp">
+
+        <Switch
+            android:id="@+id/trackingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:checked="false"
+            android:text="Track yellow puck (Python)"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/trackingStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tracking off | XY output: TCP 8765"
+            android:textSize="12sp"
+            android:textColor="#FFFFFF" />
+
+        <Switch
+            android:id="@+id/embedTrackingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:checked="false"
+            android:text="Embed green circle in MP4 (after Stop)"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/exportStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MP4 overlay off"
+            android:textSize="12sp"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/cancelExportButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:visibility="gone"
+            android:text="Cancel MP4 overlay export" />
 
         <Spinner
             android:id="@+id/modeSpinner"
