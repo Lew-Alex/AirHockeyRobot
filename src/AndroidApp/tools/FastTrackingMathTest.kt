@@ -49,6 +49,11 @@ object FastTrackingMathTest {
         for (i in 0..120) rate.add(1_000_000_000L+i*8_333_333L)
         check(abs(rate.rate(2_000_000_000L)-120.0) < 0.01)
         check(rate.rate(4_000_000_000L) == 0.0) // stalls must not leave a stale high FPS
+        rate.add(4_000_000_001L)
+        rate.add(4_100_000_001L)
+        check(rate.rate(4_100_000_001L) > 0.0)
+        rate.clear()
+        check(rate.rate(4_100_000_001L) == 0.0)
         for (rotation in listOf(0,90,180,270)) {
             val preview = PreviewCoordinates.toPreview(0.2,0.7,rotation)
             val sensor = PreviewCoordinates.toSensor(preview.first,preview.second,rotation)

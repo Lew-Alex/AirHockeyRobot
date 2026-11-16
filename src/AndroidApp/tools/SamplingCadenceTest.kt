@@ -6,9 +6,22 @@ object SamplingCadenceTest {
     fun main(args: Array<String>) {
         sixtyHzJitterKeepsThirtyHzTarget()
         thirtyHzJitterDoesNotSkipBoundaryFrames()
+        previewTargetsSixtyAcrossCameraModes()
         stallsSkipMissedSlots()
         backwardsClockAndDuplicateCallbacksReanchorSafely()
         println("Sampling cadence tests passed")
+    }
+
+    private fun previewTargetsSixtyAcrossCameraModes() {
+        for (cameraFps in listOf(60,120,240)) {
+            val cadence = SamplingCadence(16_666_667L)
+            var accepted = 0
+            for (frame in 0 until cameraFps*10) {
+                val jitter = (frame%3-1)*200_000L
+                if (cadence.tryClaim(frame*1_000_000_000L/cameraFps+jitter)) accepted++
+            }
+            check(accepted in 598..602) { "Preview target from $cameraFps fps camera: $accepted samples in 10s" }
+        }
     }
 
     private fun sixtyHzJitterKeepsThirtyHzTarget() {

@@ -7,40 +7,12 @@
     android:keepScreenOn="true"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="56dp"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:paddingStart="20dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:paddingEnd="20dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:text="Puck Lab"
-            android:textColor="@color/ink"
-            android:textSize="19sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Camera &amp; tracking"
-            android:textColor="@color/secondary_ink"
-            android:textSize="12sp" />
-    </LinearLayout>
-
     <FrameLayout
         android:id="@+id/previewContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/camera_black"
-        android:contentDescription="Camera preview and puck position monitor">
+        android:background="@color/camera_black">
 
         <TextureView
             android:id="@+id/preview"
@@ -54,217 +26,75 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:importantForAccessibility="no" />
-
-        <TextView
-            android:id="@+id/info"
-            style="@style/CameraInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:layout_margin="12dp" />
-
-        <com.example.fastcam.FastTrackingOverlay
-            android:id="@+id/fastTrackingOverlay"
-            android:layout_width="200dp"
-            android:layout_height="154dp"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="12dp"
-            android:importantForAccessibility="no"
-            android:visibility="gone" />
     </FrameLayout>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="260dp"
-        android:background="@color/surface"
-        android:fillViewport="true"
-        android:scrollbars="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingStart="16dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="12dp">
-
-            <TextView
-                style="@style/SectionLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="4dp"
-                android:text="Tracking" />
-
-            <Switch
-                android:id="@+id/fastTrackingSwitch"
-                style="@style/SettingSwitch"
-                android:checked="false"
-                android:text="Live USB tracking (C++)" />
-
-            <TextView
-                android:id="@+id/engineStatus"
-                style="@style/SupportingText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingBottom="4dp"
-                android:text="Live tracking off" />
-
-            <TextView
-                android:id="@+id/trackingStatus"
-                style="@style/SupportingText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingBottom="4dp"
-                android:text="Coordinate output: port 8765" />
-
-            <Switch
-                android:id="@+id/fastPreviewSwitch"
-                style="@style/SettingSwitch"
-                android:checked="true"
-                android:text="Show camera preview" />
-
-            <TextView
-                style="@style/SupportingText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingBottom="8dp"
-                android:text="Turn off to keep only the live position monitor" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="8dp"
-                android:background="@color/rule" />
-
-            <TextView
-                style="@style/SectionLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="4dp"
-                android:text="Camera" />
-
-            <TextView
-                style="@style/SupportingText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="4dp"
-                android:text="Camera mode" />
-
-            <Spinner
-                android:id="@+id/modeSpinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="48dp"
-                android:contentDescription="Camera mode" />
-
-            <TextView
-                android:id="@+id/shutterStatus"
-                style="@style/SupportingText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="4dp"
-                android:text="Shutter: Auto" />
-
-            <SeekBar
-                android:id="@+id/shutterSlider"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:contentDescription="Exposure time: left Auto, right faster shutter"
-                android:max="1000"
-                android:progress="0" />
-
-            <Button
-                android:id="@+id/shutterButton"
-                style="@style/QuietButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Reset shutter to Auto" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="@color/rule" />
-
-            <TextView
-                style="@style/SectionLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="4dp"
-                android:text="Recording options" />
-
-            <Switch
-                android:id="@+id/trackingSwitch"
-                style="@style/SettingSwitch"
-                android:checked="false"
-                android:text="Preview tracking (Python)" />
-
-            <TextView
-                style="@style/SupportingText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingBottom="4dp"
-                android:text="For recording; up to 30 updates/s. Live USB tracking pauses this mode." />
-
-            <Switch
-                android:id="@+id/embedTrackingSwitch"
-                style="@style/SettingSwitch"
-                android:checked="false"
-                android:text="Save MP4 with tracking circle" />
-
-            <TextView
-                style="@style/SupportingText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingBottom="4dp"
-                android:text="Creates a tracked copy after Stop; original kept" />
-
-            <TextView
-                android:id="@+id/exportStatus"
-                style="@style/SupportingText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:text="Original video only" />
-
-            <Button
-                android:id="@+id/cancelExportButton"
-                style="@style/QuietButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Cancel MP4 export"
-                android:visibility="gone" />
-        </LinearLayout>
-    </ScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="72dp"
         android:background="@color/surface"
-        android:elevation="4dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingStart="16dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:paddingEnd="16dp">
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/recordButton"
-            style="@style/RecordButton"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/rule" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/record_button_tint"
-            android:text="Record video"
-            android:textColor="@color/record_button_text" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="12dp">
+
+            <Button
+                android:id="@+id/fastTrackingSwitch"
+                style="@style/MinimalControlButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/control_button_tint"
+                android:textColor="@color/control_button_text"
+                android:text="USB tracking: Off" />
+
+            <Button
+                android:id="@+id/fastPreviewSwitch"
+                style="@style/MinimalControlButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/control_button_tint"
+                android:textColor="@color/control_button_text"
+                android:text="Preview: On" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/modeSpinner"
+                android:text="Camera mode"
+                android:textColor="@color/secondary_ink"
+                android:textSize="14sp" />
+
+            <Spinner
+                android:id="@+id/modeSpinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="48dp"
+                android:contentDescription="Camera mode" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

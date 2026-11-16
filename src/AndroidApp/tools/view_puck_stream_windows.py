@@ -158,7 +158,7 @@ def main(argv=None):
                   "puck-{}.json".format(datetime.now().strftime("%Y%m%d-%H%M%S-%f")))).expanduser().resolve()
         report.parent.mkdir(parents=True, exist_ok=True)
         print("USB phone: {}\nReport: {}".format(serial, report), flush=True)
-        print("Keep 'USB tracking test (GPU + C++; no recording)' ON and the app in the foreground.", flush=True)
+        print("Keep 'USB tracking: On' selected and the app in the foreground.", flush=True)
         command = [sys.executable, str(viewer), "--host", "127.0.0.1", "--port", str(args.port),
                    "--duration", str(args.duration), "--report", str(report)]
         if args.headless:

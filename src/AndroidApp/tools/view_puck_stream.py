@@ -237,7 +237,7 @@ class StreamStats:
                 "pipeline_stage_ms": {key: self._summary(list(values)) for key, values in self.stage_ms.items()},
                 "latest_pipeline": {key: (self.latest or {}).get(key) for key in (
                     "tracker", "pipeline_revision", "requested_fps", "preview_enabled", "readback_bytes",
-                    "analysis_width", "analysis_height", "sampling_limit_fps", "stream_revision", "detector_backend")},
+                    "analysis_width", "analysis_height", "sampling_limit_fps", "stream_revision", "detector_backend", "preview_target_fps")},
                 "clock_sync": dict(self.clock_summary),
                 "estimated_latency_ms": {key: self._summary(list(values)) for key, values in self.latency_ms.items()},
                 "latest_phone_transport": {key: (self.latest or {}).get(key) for key in (

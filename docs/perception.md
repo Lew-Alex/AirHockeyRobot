@@ -2,18 +2,15 @@
 
 ## What exists
 
-- `src/AndroidApp`: Android App Perception Test, retaining the high-speed Camera2
-  recorder and adding an opt-in Python yellow-puck tracker with a live green
-  preview ring. It imports `androidAppPerceptionTesting/puck_tracker.py` via
-  Chaquopy. Analysis samples the preview at up to 30 Hz, independently of the
-  recording frame rate. A local TCP NDJSON server on port 8765 exposes native
-  recording-pixel XY and normalized coordinates (not calibrated table units).
-  See the Android README for setup, the output contract and device checks.
-  An independent MP4 toggle now runs a frame-by-frame Python scan after Stop and
-  produces an additional `_tracked.mp4` with the green circle burned into the video.
-  The original recording is retained; no additional high-speed camera output is used.
+- `src/AndroidApp`: native GPU/C++ yellow-puck tracker, with two click buttons for
+  USB tracking and camera preview plus a camera-mode selector. The previous Python
+  runtime, recording/export features and stats panels were removed from this app.
+  TCP NDJSON on port 8765 exposes sensor-image XY and normalized positions; the
+  receiver reports rates and clock-synchronized latency estimates. There is no
+  60 Hz coordinate cap; supported camera modes and processing determine throughput.
+  Preview targets 60 Hz separately. See the Android README for build/setup and checks.
 - `src/perception/androidAppPerceptionTesting`: shared yellow-puck tracker,
-  offline video runner and Android ARGB adapter with synthetic bridge tests.
+  offline video runner and historical Android ARGB adapter with synthetic bridge tests.
 
 - `src/perception/prototype`: a webcam tracker. It crops the table, converts to
   HSV, thresholds yellow, cleans the mask with morphology, filters regions by area

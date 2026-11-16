@@ -24,7 +24,7 @@ import kotlin.math.roundToInt
 /** Experimental single-camera-output path: camera -> external GL texture -> yellow mask.
  * GPU thresholds a <=640px image; C++ labels components (Kotlin fallback available).
  * Mask samples pack four binary pixels into RGBA channels, retaining analysis resolution.
- * Preview rendering is capped at 15Hz; it can be disabled to isolate display stalls.
+ * Preview targets 60Hz; tracking and publishing have no preview/display rate cap.
  * No recorder/Python/TextureView readback is involved. Actual throughput is device dependent.
  */
 class FastPuckPipeline(
@@ -52,6 +52,11 @@ class FastPuckPipeline(
     private val handler = Handler(thread.looper)
     private val stopped = AtomicBoolean(false)
     private val closing = AtomicBoolean(false)
+    private val streamLock = Any()
+    @Volatile private var initialized = false
+    @Volatile private var trackingEnabled = false
+    @Volatile private var streamGeneration = 0
+    private var analysisGeneration = -1
     private val released = CountDownLatch(1)
     private val output = PuckCoordinateServer(clockNs = { SystemClock.elapsedRealtimeNanos() }, clockName = "elapsed_realtime") { fail(it) }
     private val sourceRate = FrameRateWindow()
@@ -93,8 +98,7 @@ class FastPuckPipeline(
     private var uvLocation = -1
     private var frameId = 0L
     private var lastCaptureNs = 0L
-    private var lastDisplayNs = 0L
-    private var lastUiNs = 0L
+    private val previewCadence = SamplingCadence(16_666_667L)
     private var previousFrameWorkMs: Double? = null
     private var previousPreviewMs: Double? = null
     private var previousPublishMs: Double? = null
@@ -104,6 +108,14 @@ class FastPuckPipeline(
     @Volatile private var windowHeight = 1
     val isRunning: Boolean get() = !stopped.get()
     fun setPreviewEnabled(enabled: Boolean) { previewEnabled = enabled }
+    fun setTrackingEnabled(enabled: Boolean) {
+        synchronized(streamLock) {
+            if (trackingEnabled != enabled) { trackingEnabled = enabled; streamGeneration++ }
+            if (initialized && !stopped.get()) {
+                if (enabled) output.start() else output.stop()
+            }
+        }
+    }
 
     fun resize(width: Int, height: Int) {
         windowWidth = maxOf(1, width); windowHeight = maxOf(1, height)
@@ -112,14 +124,20 @@ class FastPuckPipeline(
 
     fun start() { handler.post {
         if (stopped.get()) return@post
-        try { initialize(); if (!stopped.get()) { output.start(); onReady(cameraSurface!!) } }
+        try {
+            initialize()
+            synchronized(streamLock) {
+                initialized = true
+                if (trackingEnabled && !stopped.get()) output.start()
+            }
+            if (!stopped.get()) onReady(cameraSurface!!)
+        }
         catch (error: Exception) { fail("GPU setup: ${error.message}") }
     } }
 
-    /** Stops the listener synchronously so the Python path can immediately reclaim port 8765. */
+    /** Terminal stop before camera teardown; toggling USB uses setTrackingEnabled instead. */
     fun stopStreaming() {
-        stopped.set(true)
-        output.stop()
+        synchronized(streamLock) { stopped.set(true); output.stop() }
     }
 
     fun close() {
@@ -132,7 +150,7 @@ class FastPuckPipeline(
     }
 
     /** Camera-thread only. Do not reconnect a second producer before EGL disconnects. */
-    fun awaitReleased(): Boolean = released.await(1500, TimeUnit.MILLISECONDS)
+    fun awaitReleased(timeoutMs: Long = 1500): Boolean = released.await(timeoutMs, TimeUnit.MILLISECONDS)
 
     private fun fail(message: String) {
         if (!stopped.getAndSet(true)) {
@@ -220,21 +238,31 @@ class FastPuckPipeline(
             // Camera writes sensor orientation into this producer transform. Apply it
             // once here; our EGL copy has no camera transform of its own. See
             // developer.android.com/reference/androidx/camera/core/Preview.
-            GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER,framebuffer)
-            draw(packedWidth,maskHeight,true)
-            pixels.position(0)
-            GLES20.glReadPixels(0,0,packedWidth,maskHeight,GLES20.GL_RGBA,GLES20.GL_UNSIGNED_BYTE,pixels)
-            checkGl("mask readback")
-            val readbackDone = SystemClock.elapsedRealtimeNanos()
+            val streamEpoch = streamGeneration
+            val streaming = trackingEnabled
             val native = nativeDetector
-            val hit = if (native != null) native.detect(pixels,captureNs,packedStride,1)
+            var readbackDone = acquired
+            var hit: PuckMaskDetector.Hit? = null
+            if (streaming) {
+                if (analysisGeneration != streamEpoch) {
+                    analysisRate.clear(); detectedRate.clear(); analysisGeneration = streamEpoch
+                }
+                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER,framebuffer)
+                draw(packedWidth,maskHeight,true)
+                pixels.position(0)
+                GLES20.glReadPixels(0,0,packedWidth,maskHeight,GLES20.GL_RGBA,GLES20.GL_UNSIGNED_BYTE,pixels)
+                checkGl("mask readback")
+                readbackDone = SystemClock.elapsedRealtimeNanos()
+                hit = if (native != null) native.detect(pixels,captureNs,packedStride,1)
                       else detector.detect(pixels,captureNs,packedStride,1)
+            }
             val completed = SystemClock.elapsedRealtimeNanos()
-            analysisRate.add(completed)
-            if (hit != null) detectedRate.add(completed)
+            if (streaming) analysisRate.add(completed)
+            if (streaming && hit != null) detectedRate.add(completed)
             val processingMs = (completed-started)/1e6
             val showPreview = previewEnabled
-            val renderPreview = showPreview && completed-lastDisplayNs >= 66_666_667L
+            if (showPreview != lastPreviewState) previewCadence.reset()
+            val renderPreview = showPreview && previewCadence.tryClaim(completed)
             val u = hit?.let { (it.x+0.5)/maskWidth }
             val v = hit?.let { (it.y+0.5)/maskHeight }
             val sensorPoint = if (u != null && v != null) PreviewCoordinates.toSensor(u,v,rotation) else null
@@ -244,45 +272,49 @@ class FastPuckPipeline(
                 sensorPoint?.second?.times(sensorHeight)?.minus(0.5), sensorPoint?.first,sensorPoint?.second,
                 u,v,(hit?.radius ?: 0.0)/maskWidth,(hit?.radius ?: 0.0)/maskHeight,
                 sourceRate.rate(completed),analysisRate.rate(completed),detectedRate.rate(completed),processingMs,age,showPreview,renderPreview)
-            val transport = output.snapshot()
-            val json = JSONObject().apply {
-                put("type","puck"); put("version",1); put("tracker","gpu_mask_experimental"); put("pipeline_revision",2)
-                put("stream_revision",4)
-                put("detector_backend",detectorBackend)
-                if (native == null) put("native_load_error",NativePuckDetector.unavailableReason ?: JSONObject.NULL)
-                put("frame_id",frameId); put("timestamp_ns",started); put("capture_timestamp_ns",captureNs)
-                put("phone_publish_timestamp_ns",SystemClock.elapsedRealtimeNanos())
-                put("timestamp_source",if (timestampRealtime) "REALTIME" else "UNKNOWN")
-                put("detected",hit != null); put("coordinate_space","sensor_pixels")
-                put("image_width",sensorWidth); put("image_height",sensorHeight); put("rotation_degrees",rotation)
-                put("x",sample.x ?: JSONObject.NULL); put("y",sample.y ?: JSONObject.NULL)
-                put("x_normalized",sample.xNormalized ?: JSONObject.NULL); put("y_normalized",sample.yNormalized ?: JSONObject.NULL)
-                put("analysis_width",maskWidth); put("analysis_height",maskHeight)
-                put("requested_fps",requestedFps); put("capture_fps",cameraFps())
-                put("source_fps",sample.sourceFps); put("analysis_fps",sample.analysisFps); put("detected_fps",sample.detectedFps)
-                put("processing_ms",processingMs); put("frame_age_ms",age ?: JSONObject.NULL)
-                put("acquire_ms",(acquired-started)/1e6)
-                put("mask_readback_ms",(readbackDone-acquired)/1e6)
-                put("detection_ms",(completed-readbackDone)/1e6)
-                put("previous_frame_work_ms",previousFrameWorkMs ?: JSONObject.NULL)
-                put("previous_preview_ms",previousPreviewMs ?: JSONObject.NULL)
-                put("previous_publish_ms",previousPublishMs ?: JSONObject.NULL)
-                put("preview_enabled",sample.previewEnabled)
-                put("readback_bytes",packedStride*maskHeight)
-                put("socket_clients",transport.clients)
-                put("socket_offered_messages",transport.offeredMessages)
-                put("socket_written_messages",transport.writtenMessages)
-                put("socket_replaced_messages",transport.replacedMessages)
-                put("socket_last_write_ms",transport.lastWriteMs)
-                put("socket_max_write_ms",transport.maxWriteMs)
-            }.toString()
-            output.publish(json) // never waits for the UI thread or socket writes
-            val published = SystemClock.elapsedRealtimeNanos()
-            previousPublishMs = (published-completed)/1e6
+            if (streaming) {
+                val transport = output.snapshot()
+                val json = JSONObject().apply {
+                    put("type","puck"); put("version",1); put("tracker","gpu_mask_experimental"); put("pipeline_revision",3)
+                    put("stream_revision",5)
+                    put("preview_target_fps",60)
+                    put("detector_backend",detectorBackend)
+                    if (native == null) put("native_load_error",NativePuckDetector.unavailableReason ?: JSONObject.NULL)
+                    put("frame_id",frameId); put("timestamp_ns",started); put("capture_timestamp_ns",captureNs)
+                    put("phone_publish_timestamp_ns",SystemClock.elapsedRealtimeNanos())
+                    put("timestamp_source",if (timestampRealtime) "REALTIME" else "UNKNOWN")
+                    put("detected",hit != null); put("coordinate_space","sensor_pixels")
+                    put("image_width",sensorWidth); put("image_height",sensorHeight); put("rotation_degrees",rotation)
+                    put("x",sample.x ?: JSONObject.NULL); put("y",sample.y ?: JSONObject.NULL)
+                    put("x_normalized",sample.xNormalized ?: JSONObject.NULL); put("y_normalized",sample.yNormalized ?: JSONObject.NULL)
+                    put("analysis_width",maskWidth); put("analysis_height",maskHeight)
+                    put("requested_fps",requestedFps); put("capture_fps",cameraFps())
+                    put("source_fps",sample.sourceFps); put("analysis_fps",sample.analysisFps); put("detected_fps",sample.detectedFps)
+                    put("processing_ms",processingMs); put("frame_age_ms",age ?: JSONObject.NULL)
+                    put("acquire_ms",(acquired-started)/1e6)
+                    put("mask_readback_ms",(readbackDone-acquired)/1e6)
+                    put("detection_ms",(completed-readbackDone)/1e6)
+                    put("previous_frame_work_ms",previousFrameWorkMs ?: JSONObject.NULL)
+                    put("previous_preview_ms",previousPreviewMs ?: JSONObject.NULL)
+                    put("previous_publish_ms",previousPublishMs ?: JSONObject.NULL)
+                    put("preview_enabled",sample.previewEnabled)
+                    put("readback_bytes",packedStride*maskHeight)
+                    put("socket_clients",transport.clients)
+                    put("socket_offered_messages",transport.offeredMessages)
+                    put("socket_written_messages",transport.writtenMessages)
+                    put("socket_replaced_messages",transport.replacedMessages)
+                    put("socket_last_write_ms",transport.lastWriteMs)
+                    put("socket_max_write_ms",transport.maxWriteMs)
+                }.toString()
+                synchronized(streamLock) {
+                    if (trackingEnabled && streamEpoch == streamGeneration && !stopped.get()) output.publish(json)
+                }
+                val published = SystemClock.elapsedRealtimeNanos()
+                previousPublishMs = (published-completed)/1e6
+            } else previousPublishMs = 0.0
             val previewStarted = SystemClock.elapsedRealtimeNanos()
             val clearPreview = !showPreview && lastPreviewState
             if (clearPreview || renderPreview) {
-                lastDisplayNs = completed
                 makeCurrent(window)
                 GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER,0)
                 if (clearPreview) {
@@ -294,10 +326,8 @@ class FastPuckPipeline(
             }
             lastPreviewState = showPreview
             previousPreviewMs = (SystemClock.elapsedRealtimeNanos()-previewStarted)/1e6
-            // Video ring updates only for a newly rendered camera image. Mini-map
-            // updates can run more frequently, without drawing a newer centre on
-            // an older image. Posting after swap also avoids pacing the USB stream.
-            if (renderPreview || completed-lastUiNs >= 33_333_333L) { lastUiNs = completed; onSample(sample) }
+            // Match the ring to rendered images; publish coordinates before preview work.
+            if (renderPreview && streaming) onSample(sample)
             val finished = SystemClock.elapsedRealtimeNanos()
             previousFrameWorkMs = (finished-started)/1e6
         } catch (error: Exception) { fail("GPU tracking: ${error.message}") }

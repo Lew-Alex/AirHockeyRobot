@@ -5,6 +5,7 @@ package com.example.fastcam
  */
 class FrameRateWindow {
     private val arrivals = ArrayDeque<Long>()
+    fun clear() { arrivals.clear() }
     fun add(nowNs: Long) { arrivals.addLast(nowNs); trim(nowNs) }
     private fun trim(nowNs: Long) {
         while (arrivals.isNotEmpty() && nowNs - arrivals.first() > 1_000_000_000L) arrivals.removeFirst()
