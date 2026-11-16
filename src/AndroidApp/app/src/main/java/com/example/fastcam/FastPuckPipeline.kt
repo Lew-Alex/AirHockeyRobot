@@ -23,7 +23,8 @@ import kotlin.math.roundToInt
 
 /** Experimental single-camera-output path: camera -> external GL texture -> yellow mask.
  * GPU thresholds a <=640px image; Kotlin labels components and publishes measured centres.
- * Preview rendering is capped at 30Hz, independently of frame consumption/detection/USB.
+ * Mask samples pack four binary pixels into RGBA channels, retaining analysis resolution.
+ * Preview rendering is capped at 15Hz; it can be disabled to isolate display stalls.
  * No recorder/Python/TextureView readback is involved. Actual throughput is device dependent.
  */
 class FastPuckPipeline(
@@ -43,7 +44,8 @@ class FastPuckPipeline(
         val x: Double?, val y: Double?, val xNormalized: Double?, val yNormalized: Double?,
         val previewX: Double?, val previewY: Double?, val radiusX: Double, val radiusY: Double,
         val sourceFps: Double, val analysisFps: Double, val detectedFps: Double,
-        val processingMs: Double, val frameAgeMs: Double?
+        val processingMs: Double, val frameAgeMs: Double?, val previewEnabled: Boolean,
+        val previewRendered: Boolean
     )
 
     private val thread = HandlerThread("puck-gpu").apply { start() }
@@ -60,7 +62,9 @@ class FastPuckPipeline(
     private val scale = minOf(1.0, 640.0 / maxOf(dims.first, dims.second))
     private val maskWidth = (dims.first * scale).roundToInt().coerceAtLeast(1)
     private val maskHeight = (dims.second * scale).roundToInt().coerceAtLeast(1)
-    private val pixels = ByteBuffer.allocateDirect(maskWidth * maskHeight * 4).order(ByteOrder.nativeOrder())
+    private val packedWidth = (maskWidth + 3) / 4
+    private val packedStride = packedWidth * 4
+    private val pixels = ByteBuffer.allocateDirect(packedStride * maskHeight).order(ByteOrder.nativeOrder())
     private val detector = PuckMaskDetector(maskWidth, maskHeight)
     private val vertices: FloatBuffer = ByteBuffer.allocateDirect(16 * 4).order(ByteOrder.nativeOrder())
         .asFloatBuffer().apply {
@@ -77,13 +81,26 @@ class FastPuckPipeline(
     private var maskTexture = 0
     private var framebuffer = 0
     private var program = 0
+    private var cameraLocation = -1
+    private var maskLocation = -1
+    private var rotationLocation = -1
+    private var textureLocation = -1
+    private var maskSizeLocation = -1
+    private var positionLocation = -1
+    private var uvLocation = -1
     private var frameId = 0L
     private var lastCaptureNs = 0L
     private var lastDisplayNs = 0L
     private var lastUiNs = 0L
+    private var previousFrameWorkMs: Double? = null
+    private var previousPreviewMs: Double? = null
+    private var previousPublishMs: Double? = null
+    private var lastPreviewState = true
+    @Volatile private var previewEnabled = true
     @Volatile private var windowWidth = 1
     @Volatile private var windowHeight = 1
     val isRunning: Boolean get() = !stopped.get()
+    fun setPreviewEnabled(enabled: Boolean) { previewEnabled = enabled }
 
     fun resize(width: Int, height: Int) {
         windowWidth = maxOf(1, width); windowHeight = maxOf(1, height)
@@ -148,6 +165,14 @@ class FastPuckPipeline(
         EGL14.eglSwapInterval(display, 0) // applies to the window, not the pbuffer
         makeCurrent(pbuffer)
         program = createProgram()
+        // Locations are constant for this linked program, not per-frame work.
+        cameraLocation = GLES20.glGetUniformLocation(program,"uCamera")
+        maskLocation = GLES20.glGetUniformLocation(program,"uMask")
+        rotationLocation = GLES20.glGetUniformLocation(program,"uDisplayRotation")
+        textureLocation = GLES20.glGetUniformLocation(program,"uTexture")
+        maskSizeLocation = GLES20.glGetUniformLocation(program,"uMaskSize")
+        positionLocation = GLES20.glGetAttribLocation(program,"aPosition")
+        uvLocation = GLES20.glGetAttribLocation(program,"aUv")
         val ids = IntArray(1)
         GLES20.glGenTextures(1,ids,0)
         cameraTexture = ids[0]
@@ -162,13 +187,14 @@ class FastPuckPipeline(
         maskTexture = ids[0]
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,maskTexture)
         textureParameters(GLES20.GL_TEXTURE_2D)
-        GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D,0,GLES20.GL_RGBA,maskWidth,maskHeight,0,GLES20.GL_RGBA,GLES20.GL_UNSIGNED_BYTE,null)
+        GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D,0,GLES20.GL_RGBA,packedWidth,maskHeight,0,GLES20.GL_RGBA,GLES20.GL_UNSIGNED_BYTE,null)
         GLES20.glGenFramebuffers(1,ids,0)
         framebuffer = ids[0]
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER,framebuffer)
         GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER,GLES20.GL_COLOR_ATTACHMENT0,GLES20.GL_TEXTURE_2D,maskTexture,0)
         check(GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER) == GLES20.GL_FRAMEBUFFER_COMPLETE) { "Mask framebuffer incomplete" }
         GLES20.glDisable(GLES20.GL_DITHER)
+        GLES20.glDisable(GLES20.GL_BLEND) // alpha transports the fourth binary mask sample
         checkGl("initialize")
     }
 
@@ -181,6 +207,7 @@ class FastPuckPipeline(
             texture.updateTexImage()
             val captureNs = texture.timestamp
             if (captureNs <= lastCaptureNs) return // coalesced callbacks are not new measurements
+            val acquired = SystemClock.elapsedRealtimeNanos()
             lastCaptureNs = captureNs
             frameId++
             sourceRate.add(started)
@@ -189,15 +216,18 @@ class FastPuckPipeline(
             // once here; our EGL copy has no camera transform of its own. See
             // developer.android.com/reference/androidx/camera/core/Preview.
             GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER,framebuffer)
-            draw(maskWidth,maskHeight,true)
+            draw(packedWidth,maskHeight,true)
             pixels.position(0)
-            GLES20.glReadPixels(0,0,maskWidth,maskHeight,GLES20.GL_RGBA,GLES20.GL_UNSIGNED_BYTE,pixels)
+            GLES20.glReadPixels(0,0,packedWidth,maskHeight,GLES20.GL_RGBA,GLES20.GL_UNSIGNED_BYTE,pixels)
             checkGl("mask readback")
-            val hit = detector.detect(pixels,captureNs)
+            val readbackDone = SystemClock.elapsedRealtimeNanos()
+            val hit = detector.detect(pixels,captureNs,packedStride,1)
             val completed = SystemClock.elapsedRealtimeNanos()
             analysisRate.add(completed)
             if (hit != null) detectedRate.add(completed)
             val processingMs = (completed-started)/1e6
+            val showPreview = previewEnabled
+            val renderPreview = showPreview && completed-lastDisplayNs >= 66_666_667L
             val u = hit?.let { (it.x+0.5)/maskWidth }
             val v = hit?.let { (it.y+0.5)/maskHeight }
             val sensorPoint = if (u != null && v != null) PreviewCoordinates.toSensor(u,v,rotation) else null
@@ -206,9 +236,9 @@ class FastPuckPipeline(
             val sample = Sample(sensorPoint?.first?.times(sensorWidth)?.minus(0.5),
                 sensorPoint?.second?.times(sensorHeight)?.minus(0.5), sensorPoint?.first,sensorPoint?.second,
                 u,v,(hit?.radius ?: 0.0)/maskWidth,(hit?.radius ?: 0.0)/maskHeight,
-                sourceRate.rate(completed),analysisRate.rate(completed),detectedRate.rate(completed),processingMs,age)
+                sourceRate.rate(completed),analysisRate.rate(completed),detectedRate.rate(completed),processingMs,age,showPreview,renderPreview)
             val json = JSONObject().apply {
-                put("type","puck"); put("version",1); put("tracker","gpu_mask_experimental")
+                put("type","puck"); put("version",1); put("tracker","gpu_mask_experimental"); put("pipeline_revision",2)
                 put("frame_id",frameId); put("timestamp_ns",started); put("capture_timestamp_ns",captureNs)
                 put("phone_publish_timestamp_ns",SystemClock.elapsedRealtimeNanos())
                 put("timestamp_source",if (timestampRealtime) "REALTIME" else "UNKNOWN")
@@ -220,17 +250,39 @@ class FastPuckPipeline(
                 put("requested_fps",requestedFps); put("capture_fps",cameraFps())
                 put("source_fps",sample.sourceFps); put("analysis_fps",sample.analysisFps); put("detected_fps",sample.detectedFps)
                 put("processing_ms",processingMs); put("frame_age_ms",age ?: JSONObject.NULL)
+                put("acquire_ms",(acquired-started)/1e6)
+                put("mask_readback_ms",(readbackDone-acquired)/1e6)
+                put("detection_ms",(completed-readbackDone)/1e6)
+                put("previous_frame_work_ms",previousFrameWorkMs ?: JSONObject.NULL)
+                put("previous_preview_ms",previousPreviewMs ?: JSONObject.NULL)
+                put("previous_publish_ms",previousPublishMs ?: JSONObject.NULL)
+                put("preview_enabled",sample.previewEnabled)
+                put("readback_bytes",packedStride*maskHeight)
             }.toString()
             output.publish(json) // never waits for the UI thread or socket writes
-            if (completed-lastUiNs >= 33_333_333L) { lastUiNs = completed; onSample(sample) }
-            if (completed-lastDisplayNs >= 33_333_333L) {
+            val published = SystemClock.elapsedRealtimeNanos()
+            previousPublishMs = (published-completed)/1e6
+            val previewStarted = SystemClock.elapsedRealtimeNanos()
+            val clearPreview = !showPreview && lastPreviewState
+            if (clearPreview || renderPreview) {
                 lastDisplayNs = completed
                 makeCurrent(window)
                 GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER,0)
-                draw(windowWidth,windowHeight,false)
+                if (clearPreview) {
+                    GLES20.glClearColor(0f,0f,0f,1f)
+                    GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
+                } else draw(windowWidth,windowHeight,false)
                 check(EGL14.eglSwapBuffers(display,window)) { "Preview swap failed" }
                 // Swap can still block on some devices: source_fps will expose that cost.
             }
+            lastPreviewState = showPreview
+            previousPreviewMs = (SystemClock.elapsedRealtimeNanos()-previewStarted)/1e6
+            // Video ring updates only for a newly rendered camera image. Mini-map
+            // updates can run more frequently, without drawing a newer centre on
+            // an older image. Posting after swap also avoids pacing the USB stream.
+            if (renderPreview || completed-lastUiNs >= 33_333_333L) { lastUiNs = completed; onSample(sample) }
+            val finished = SystemClock.elapsedRealtimeNanos()
+            previousFrameWorkMs = (finished-started)/1e6
         } catch (error: Exception) { fail("GPU tracking: ${error.message}") }
     }
 
@@ -243,15 +295,14 @@ class FastPuckPipeline(
         GLES20.glUseProgram(program)
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
         GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES,cameraTexture)
-        GLES20.glUniform1i(GLES20.glGetUniformLocation(program,"uCamera"),0)
-        GLES20.glUniform1i(GLES20.glGetUniformLocation(program,"uMask"),if (mask) 1 else 0)
-        GLES20.glUniform1i(GLES20.glGetUniformLocation(program,"uDisplayRotation"),PreviewCoordinates.textureRotation(displayRotation))
-        GLES20.glUniformMatrix4fv(GLES20.glGetUniformLocation(program,"uTexture"),1,false,matrix,0)
-        val position = GLES20.glGetAttribLocation(program,"aPosition")
-        val uv = GLES20.glGetAttribLocation(program,"aUv")
-        vertices.position(0); GLES20.glVertexAttribPointer(position,2,GLES20.GL_FLOAT,false,16,vertices)
-        vertices.position(2); GLES20.glVertexAttribPointer(uv,2,GLES20.GL_FLOAT,false,16,vertices)
-        GLES20.glEnableVertexAttribArray(position); GLES20.glEnableVertexAttribArray(uv)
+        GLES20.glUniform1i(cameraLocation,0)
+        GLES20.glUniform1i(maskLocation,if (mask) 1 else 0)
+        GLES20.glUniform1i(rotationLocation,PreviewCoordinates.textureRotation(displayRotation))
+        GLES20.glUniform2f(maskSizeLocation,maskWidth.toFloat(),maskHeight.toFloat())
+        GLES20.glUniformMatrix4fv(textureLocation,1,false,matrix,0)
+        vertices.position(0); GLES20.glVertexAttribPointer(positionLocation,2,GLES20.GL_FLOAT,false,16,vertices)
+        vertices.position(2); GLES20.glVertexAttribPointer(uvLocation,2,GLES20.GL_FLOAT,false,16,vertices)
+        GLES20.glEnableVertexAttribArray(positionLocation); GLES20.glEnableVertexAttribArray(uvLocation)
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP,0,4)
     }
 
@@ -280,15 +331,18 @@ class FastPuckPipeline(
             #extension GL_OES_EGL_image_external : require
             precision highp float;
             uniform samplerExternalOES uCamera; uniform mat4 uTexture;
-            uniform int uMask; uniform int uDisplayRotation; varying vec2 vUv;
-            void main() {
-                vec2 p=vec2(vUv.x,1.0-vUv.y);
+            uniform int uMask; uniform int uDisplayRotation; uniform vec2 uMaskSize; varying vec2 vUv;
+            vec3 cameraRgb(vec2 imageUv) {
+                vec2 p=vec2(imageUv.x,1.0-imageUv.y);
                 if (uDisplayRotation==90) p=vec2(p.y,1.0-p.x);
                 else if (uDisplayRotation==180) p=vec2(1.0-p.x,1.0-p.y);
                 else if (uDisplayRotation==270) p=vec2(1.0-p.y,p.x);
                 vec2 uv=(uTexture*vec4(p.x,1.0-p.y,0.0,1.0)).xy;
-                vec3 rgb=texture2D(uCamera,uv).rgb;
-                if (uMask==0) { gl_FragColor=vec4(rgb,1.0); return; }
+                return texture2D(uCamera,uv).rgb;
+            }
+            float yellow(float x, float y) {
+                if (x>=uMaskSize.x) return 0.0;
+                vec3 rgb=cameraRgb(vec2((x+0.5)/uMaskSize.x,y));
                 float hi=max(rgb.r,max(rgb.g,rgb.b)); float lo=min(rgb.r,min(rgb.g,rgb.b));
                 float delta=hi-lo; float hue=0.0;
                 if (delta>0.00001) {
@@ -298,8 +352,15 @@ class FastPuckPipeline(
                 }
                 float saturation=delta/max(hi,0.00001);
                 // Same yellow HSV bounds as Python (OpenCV hue units are half degrees).
-                float yellow=(hue>=44.0 && hue<=80.0 && saturation>=90.0/255.0 && hi>=70.0/255.0)?1.0:0.0;
-                gl_FragColor=vec4(yellow,yellow,yellow,1.0);
+                return (hue>=44.0 && hue<=80.0 && saturation>=90.0/255.0 && hi>=70.0/255.0)?1.0:0.0;
+            }
+            void main() {
+                if (uMask==0) { gl_FragColor=vec4(cameraRgb(vUv),1.0); return; }
+                // Each output texel transports four adjacent binary mask samples.
+                // Sampling centres and the 640px analysis grid are unchanged.
+                float x=floor(gl_FragCoord.x)*4.0;
+                float y=gl_FragCoord.y/uMaskSize.y;
+                gl_FragColor=vec4(yellow(x,y),yellow(x+1.0,y),yellow(x+2.0,y),yellow(x+3.0,y));
             }
         """.trimIndent()) } catch (error: Exception) { GLES20.glDeleteShader(vs); throw error }
         val id = GLES20.glCreateProgram()

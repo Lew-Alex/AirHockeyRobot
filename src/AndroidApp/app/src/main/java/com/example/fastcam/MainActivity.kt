@@ -82,9 +82,11 @@ class MainActivity : Activity() {
     private lateinit var shutterSlider: SeekBar
     private lateinit var shutterStatus: TextView
     private lateinit var fastSwitch: Switch
+    private lateinit var fastPreviewSwitch: Switch
     private lateinit var trackingSwitch: Switch
     private lateinit var fastOverlay: FastTrackingOverlay
     @Volatile private var fastTracking = false
+    @Volatile private var fastPreviewEnabled = true
     @Volatile private var fastPipeline: FastPuckPipeline? = null
     private lateinit var infoText: TextView
     private lateinit var tracking: LivePuckTracking
@@ -156,6 +158,13 @@ class MainActivity : Activity() {
         shutterSlider = findViewById(R.id.shutterSlider)
         shutterStatus = findViewById(R.id.shutterStatus)
         fastSwitch = findViewById(R.id.fastTrackingSwitch)
+        fastPreviewSwitch = findViewById(R.id.fastPreviewSwitch)
+        fastPreviewSwitch.isEnabled = false
+        fastPreviewSwitch.setOnCheckedChangeListener { _, checked ->
+            fastPreviewEnabled = checked
+            fastPipeline?.setPreviewEnabled(checked)
+            if (!checked && fastTracking) puckOverlay.clear()
+        }
         fastOverlay = findViewById(R.id.fastTrackingOverlay)
         infoText = findViewById(R.id.info)
         puckOverlay = findViewById(R.id.puckOverlay)
@@ -174,6 +183,7 @@ class MainActivity : Activity() {
             tracking.setResumed(activityResumed && !checked && !videoExporter.isRunning)
             if (checked) trackingStatus.text = "GPU tracking test | TCP 8765 | Python paused"
             trackingSwitch.isEnabled = !checked
+            fastPreviewSwitch.isEnabled = checked
             embedTrackingSwitch.isEnabled = !checked && !videoExporter.isRunning
             fastOverlay.visibility = if (checked) View.VISIBLE else View.GONE
             fastOverlay.clear()
@@ -583,9 +593,11 @@ class MainActivity : Activity() {
             onSample = { sample -> runOnUiThread {
                 if (generation == sessionGeneration && fastTracking && activityResumed) {
                     fastOverlay.show(sample)
-                    if (sample.previewX != null && sample.previewY != null) {
+                    if (!sample.previewEnabled || sample.previewX == null || sample.previewY == null) {
+                        puckOverlay.clear()
+                    } else if (sample.previewRendered) {
                         puckOverlay.show(sample.previewX, sample.previewY, sample.radiusX, sample.radiusY)
-                    } else puckOverlay.clear()
+                    }
                 }
             } },
             onError = { error -> runOnUiThread {
@@ -597,6 +609,7 @@ class MainActivity : Activity() {
                 }
             } })
         fastPipeline = pipeline
+        pipeline.setPreviewEnabled(fastPreviewEnabled)
         pipeline.resize(textureView.width, textureView.height)
         pipeline.start()
     }

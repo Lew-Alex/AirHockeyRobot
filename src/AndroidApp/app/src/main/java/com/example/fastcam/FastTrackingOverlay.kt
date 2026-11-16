@@ -30,7 +30,7 @@ class FastTrackingOverlay(context: Context, attrs: AttributeSet? = null) : View(
         val s = sample?.takeIf { SystemClock.uptimeMillis() - receivedAt < 250 }
         paint.color = Color.WHITE
         paint.textSize = 11*d
-        canvas.drawText("LIVE USB TRACKING TEST", 8*d, 16*d, paint)
+        canvas.drawText(if (s?.previewEnabled == false) "LIVE XY | CAMERA PREVIEW OFF" else "LIVE USB TRACKING TEST", 8*d, 16*d, paint)
         canvas.drawText(s?.let { "Frames %.1f/s | detect %.1f/s".format(it.sourceFps, it.detectedFps) } ?: "Waiting for fresh frames", 8*d, 33*d, paint)
         canvas.drawText(s?.let { "Analysis %.1f/s | %.1f ms".format(it.analysisFps, it.processingMs) } ?: "", 8*d, 49*d, paint)
         val left = 8*d

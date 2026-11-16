@@ -70,6 +70,14 @@
             android:textColor="#FFFFFF" />
 
         <Switch
+            android:id="@+id/fastPreviewSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:checked="true"
+            android:text="Camera preview in GPU test (15 fps; off = mini-map only)"
+            android:textColor="#FFFFFF" />
+
+        <Switch
             android:id="@+id/trackingSwitch"
             android:layout_width="match_parent"
             android:layout_height="48dp"

@@ -48,8 +48,8 @@ class PuckCoordinateServer(
             report("Puck coordinate message must be a single JSON line")
             return
         }
-        val bytes = json.toByteArray(StandardCharsets.UTF_8)
-        if (bytes.size > MAX_MESSAGE_BYTES) {
+        val bytes = (json + '\n').toByteArray(StandardCharsets.UTF_8)
+        if (bytes.size > MAX_MESSAGE_BYTES + 1) {
             report("Puck coordinate message exceeds $MAX_MESSAGE_BYTES bytes")
             return
         }
@@ -184,7 +184,6 @@ class PuckCoordinateServer(
                             pending.getAndSet(null)
                         } ?: continue
                         output.write(message)
-                        output.write('\n'.code)
                         output.flush()
                     }
                 } catch (e: IOException) {

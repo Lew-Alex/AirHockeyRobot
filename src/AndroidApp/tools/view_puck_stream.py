@@ -28,6 +28,9 @@ class StreamStats:
         self.reported_rates = {key: deque(maxlen=10000) for key in
                                ("capture_fps", "analysis_fps", "detected_fps", "source_fps")}
         self.frame_age_ms = deque(maxlen=10000)
+        self.stage_ms = {key: deque(maxlen=10000) for key in (
+            "acquire_ms", "mask_readback_ms", "detection_ms", "previous_publish_ms",
+            "previous_preview_ms", "previous_frame_work_ms")}
         self.received = 0
         self.detected = 0
         self.invalid = 0
@@ -85,6 +88,10 @@ class StreamStats:
             processing = self._number(sample.get("processing_ms"))
             if processing is not None and processing >= 0:
                 self.processing_ms.append(processing)
+            for key, values in self.stage_ms.items():
+                value = self._number(sample.get(key))
+                if value is not None and value >= 0:
+                    values.append(value)
             for key, values in self.reported_rates.items():
                 rate = self._number(sample.get(key))
                 if rate is not None and rate >= 0:
@@ -124,6 +131,16 @@ class StreamStats:
         now = time.monotonic() if now is None else now
         with self.lock:
             return self.latest, None if self.latest_arrival is None else max(0.0, now - self.latest_arrival)
+
+    def live_received_rate(self, now=None):
+        """Cheap GUI path: avoid sorting full benchmark histories while receiving."""
+        now = time.monotonic() if now is None else now
+        with self.lock:
+            while self.arrivals and now - self.arrivals[0][0] > self.window_seconds:
+                self.arrivals.popleft()
+            if len(self.arrivals) < 2:
+                return 0.0
+            return self._rate(len(self.arrivals) - 1, now - self.arrivals[0][0]) or 0.0
 
     @staticmethod
     def _summary(values):
@@ -166,6 +183,10 @@ class StreamStats:
                 "estimated_missing_frame_ids": self.frame_gaps,
                 "observed_unique_texture_rate_hz": self._rate(self.unique_texture_frames, duration),
                 "processing_ms": self._summary(list(self.processing_ms)),
+                "pipeline_stage_ms": {key: self._summary(list(values)) for key, values in self.stage_ms.items()},
+                "latest_pipeline": {key: (self.latest or {}).get(key) for key in (
+                    "tracker", "pipeline_revision", "requested_fps", "preview_enabled", "readback_bytes",
+                    "analysis_width", "analysis_height")},
                 "reported_phone_rates_fps": {key: self._summary(list(values))
                                               for key, values in self.reported_rates.items()},
                 "frame_age_ms_from_phone_when_realtime": self._summary(frame_age),
@@ -175,6 +196,7 @@ class StreamStats:
                     "Phone-reported camera rates come from message metadata; message arrivals are not camera capture speed.",
                     "Observed unique texture rate counts distinct phone texture timestamps seen by this receiver.",
                     "Detection ratio describes received samples and does not measure detection accuracy.",
+                    "previous_* timings describe the prior processed frame; processing_ms excludes display and publishing.",
                 ],
             }
 
@@ -321,11 +343,10 @@ def _gui(stats, stop, duration, errors, report_path):
             canvas.create_oval(x - 8, y - 8, x + 8, y + 8, fill="#59d68c", outline="white", width=2)
             canvas.create_text(115, 123, fill="#e8edf2", font=("Helvetica", 10),
                                text="x {:.1f}  y {:.1f} px".format(sample["_x"], sample["_y"]))
-        snap = stats.snapshot()
-        phone_source = snap["reported_phone_rates_fps"]["source_fps"]["mean"]
-        fps = "source {} fps".format("—" if phone_source is None else "{:.1f}".format(phone_source))
+        phone_source = StreamStats._number((sample or {}).get("source_fps"))
+        fps = "source {}/s".format("-" if phone_source is None or age is None or age > 0.25 else "{:.1f}".format(phone_source))
         canvas.create_text(115, 157, fill="#aab5c0", font=("Helvetica", 9),
-                           text="{}  |  detections {:.0%}".format(fps, snap["detection_ratio"] or 0))
+                           text="{} | received {:.1f}/s".format(fps, stats.live_received_rate()))
         root.after(50, draw)
 
     draw()

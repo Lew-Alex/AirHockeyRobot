@@ -24,6 +24,27 @@ object FastTrackingMathTest {
         val reacquired = detector.detect(disk(50,30,3),1_300_000_000L)!!
         check(abs(reacquired.x-50) < 0.01) // elapsed-time reacquisition
         check(PuckMaskDetector(w,h).detect(ByteBuffer.allocate(w*h*4).apply { put(0,255.toByte()) },1L) == null)
+        // Odd widths exercise packed RGBA channels, padding, right edge and GL row order.
+        val oddWidth = 65
+        val stride = ((oddWidth+3)/4)*4
+        val rgba = ByteBuffer.allocate(oddWidth*h*4)
+        val packed = ByteBuffer.allocate(stride*h)
+        for (y in 0 until h) for (x in 0 until oddWidth) {
+            if ((x-63)*(x-63)+(y-31)*(y-31) <= 4) {
+                rgba.put(((h-1-y)*oddWidth+x)*4,255.toByte())
+                packed.put((h-1-y)*stride+x,255.toByte())
+            }
+        }
+        // Poison unused channels: these must never become edge blobs.
+        for (y in 0 until h) for (x in oddWidth until stride) packed.put(y*stride+x,255.toByte())
+        packed.position(7)
+        val legacyHit = PuckMaskDetector(oddWidth,h).detect(rgba,1L)
+        val packedHit = PuckMaskDetector(oddWidth,h).detect(packed,1L,stride,1)
+        check(legacyHit != null && packedHit == legacyHit)
+        check(packed.position() == 7)
+        val paddingOnly = ByteBuffer.allocate(stride*h)
+        for (y in 0 until h) for (x in oddWidth until stride) paddingOnly.put(y*stride+x,255.toByte())
+        check(PuckMaskDetector(oddWidth,h).detect(paddingOnly,1L,stride,1) == null)
         val rate = FrameRateWindow()
         for (i in 0..120) rate.add(1_000_000_000L+i*8_333_333L)
         check(abs(rate.rate(2_000_000_000L)-120.0) < 0.01)

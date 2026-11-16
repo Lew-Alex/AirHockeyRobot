@@ -74,6 +74,11 @@ The test configures exactly **one Camera2 output**, an offscreen SurfaceTexture 
 on a dedicated EGL/GLES worker. A fragment shader thresholds the same yellow HSV range
 as the Python tracker into a binary mask (longest edge at most 640 px). A separate Kotlin
 connected-component detector selects a blob using size, shape and timed continuity.
+Four adjacent binary samples are packed into the RGBA channels of each readback texel,
+reducing transferred mask data to about one quarter of the original full-RGBA mask.
+The detector bulk-copies the buffer into reusable arrays rather than checking direct
+buffer bytes for each pixel/neighbor. The 640px analysis grid and blob-selection rules
+are retained; no smaller analysis resolution is used for this optimization.
 It does not embed OpenCV or call Python. Its results are experimental and must be checked
 against the Python reference/ground truth; matching HSV bounds does not imply matching
 detector accuracy. Very small/distant pucks can be lost by downsampling.
@@ -81,8 +86,11 @@ detector accuracy. Very small/distant pucks can be lost by downsampling.
 Each **new texture timestamp** produces at most one measured result; duplicate/coalesced
 callbacks are ignored. Measurements are published from the worker directly to the existing
 TCP 8765 stream. The latest camera image, green circle and small native-axis puck-position
-monitor update at up to 30 Hz, independently of the measurement stream. Overlay refresh
-rate is not the tracking rate. The GL path applies the camera SurfaceTexture producer
+monitor update at up to 30 Hz; the camera preview updates at up to 15 Hz. Measurement
+streaming has no 15/21/30 Hz cap. Overlay refresh rate is not the tracking rate.
+**Camera preview in GPU test** can be switched off while streaming. The camera image
+is cleared, while the mini-map and coordinates stay live. This comparison isolates
+preview drawing/swap cost from capture and tracking. The GL path applies the camera SurfaceTexture producer
 transform once (including sensor orientation), plus display-rotation compensation; the
 visible TextureView has an identity matrix for this copied output. Mode changes disconnect
 Camera2 before switching between the camera and EGL preview producers.
@@ -168,6 +176,12 @@ actual puck; detection ratio is **not** an accuracy score.
 | `detected_fps` | Successful detections per elapsed phone time. |
 | Mac `received_rate_hz` | Received coordinate/lost messages per Mac elapsed time, including connection startup. |
 | `processing_ms` | Texture acquisition, GPU mask/readback and blob detection; excludes preview swap, network and UI work. |
+| `acquire_ms` | Making the analysis context current and acquiring the newest texture frame. |
+| `mask_readback_ms` | Transform/mask rendering and synchronous GPU-to-CPU readback. |
+| `detection_ms` | Bulk mask unpacking and connected-component/continuity detection. |
+| `previous_publish_ms` | Prior result's JSON construction and enqueue time; excludes background socket writes. |
+| `previous_preview_ms` | Prior frame's preview context/draw/swap work (near zero on skipped preview frames). |
+| `previous_frame_work_ms` | Prior frame's full worker time, including publishing, UI callback posting and preview work; excludes waiting for the next callback. |
 | `frame_age_ms` | Sensor timestamp to detection completion on the phone, only for a comparable REALTIME clock; otherwise null. |
 
 The stream also includes `tracker:gpu_mask_experimental`, `requested_fps`,
@@ -176,6 +190,43 @@ sensor-pixel/normalized coordinate contract below is retained. Phone and Mac clo
 not be subtracted directly: this report does **not** measure full one-way USB latency.
 Sensor timestamps describe the start of first-row exposure, not the exact instant the
 puck's row was captured. No table calibration or rolling-shutter correction is added.
+
+#### Investigating a roughly 21 Hz stream
+
+21 Hz is not a configured GPU tracking limit. The legacy **Python** switch caps its
+sampler at 30 Hz and drops frames when busy; make sure the GPU switch is the active test.
+The laptop mini-window redraws at about 20 Hz, independently of how many messages it
+receives. It now displays **current source rate** and **received rate** separately and
+does not sort full benchmark histories on every redraw.
+
+After building/installing the updated app elsewhere, collect two 60-second runs in
+the same camera mode, lighting and puck setup: one with **Camera preview in GPU test**
+on, one with it off. Run the receiver again for each run. For example, on the Mac
+from `src/AndroidApp`, after forwarding port 8765:
+
+```sh
+python3 tools/view_puck_stream.py --headless --duration 60 --report gpu-preview-on.json
+python3 tools/view_puck_stream.py --headless --duration 60 --report gpu-preview-off.json
+```
+
+Toggle the phone preview off between those two commands. On Windows, use the Windows
+launcher with the same `--headless`, `--duration` and `--report` arguments. Headless
+mode removes laptop GUI rendering from the comparison; the phone mini-map remains live.
+The report includes `latest_pipeline.pipeline_revision: 2` to identify the new app.
+Old apps still work with the receiver, but their added stage timings remain null.
+
+| Observation | What to investigate next |
+|---|---|
+| Camera metadata near 60, analyses near 21, received near 21 | Phone-side processing or preview stalls; inspect the stage timings. |
+| Preview-off rate rises materially | Preview draw/swap is consuming the tracking worker's time. |
+| Analyses are fast but camera metadata is also low | Camera mode, actual exposure/lighting and thermal conditions; metadata cadence is indicative, not a full capture audit. |
+| Phone analyses are fast but laptop received rate is low | Receiver load, ADB/USB delivery and slow-client message replacement. |
+
+The report's `pipeline_stage_ms` contains mean/p95 timing for each stage. `previous_*`
+fields belong to the preceding processed frame so the result can be published before
+preview work. They are not extra coordinates and no frame is replayed to raise the rate.
+Actual speed improvement, accuracy equivalence on camera images and GPU shader operation
+remain unverified until device testing. No Android app compilation is performed here.
 
 ### Fast shutter without 240 fps
 
@@ -288,9 +339,14 @@ py tools/view_puck_stream_windows.py --self-test
 py -m unittest discover -s tools -p test_windows_launcher.py -v
 ```
 
+All receiver/launcher diagnostic tests (including separation of camera, analysis and
+received rates) can be run with `py -m unittest discover -s tools -p "test_*.py" -v`.
+
 `tools/ExposureControlTest.kt` and `tools/FastTrackingMathTest.kt` are additional source-only
 JVM checks for slider limits, mask row orientation, lost/duplicate detections, reacquisition,
-rate expiry and coordinate round trips. Compile/run them on the build machine alongside
+rate expiry and coordinate round trips. Packed-mask checks also compare odd-width/padded
+readback against legacy RGBA centres and verify that padding cannot create blobs.
+Compile/run them on the build machine alongside
 `ExposureControl.kt`, `PuckMaskDetector.kt`, `FrameRateWindow.kt` and `PreviewCoordinates.kt`.
 They have not been compiled/run here. They do not validate EGL, sensor orientation or
 device timing. Receiver statistics tests, Python syntax and Android XML parsing passed;
