@@ -114,6 +114,47 @@ the run ends. If your Python installation lacks Tk, use:
 python3 tools/view_puck_stream.py --headless --duration 60 --report puck-720p60.json
 ```
 
+#### Windows receiver
+
+The viewer is also compatible with Windows. Install Python 3.8+ with Tcl/Tk support
+for the position window, plus [Android SDK Platform Tools for Windows](https://developer.android.com/tools/releases/platform-tools).
+Enable USB debugging, connect a USB data cable and authorize the computer on the phone.
+If the Pixel does not appear in ADB/Device Manager, check the
+[Google USB Driver](https://developer.android.com/studio/run/win-usb).
+
+Keep `tools/view_puck_stream_windows.py` and `tools/view_puck_stream.py` together.
+From `src/AndroidApp` in PowerShell or Command Prompt, with the phone's GPU test on:
+
+```powershell
+py tools/view_puck_stream_windows.py
+```
+
+The launcher finds ADB on PATH, in Android Studio's default SDK, in `ANDROID_HOME` /
+`ANDROID_SDK_ROOT`, or in `Downloads/platform-tools`. It selects a USB phone, sets up
+TCP forwarding, opens the same small position window and collects a 60-second report.
+The report's absolute path is printed before the test starts; by default it is a
+timestamped JSON in `puck-reports` under the current directory. No pip packages are needed.
+If `py` is unavailable, use the installed `python` command instead.
+
+For a longer test without a window:
+
+```powershell
+py tools/view_puck_stream_windows.py --headless --duration 120 --report puck-720p60-windows.json
+```
+
+Use `--adb "C:\path\to\platform-tools\adb.exe"` for another ADB location, `--serial SERIAL`
+for multiple phones, and `--port 8766` if PC port 8765 is already used. The phone still
+uses port 8765. The launcher preserves existing forwards and refuses to replace a
+different device/service's mapping. It removes only a forwarding entry it created,
+after the viewer finishes. It does not build/install an APK or change system settings.
+
+If you already forwarded the port manually, the shared script also works directly:
+
+```powershell
+adb forward tcp:8765 tcp:8765
+py tools/view_puck_stream.py --duration 60 --report puck-720p60-windows.json
+```
+
 Run a new receiver for each camera mode (a mode change closes the old connection).
 Repeat for a few minutes to check thermal throttling. Keep lighting, camera placement,
 puck distance and movement similar between runs. Check visible detections against the
@@ -238,6 +279,13 @@ For the experimental receiver, the stdlib-only statistics self-test can be run o
 
 ```sh
 python3 tools/view_puck_stream.py --self-test
+```
+
+Windows launcher/forwarding tests use mocks and require no connected phone:
+
+```powershell
+py tools/view_puck_stream_windows.py --self-test
+py -m unittest discover -s tools -p test_windows_launcher.py -v
 ```
 
 `tools/ExposureControlTest.kt` and `tools/FastTrackingMathTest.kt` are additional source-only

@@ -1,7 +1,9 @@
 """View and benchmark the Android puck NDJSON stream (after ``adb forward tcp:8765 tcp:8765``).
 
-Run with ``python3 view_puck_stream.py`` on macOS. Use ``--headless`` when Python has
-no Tk support, or ``--self-test`` to run the standard-library-only statistics checks.
+Run with ``python3 view_puck_stream.py`` on macOS or ``py view_puck_stream.py`` on
+Windows. Use ``--headless`` when Python has no Tk support, or ``--self-test`` to run
+the standard-library-only statistics checks. Windows USB setup can also be automated
+with the companion ``view_puck_stream_windows.py`` launcher.
 """
 
 import argparse
@@ -16,7 +18,7 @@ from collections import deque
 
 
 class StreamStats:
-    """Bounded rolling samples and run-wide counters measured with the Mac clock."""
+    """Bounded rolling samples and run-wide counters measured with the receiver clock."""
 
     def __init__(self, window_seconds=10.0):
         self.started = time.monotonic()
@@ -88,7 +90,7 @@ class StreamStats:
                 if rate is not None and rate >= 0:
                     values.append(rate)
             # frame_age_ms is supplied by the phone only when it can safely compare
-            # clock domains. Never derive it by subtracting phone and Mac timestamps.
+            # clock domains. Never derive it by subtracting phone and receiver timestamps.
             self.last_timestamp_source = str(sample.get("timestamp_source", "unknown"))
             if self.last_timestamp_source.upper() == "REALTIME":
                 age = self._number(sample.get("frame_age_ms"))
@@ -169,7 +171,7 @@ class StreamStats:
                 "frame_age_ms_from_phone_when_realtime": self._summary(frame_age),
                 "timestamp_source": self.last_timestamp_source,
                 "measurement_notes": [
-                    "Whole-run received rates use Mac wall elapsed time since viewer start, including connection startup.",
+                    "Whole-run received rates use receiver elapsed time since viewer start, including connection startup.",
                     "Phone-reported camera rates come from message metadata; message arrivals are not camera capture speed.",
                     "Observed unique texture rate counts distinct phone texture timestamps seen by this receiver.",
                     "Detection ratio describes received samples and does not measure detection accuracy.",
@@ -335,8 +337,9 @@ def _gui(stats, stop, duration, errors, report_path):
 def main():
     parser = argparse.ArgumentParser(
         description=__doc__,
-        epilog="macOS: run 'adb forward tcp:8765 tcp:8765', then "
-               "'python3 view_puck_stream.py'. Add --headless for terminal-only use.")
+        epilog="Run 'adb forward tcp:8765 tcp:8765', then 'python3 view_puck_stream.py' "
+               "(macOS) or 'py view_puck_stream.py' (Windows). "
+               "Add --headless for terminal-only use.")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--headless", action="store_true", help="collect and report without opening a window")
