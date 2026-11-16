@@ -1,6 +1,6 @@
 # Android App Perception Test
 
-Android Camera2 recorder with optional on-device Python tracking of the yellow puck.
+Android Camera2 recorder with a GPU/C++ live puck stream and optional Python preview tracking.
 The existing camera mode selection, manual shutter controls, MP4 recording and per-frame
 camera metadata CSV remain available. The launcher name is **Android App Perception Test**;
 its package remains `com.example.fastcam` so it updates the original FastCam installation.
@@ -29,6 +29,22 @@ server, internet connection or laptop is needed on the phone to run the tracker.
 
 ## Record and track
 
+The screen keeps the camera and position monitor above a scrolling control panel,
+with **Record video** always available in the bottom action bar. Controls use the
+following names (older builds used the longer "USB tracking test" and "Track yellow
+puck" labels):
+
+| Control | Tracker and purpose |
+|---|---|
+| **Live USB tracking (C++)** | GPU mask plus native C++ detection and coordinate streaming. Recording is disabled while this mode runs. |
+| **Show camera preview** | Optional video display during live USB tracking. Turn off to keep the position monitor and stream running without drawing the preview. |
+| **Preview tracking (Python)** | Original recorder-compatible tracker, targeting up to 30 analyses/s. Paused while live USB tracking is active. |
+| **Save MP4 with tracking circle** | Python processing after Stop to create an annotated copy. The original recording is kept. |
+
+The tracking status names the **actual** live detector. If the C++ library cannot
+load, it explicitly shows **Kotlin fallback**. Keeping the Python label is intentional:
+that switch still selects Python, rather than the C++ streaming path.
+
 - Select a resolution/frame-rate mode. The existing camera discovery still offers
   supported 120/240 fps high-speed modes, standard 60 fps modes, or a 30 fps fallback.
 - **Shutter slider** changes exposure live in standard modes when manual sensor control
@@ -36,13 +52,13 @@ server, internet connection or laptop is needed on the phone to run the tracker.
   down to the camera's advertised minimum. **Reset shutter to Auto** restores automatic
   exposure. The label shows the requested value; the top panel shows the **actual** value
   reported by the camera. High-speed sessions keep automatic exposure.
-- Turn on **Track yellow puck (Python)**. It works before recording to help aim the camera,
-  and continues when **REC** is pressed. A green ring follows the detected puck, and the
+- Turn on **Preview tracking (Python)**. It works before recording to help aim the camera,
+  and continues when **Record video** is pressed. A green ring follows the detected puck, and the
   status shows X/Y and Python processing time. Toggle it off to disable analysis/output.
-- **REC / STOP** saves the original video and metadata as before:
+- **Record video / Stop recording** saves the original video and metadata as before:
   - `Movies/FastCam/FASTCAM_<date>_<WxH>_<fps>fps.mp4` (HEVC with H.264 fallback, no audio)
   - `Download/FastCam/FASTCAM_<...>.csv` (camera frame metadata)
-- **Embed green circle in MP4 (after Stop)** is a separate toggle, off by default.
+- **Save MP4 with tracking circle** is a separate toggle, off by default.
   Select it before recording; it is locked for the duration of that recording. After
   Stop, the app automatically analyses every saved frame with the Python tracker and
   creates `Movies/FastCam/FASTCAM_<...>_tracked.mp4`, with the green circle embedded in
@@ -421,6 +437,11 @@ Compile/run them on the build machine alongside
 They have not been compiled/run here. They do not validate EGL, sensor orientation or
 device timing. Receiver statistics tests, Python syntax and Android XML parsing passed;
 no Android app compilation or device benchmark was performed for the GPU/shutter changes.
+
+UI source checks cover XML/resource references and retained view IDs. The light theme,
+larger text layout, preview fit/ring alignment, disabled record state, fallback/error
+labels and scroll-to-cancel behavior still need visual/device validation after building
+elsewhere. No Android compilation was performed for the UI refresh.
 
 `tools/SamplingCadenceTest.kt` adds source-only cadence checks (jitter/stalls/duplicates).
 Standalone C++ detector tests can be built on a host C++17 compiler from this directory:

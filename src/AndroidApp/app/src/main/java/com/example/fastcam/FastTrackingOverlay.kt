@@ -25,14 +25,14 @@ class FastTrackingOverlay(context: Context, attrs: AttributeSet? = null) : View(
     override fun onDraw(canvas: Canvas) {
         val d = resources.displayMetrics.density
         paint.style = Paint.Style.FILL
-        paint.color = 0xDD101820.toInt()
+        paint.color = 0xEE17354A.toInt()
         canvas.drawRoundRect(0f, 0f, width.toFloat(), height.toFloat(), 8*d, 8*d, paint)
         val s = sample?.takeIf { SystemClock.uptimeMillis() - receivedAt < 250 }
         paint.color = Color.WHITE
         paint.textSize = 11*d
-        canvas.drawText(if (s?.previewEnabled == false) "LIVE XY | CAMERA PREVIEW OFF" else "LIVE USB TRACKING TEST", 8*d, 16*d, paint)
-        canvas.drawText(s?.let { "Frames %.1f/s | detect %.1f/s".format(it.sourceFps, it.detectedFps) } ?: "Waiting for fresh frames", 8*d, 33*d, paint)
-        canvas.drawText(s?.let { "Analysis %.1f/s | %.1f ms".format(it.analysisFps, it.processingMs) } ?: "", 8*d, 49*d, paint)
+        canvas.drawText(if (s?.previewEnabled == false) "Puck position · camera paused" else "Live puck position", 8*d, 16*d, paint)
+        canvas.drawText(s?.let { "%.1f updates/s on phone".format(it.analysisFps) } ?: "Waiting for fresh frames", 8*d, 33*d, paint)
+        canvas.drawText(s?.let { "%.1f ms processing".format(it.processingMs) } ?: "", 8*d, 49*d, paint)
         val left = 8*d
         val top = 59*d
         val right = width - 8*d

@@ -7,7 +7,7 @@
 
     <application
         android:label="Android App Perception Test"
-        android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
+        android:theme="@style/PuckLabTheme">
 
         <activity
             android:name=".MainActivity"

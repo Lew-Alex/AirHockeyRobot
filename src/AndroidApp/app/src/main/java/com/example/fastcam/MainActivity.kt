@@ -89,6 +89,8 @@ class MainActivity : Activity() {
     @Volatile private var fastPreviewEnabled = true
     @Volatile private var fastPipeline: FastPuckPipeline? = null
     private lateinit var infoText: TextView
+    private lateinit var engineStatus: TextView
+    private lateinit var trackingStatus: TextView
     private lateinit var tracking: LivePuckTracking
     private lateinit var puckOverlay: PuckOverlayView
     private lateinit var embedTrackingSwitch: Switch
@@ -168,20 +170,24 @@ class MainActivity : Activity() {
         fastOverlay = findViewById(R.id.fastTrackingOverlay)
         infoText = findViewById(R.id.info)
         puckOverlay = findViewById(R.id.puckOverlay)
-        val trackingStatus = findViewById<TextView>(R.id.trackingStatus)
+        trackingStatus = findViewById(R.id.trackingStatus)
+        engineStatus = findViewById(R.id.engineStatus)
         trackingSwitch = findViewById(R.id.trackingSwitch)
         tracking = LivePuckTracking(this, textureView, puckOverlay, { trackingSwitch.isChecked = false }) {
             trackingStatus.text = it
         }
         trackingSwitch.setOnCheckedChangeListener { _, checked ->
             tracking.setEnabled(checked)
+            if (!fastTracking) engineStatus.text = if (checked) "Python preview tracker · up to 30 updates/s" else "Tracking off"
         }
         fastSwitch.setOnCheckedChangeListener { _, checked ->
             fastTracking = checked
             if (!checked) fastPipeline?.stopStreaming() // release TCP before Python restarts; close camera before GL
             tracking.setCameraReady(false)
             tracking.setResumed(activityResumed && !checked && !videoExporter.isRunning)
-            if (checked) trackingStatus.text = "GPU tracking test | TCP 8765 | Python paused"
+            if (checked) trackingStatus.text = "Starting coordinate output on port 8765"
+            engineStatus.text = if (checked) "Starting native tracker…"
+                else if (trackingSwitch.isChecked) "Python preview tracker · up to 30 updates/s" else "Tracking off"
             trackingSwitch.isEnabled = !checked
             fastPreviewSwitch.isEnabled = checked
             embedTrackingSwitch.isEnabled = !checked && !videoExporter.isRunning
@@ -189,8 +195,9 @@ class MainActivity : Activity() {
             fastOverlay.clear()
             puckOverlay.clear()
             recordButton.isEnabled = false
-            exportStatus.text = if (checked) "Starting GPU test; MP4 recording disabled"
-                else if (embedTrackingInMp4) "After Stop: save an additional MP4 with the tracked circle" else "MP4 overlay off"
+            recordButton.text = if (checked) "Live stream mode" else "Record video"
+            exportStatus.text = if (checked) "Turn off live USB tracking to record video."
+                else if (embedTrackingInMp4) "A tracked copy will be created after Stop." else "Original video only"
             updatePreviewLayout()
             cameraHandler?.post { restartCamera() }
         }
@@ -206,8 +213,8 @@ class MainActivity : Activity() {
             })
         embedTrackingSwitch.setOnCheckedChangeListener { _, checked ->
             embedTrackingInMp4 = checked
-            exportStatus.text = if (checked) "After Stop: save an additional MP4 with the tracked circle"
-                                else "MP4 overlay off"
+            exportStatus.text = if (checked) "A tracked copy will be created after Stop."
+                                else "Original video only"
         }
         cancelExportButton.setOnClickListener { videoExporter.cancel() }
 
@@ -575,13 +582,22 @@ class MainActivity : Activity() {
                                 runOnUiThread {
                                     fastSwitch.isEnabled = true
                                     recordButton.isEnabled = false
-                                    exportStatus.text = "USB tracking test: streaming on TCP 8765; MP4 recording disabled"
+                                    engineStatus.text = when (fastPipeline?.detectorBackend) {
+                                        "cpp" -> "Native C++ detector · GPU colour mask"
+                                        "kotlin_fallback" -> "Kotlin fallback · C++ library could not load"
+                                        else -> "Starting native tracker…"
+                                    }
+                                    trackingStatus.text = "Coordinate output ready on port 8765"
                                 }
                             }
                             override fun onConfigureFailed(s: CameraCaptureSession) {
                                 s.close()
                                 if (generation == sessionGeneration) {
                                     fastPipeline?.close()
+                                    runOnUiThread {
+                                        engineStatus.text = "Camera mode unavailable"
+                                        trackingStatus.text = "Choose a standard 720p mode and try live tracking again."
+                                    }
                                     toast("Tracking test refused ${mode.label}; try a standard 720p mode")
                                 }
                             }
@@ -603,7 +619,8 @@ class MainActivity : Activity() {
             onError = { error -> runOnUiThread {
                 if (generation == sessionGeneration && fastTracking) {
                     fastOverlay.clear(); puckOverlay.clear()
-                    exportStatus.text = "Tracking test stopped: $error. Toggle off to restore recording."
+                    engineStatus.text = "Live tracking stopped"
+                    trackingStatus.text = "$error. Turn live USB tracking off, then on to retry."
                     toast(error)
                     cameraHandler?.post { if (generation == sessionGeneration) closeCamera() }
                 }
@@ -790,7 +807,7 @@ class MainActivity : Activity() {
             recording = true
             startRepeating(true)
             runOnUiThread {
-                recordButton.text = "■ STOP"
+                recordButton.text = "Stop recording"
                 recordButton.isEnabled = true
                 modeSpinner.isEnabled = false
                 fastSwitch.isEnabled = false
@@ -854,7 +871,7 @@ class MainActivity : Activity() {
         val savedBaseName = baseName
         val savedFps = recordedFps
         runOnUiThread {
-            recordButton.text = "● REC"
+            recordButton.text = "Record video"
             recordButton.isEnabled = true
             modeSpinner.isEnabled = true
             embedTrackingSwitch.isEnabled = true
@@ -941,7 +958,7 @@ class MainActivity : Activity() {
         if (mode == null || mode.highSpeed || !manualSensorSupported || range == null) {
             shutterButton.isEnabled = false
             shutterSlider.isEnabled = false
-            shutterButton.text = if (mode?.highSpeed == true) "Shutter: Auto\n(locked in high-speed)" else "Shutter: Auto"
+            shutterButton.text = if (mode?.highSpeed == true) "Auto in high-speed mode" else "Auto exposure"
             shutterStatus.text = if (mode?.highSpeed == true) "Choose a standard mode for manual fast exposure"
                                  else "Camera does not expose manual shutter control"
             return
@@ -950,7 +967,7 @@ class MainActivity : Activity() {
         val shortest = ExposureControl.exposureForProgress(1000, range.lower, range.upper, 1_000_000_000L / mode.fps)
         shutterSlider.isEnabled = shortest != null
         shutterButton.isEnabled = true
-        shutterButton.text = "Reset shutter\nto Auto"
+        shutterButton.text = "Reset to Auto"
         shutterStatus.text = "Requested: ${ExposureControl.labelForExposureNs(exposure)}\n" +
             "Right = faster; sensor limit ${ExposureControl.labelForExposureNs(shortest)}" +
             if (exposure != null) "\nISO fixed at $manualIso; add light if the image is dark" else ""
