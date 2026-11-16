@@ -130,6 +130,8 @@ def main(argv=None):
     parser.add_argument("--duration", type=positive_duration, default=60, help="benchmark seconds (default: 60)")
     parser.add_argument("--report", type=Path, help="report path (default: timestamped JSON in ./puck-reports)")
     parser.add_argument("--headless", action="store_true", help="collect results without a Tk window")
+    parser.add_argument("--live", action="store_true", help="print actual received rates once per second")
+    parser.add_argument("--latency", action="store_true", help="estimate end-to-end latency with clock synchronization")
     parser.add_argument("--serial", help="ADB serial when several phones are connected")
     parser.add_argument("--adb", help="explicit path to adb.exe")
     parser.add_argument("--port", type=port_number, default=PHONE_PORT, help="PC TCP port (phone always uses 8765)")
@@ -156,11 +158,15 @@ def main(argv=None):
                   "puck-{}.json".format(datetime.now().strftime("%Y%m%d-%H%M%S-%f")))).expanduser().resolve()
         report.parent.mkdir(parents=True, exist_ok=True)
         print("USB phone: {}\nReport: {}".format(serial, report), flush=True)
-        print("Keep 'USB tracking test (GPU; no recording)' ON and the app in the foreground.", flush=True)
+        print("Keep 'USB tracking test (GPU + C++; no recording)' ON and the app in the foreground.", flush=True)
         command = [sys.executable, str(viewer), "--host", "127.0.0.1", "--port", str(args.port),
                    "--duration", str(args.duration), "--report", str(report)]
         if args.headless:
             command.append("--headless")
+        if args.live:
+            command.append("--live")
+        if args.latency:
+            command.append("--latency")
         return run_viewer(adb, serial, args.port, command)
     except (RuntimeError, OSError) as error:
         print(str(error), file=sys.stderr)

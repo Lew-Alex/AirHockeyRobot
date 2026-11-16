@@ -6,6 +6,7 @@ venv/
 
 # Android local build state
 .gradle/
+.cxx/
 local.properties
 
 # macOS

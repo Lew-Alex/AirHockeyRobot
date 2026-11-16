@@ -8,6 +8,8 @@ its package remains `com.example.fastcam` so it updates the original FastCam ins
 ## Build and install
 
 1. Install Android Studio, Android SDK Platform 35, and JDK 17.
+   The native tracker additionally requires **NDK 28.2.13676358** and **CMake 3.22.1**
+   on the build computer (SDK Manager → SDK Tools → Show Package Details).
 2. Install **Python 3.10** on the build computer. The app embeds Python 3.10 via
    Chaquopy 17.2.0; NumPy 1.26.2 and OpenCV 4.5.1.48 are pinned to available Android wheels.
    The first sync needs internet access to download Gradle, Maven dependencies and wheels.
@@ -65,19 +67,22 @@ server, internet connection or laptop is needed on the phone to run the tracker.
 
 ### Experimental high-rate USB tracking test
 
-Enable **USB tracking test (GPU; no recording)** to try the independent high-rate path.
+Enable **USB tracking test (GPU + C++; no recording)** to try the independent high-rate path.
 It replaces the Python preview sampler for the duration of the test. The existing
 recording/Python path is restored when the switch is turned off. No APK or phone
 benchmark has been run for this change: requested camera rates are targets, not results.
 
 The test configures exactly **one Camera2 output**, an offscreen SurfaceTexture consumed
 on a dedicated EGL/GLES worker. A fragment shader thresholds the same yellow HSV range
-as the Python tracker into a binary mask (longest edge at most 640 px). A separate Kotlin
+as the Python tracker into a binary mask (longest edge at most 640 px). A C++
 connected-component detector selects a blob using size, shape and timed continuity.
 Four adjacent binary samples are packed into the RGBA channels of each readback texel,
 reducing transferred mask data to about one quarter of the original full-RGBA mask.
-The detector bulk-copies the buffer into reusable arrays rather than checking direct
-buffer bytes for each pixel/neighbor. The 640px analysis grid and blob-selection rules
+JNI passes the direct GPU mask buffer to C++ without copying the full frame into Java.
+The previous Kotlin detector remains a runtime fallback if the native library cannot load.
+The report's `detector_backend` must say **cpp** to verify the native path; it says
+`kotlin_fallback` otherwise, with a `native_load_error` when available.
+The 640px analysis grid and blob-selection rules
 are retained; no smaller analysis resolution is used for this optimization.
 It does not embed OpenCV or call Python. Its results are experimental and must be checked
 against the Python reference/ground truth; matching HSV bounds does not imply matching
@@ -228,6 +233,71 @@ preview work. They are not extra coordinates and no frame is replayed to raise t
 Actual speed improvement, accuracy equivalence on camera images and GPU shader operation
 remain unverified until device testing. No Android app compilation is performed here.
 
+#### C++ tracking and tracing a reported 180 ms latency
+
+The GPU mode now uses a C++ detector (`app/src/main/cpp`) through JNI. The original
+Python tracker remains available; the C++ path is selected with the **GPU + C++**
+switch and does not call Python. The packed GPU mask is consumed directly by native
+code, using reusable flood-fill buffers. C++ follows the experimental Kotlin detector's
+size/shape/continuity rules, not a newly trained model. Test camera accuracy separately.
+The new native library uses the pinned NDK/CMake versions listed above. Its standalone
+host C++ tests pass; the Android JNI build/loading and phone speed remain unverified.
+
+The Python preview path has also been improved: finished results are now published
+on the Python worker without waiting for the phone UI thread. Its 30 Hz target uses
+an anchored deadline with 1 ms tolerance instead of resetting the timer after every
+accepted frame, avoiding unnecessary losses around nominal 30/60 Hz callback boundaries.
+It still depends on preview readback and Python processing and cannot promise a higher rate.
+
+180 ms must be attributed to a specific interval. `processing_ms` alone excludes
+capture/readback before detection, display swaps, socket queuing and USB delivery.
+The receiver's optional `--latency` uses bounded four-timestamp clock probes on the
+same TCP connection to estimate the offset between phone and laptop clocks. Keep
+`puck_clock_sync.py` next to the viewer for this feature. Ordinary receiving still
+works without that helper. Raw phone and laptop timestamps must not be subtracted.
+
+After building/installing the updated app elsewhere, enable GPU + C++, select a
+standard 720p/60 mode, turn its camera preview off, and run on the Mac from `src/AndroidApp`:
+
+```sh
+adb forward tcp:8765 tcp:8765
+python3 tools/view_puck_stream.py --headless --live --latency --duration 30 --report latency-native.json
+```
+
+On Windows:
+
+```powershell
+py tools/view_puck_stream_windows.py --headless --live --latency --duration 30 --report latency-native-windows.json
+```
+
+The terminal prints actual received **messages/sec** and **valid positions/sec** once
+per second. A lost sample is a message with null XY, so these two counts can differ.
+Reports identify `tracker`, `detector_backend`, `sampling_limit_fps` (Python only) and
+`stream_revision:4`. Clock replies are excluded from every coordinate/rate counter.
+For an older app that does not answer clock probes, ordinary rate reporting works,
+but synchronized ages remain unavailable. Use a new receiver run after changing modes.
+
+| Report field | Interpretation |
+|---|---|
+| `estimated_latency_ms.sensor_to_receiver_ms` | GPU sensor first-row exposure timestamp to laptop socket reception, only with REALTIME sensor timestamps. |
+| `estimated_latency_ms.sample_to_receiver_ms` | Phone readback start to laptop reception; available for both updated trackers after synchronization. |
+| `estimated_latency_ms.publish_to_receiver_ms` | Phone result formatting/enqueue to laptop reception; includes writer queuing and ADB/USB, not just cable time. |
+| `clock_sync.offset_uncertainty_ms` | Half the minimum corrected round-trip time; one-way age estimates depend on path asymmetry and clock drift. |
+| `latest_phone_transport.socket_replaced_messages` | Pending coordinate offers overwritten while a client writer lagged. Counters aggregate all connected readers; test with one reader. |
+| `latest_phone_transport.socket_max_write_ms` | Maximum completed socket write+flush duration in the current server run; writing to a kernel buffer is not confirmation of laptop reception. |
+| `frame_id_advance_rate_hz` | Observed sender ID advances per receiver time; high ID advance with low received cadence exposes skipped updates, not camera FPS. |
+
+Compare per-stage processing times with these ages. High detection time points toward
+the detector; large preview times point toward display; high readback time points toward
+GPU synchronization; low processing time but high publish-to-receiver age points toward
+the downstream path. The socket already uses TCP_NODELAY and a latest-only pending slot;
+it now also requests a small kernel send buffer to reduce hidden backlog under load.
+The OS can enlarge that buffer, so this is not a fixed latency guarantee. A reader
+disconnect no longer reports a fatal tracker error, allowing the next test to reconnect.
+
+No prerecorded coordinates are replayed to raise update counts. These changes do not
+establish the cause of the reported 180 ms or promise a new phone FPS before measuring it.
+
 ### Fast shutter without 240 fps
 
 Yes: frame rate and exposure duration are different. At 60 fps the frame interval is
@@ -351,6 +421,17 @@ Compile/run them on the build machine alongside
 They have not been compiled/run here. They do not validate EGL, sensor orientation or
 device timing. Receiver statistics tests, Python syntax and Android XML parsing passed;
 no Android app compilation or device benchmark was performed for the GPU/shutter changes.
+
+`tools/SamplingCadenceTest.kt` adds source-only cadence checks (jitter/stalls/duplicates).
+Standalone C++ detector tests can be built on a host C++17 compiler from this directory:
+
+```sh
+g++ -std=c++17 -O3 -Wall -Wextra -pedantic -I app/src/main/cpp app/src/main/cpp/puck_detector.cpp tools/native_puck_detector_test.cpp -o native-puck-test
+./native-puck-test
+```
+
+This tests the detector core only and does not build the Android app, JNI layer or shaders.
+Clock-sync and receiver tests are included in `tools/test_*.py` (stdlib unittest).
 
 Python bridge tests, from `../perception/androidAppPerceptionTesting`:
 

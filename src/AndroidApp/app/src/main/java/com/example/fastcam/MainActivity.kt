@@ -710,6 +710,7 @@ class MainActivity : Activity() {
                 fpsEma = if (fpsEma == 0.0) inst else fpsEma * 0.95 + inst * 0.05
             }
             lastTimestamp = ts
+            tracking.setCaptureFps(fpsEma)
 
             if (recording && request.tag == REC_TAG) {
                 csv?.append("${result.frameNumber},$ts,$exposure,$skew,$frameDuration,$iso\n")

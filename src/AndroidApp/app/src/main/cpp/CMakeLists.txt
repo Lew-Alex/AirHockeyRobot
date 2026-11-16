@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.22.1)
+project(puck_native LANGUAGES CXX)
+add_library(puck_native SHARED puck_detector.cpp puck_jni.cpp)
+target_compile_features(puck_native PRIVATE cxx_std_17)
+target_compile_options(puck_native PRIVATE -O3 -Wall -Wextra -ffp-contract=off)

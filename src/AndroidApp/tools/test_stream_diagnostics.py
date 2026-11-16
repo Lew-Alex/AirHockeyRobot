@@ -1,12 +1,55 @@
 """Receiver diagnostics checks; no camera, socket, GUI or Android build required."""
 
 import unittest
+import json
+import threading
 from unittest.mock import patch
 
 from view_puck_stream import StreamStats
+import view_puck_stream as viewer
 
 
 class StreamDiagnosticsTests(unittest.TestCase):
+    def test_clock_reply_is_excluded_and_end_to_end_ages_use_synced_clocks(self):
+        class Connection:
+            def __init__(self): self.packet = b""
+            def __enter__(self): return self
+            def __exit__(self,*args): pass
+            def settimeout(self,*args): pass
+            def sendall(self,data):
+                probe_id = data.decode().split()[1]
+                reply = {"type":"clock_sync", "id":probe_id, "clock":"elapsed_realtime",
+                         "phone_receive_ns":1125000000, "phone_send_ns":1130000000}
+                puck = {"type":"puck", "detected":True, "x":1, "y":2, "timestamp_ns":1140000000,
+                        "phone_publish_timestamp_ns":1150000000, "capture_timestamp_ns":1130000000,
+                        "timestamp_source":"REALTIME"}
+                self.packet = (json.dumps(reply)+"\n"+json.dumps(puck)+"\n").encode()
+            def recv(self,*args):
+                data,self.packet = self.packet,b""
+                return data
+        stats, stop, errors = StreamStats(),threading.Event(),[]
+        stats.started = 1.0
+        with patch.object(viewer.socket,"create_connection",return_value=Connection()), \
+                patch.object(viewer.time,"monotonic_ns",side_effect=[1000000000,1055000000,1060000000]):
+            viewer.receive("localhost",8765,stats,stop,errors,latency=True)
+        result = stats.snapshot(now=1.06)
+        self.assertEqual(result["received_messages"],1)
+        self.assertEqual(result["detected_messages"],1)
+        self.assertEqual(result["estimated_latency_ms"]["sensor_to_receiver_ms"]["mean"],25.0)
+        self.assertEqual(result["estimated_latency_ms"]["sample_to_receiver_ms"]["mean"],15.0)
+        self.assertEqual(result["estimated_latency_ms"]["publish_to_receiver_ms"]["mean"],5.0)
+        self.assertEqual(result["clock_sync"]["offset_uncertainty_ms"],25.0)
+
+    def test_counter_advance_can_exceed_received_message_rate(self):
+        stats = StreamStats()
+        stats.started = 10.0
+        for frame in range(22):
+            stats.add({"frame_id":frame*3,"detected":False},arrival=10+frame/21)
+        report = stats.snapshot(now=11.0)
+        self.assertEqual(report["received_cadence_hz"],21.0)
+        self.assertEqual(report["frame_id_advance_rate_hz"],63.0)
+        self.assertEqual(report["estimated_missing_frame_ids"],42)
+
     def test_camera_processing_and_receiver_rates_remain_distinct(self):
         stats = StreamStats()
         stats.started = 10.0

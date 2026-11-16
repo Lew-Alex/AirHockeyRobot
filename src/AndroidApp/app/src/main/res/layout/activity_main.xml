@@ -66,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:checked="false"
-            android:text="USB tracking test (GPU; no recording)"
+            android:text="USB tracking test (GPU + C++; no recording)"
             android:textColor="#FFFFFF" />
 
         <Switch

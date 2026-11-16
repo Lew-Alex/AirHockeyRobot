@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
 /** Experimental single-camera-output path: camera -> external GL texture -> yellow mask.
- * GPU thresholds a <=640px image; Kotlin labels components and publishes measured centres.
+ * GPU thresholds a <=640px image; C++ labels components (Kotlin fallback available).
  * Mask samples pack four binary pixels into RGBA channels, retaining analysis resolution.
  * Preview rendering is capped at 15Hz; it can be disabled to isolate display stalls.
  * No recorder/Python/TextureView readback is involved. Actual throughput is device dependent.
@@ -53,7 +53,7 @@ class FastPuckPipeline(
     private val stopped = AtomicBoolean(false)
     private val closing = AtomicBoolean(false)
     private val released = CountDownLatch(1)
-    private val output = PuckCoordinateServer { fail(it) }
+    private val output = PuckCoordinateServer(clockNs = { SystemClock.elapsedRealtimeNanos() }, clockName = "elapsed_realtime") { fail(it) }
     private val sourceRate = FrameRateWindow()
     private val analysisRate = FrameRateWindow()
     private val detectedRate = FrameRateWindow()
@@ -65,7 +65,10 @@ class FastPuckPipeline(
     private val packedWidth = (maskWidth + 3) / 4
     private val packedStride = packedWidth * 4
     private val pixels = ByteBuffer.allocateDirect(packedStride * maskHeight).order(ByteOrder.nativeOrder())
-    private val detector = PuckMaskDetector(maskWidth, maskHeight)
+    private val detector by lazy { PuckMaskDetector(maskWidth, maskHeight) }
+    private var nativeDetector: NativePuckDetector? = null
+    @Volatile var detectorBackend = "initializing"
+        private set
     private val vertices: FloatBuffer = ByteBuffer.allocateDirect(16 * 4).order(ByteOrder.nativeOrder())
         .asFloatBuffer().apply {
             put(floatArrayOf(-1f,-1f, 0f,0f, 1f,-1f, 1f,0f, -1f,1f, 0f,1f, 1f,1f, 1f,1f)); position(0)
@@ -165,6 +168,8 @@ class FastPuckPipeline(
         EGL14.eglSwapInterval(display, 0) // applies to the window, not the pbuffer
         makeCurrent(pbuffer)
         program = createProgram()
+        nativeDetector = NativePuckDetector.createOrNull(maskWidth,maskHeight)
+        detectorBackend = if (nativeDetector != null) "cpp" else "kotlin_fallback"
         // Locations are constant for this linked program, not per-frame work.
         cameraLocation = GLES20.glGetUniformLocation(program,"uCamera")
         maskLocation = GLES20.glGetUniformLocation(program,"uMask")
@@ -221,7 +226,9 @@ class FastPuckPipeline(
             GLES20.glReadPixels(0,0,packedWidth,maskHeight,GLES20.GL_RGBA,GLES20.GL_UNSIGNED_BYTE,pixels)
             checkGl("mask readback")
             val readbackDone = SystemClock.elapsedRealtimeNanos()
-            val hit = detector.detect(pixels,captureNs,packedStride,1)
+            val native = nativeDetector
+            val hit = if (native != null) native.detect(pixels,captureNs,packedStride,1)
+                      else detector.detect(pixels,captureNs,packedStride,1)
             val completed = SystemClock.elapsedRealtimeNanos()
             analysisRate.add(completed)
             if (hit != null) detectedRate.add(completed)
@@ -237,8 +244,12 @@ class FastPuckPipeline(
                 sensorPoint?.second?.times(sensorHeight)?.minus(0.5), sensorPoint?.first,sensorPoint?.second,
                 u,v,(hit?.radius ?: 0.0)/maskWidth,(hit?.radius ?: 0.0)/maskHeight,
                 sourceRate.rate(completed),analysisRate.rate(completed),detectedRate.rate(completed),processingMs,age,showPreview,renderPreview)
+            val transport = output.snapshot()
             val json = JSONObject().apply {
                 put("type","puck"); put("version",1); put("tracker","gpu_mask_experimental"); put("pipeline_revision",2)
+                put("stream_revision",4)
+                put("detector_backend",detectorBackend)
+                if (native == null) put("native_load_error",NativePuckDetector.unavailableReason ?: JSONObject.NULL)
                 put("frame_id",frameId); put("timestamp_ns",started); put("capture_timestamp_ns",captureNs)
                 put("phone_publish_timestamp_ns",SystemClock.elapsedRealtimeNanos())
                 put("timestamp_source",if (timestampRealtime) "REALTIME" else "UNKNOWN")
@@ -258,6 +269,12 @@ class FastPuckPipeline(
                 put("previous_publish_ms",previousPublishMs ?: JSONObject.NULL)
                 put("preview_enabled",sample.previewEnabled)
                 put("readback_bytes",packedStride*maskHeight)
+                put("socket_clients",transport.clients)
+                put("socket_offered_messages",transport.offeredMessages)
+                put("socket_written_messages",transport.writtenMessages)
+                put("socket_replaced_messages",transport.replacedMessages)
+                put("socket_last_write_ms",transport.lastWriteMs)
+                put("socket_max_write_ms",transport.maxWriteMs)
             }.toString()
             output.publish(json) // never waits for the UI thread or socket writes
             val published = SystemClock.elapsedRealtimeNanos()
@@ -377,6 +394,8 @@ class FastPuckPipeline(
     }
 
     private fun releaseGl() {
+        nativeDetector?.close()
+        nativeDetector = null
         input?.setOnFrameAvailableListener(null)
         cameraSurface?.release(); cameraSurface = null
         input?.release(); input = null

@@ -47,13 +47,19 @@ class LivePuckTracking(
     private var rotation = 90
     private var bitmap: Bitmap? = null
     private var pixels = IntArray(0)
-    private var lastSampleNs = 0L
+    private val cadence = SamplingCadence(SAMPLE_INTERVAL_NS)
+    // Serializes run transitions with worker publication so an old sample cannot be
+    // enqueued into a newly started server run.
+    private val publicationLock = Any()
     private var sampleId = 0L
     // Accessed exclusively by the Python worker.
     private var tracker: PyObject? = null
     private var trackerGeneration = -1
+    private var analysisRate = FrameRateWindow()
+    private var detectedRate = FrameRateWindow()
+    @Volatile private var captureFps = 0.0
     private var outputError: String? = null
-    private val output = PuckCoordinateServer(onError = { error ->
+    private val output = PuckCoordinateServer(clockNs = { SystemClock.elapsedRealtimeNanos() }, clockName = "elapsed_realtime", onError = { error ->
         val epoch = generation
         main.post {
             if (active && epoch == generation) {
@@ -75,6 +81,9 @@ class LivePuckTracking(
         refresh()
     }
 
+    /** Camera metadata thread may update this diagnostic; no UI access. */
+    fun setCaptureFps(value: Double) { captureFps = value }
+
     fun setResumed(value: Boolean) {
         resumed = value
         refresh()
@@ -89,20 +98,26 @@ class LivePuckTracking(
 
     /** Invalidate a result captured before a mode/surface/lifecycle change. */
     fun invalidateRun() {
-        generation++
-        lastSampleNs = 0
+        synchronized(publicationLock) {
+            generation++
+            cadence.reset()
+        }
         overlay.clear()
     }
 
     private fun refresh() {
         val next = enabled && resumed && !closed
         if (next != active) {
-            active = next
-            invalidateRun()
-            if (next) {
-                outputError = null
-                output.start()
-            } else output.stop()
+            synchronized(publicationLock) {
+                active = next
+                generation++
+                cadence.reset()
+                if (next) {
+                    outputError = null
+                    output.start()
+                } else output.stop()
+            }
+            overlay.clear()
         }
         status(if (active) "Starting Python tracker | TCP ${PuckCoordinateServer.DEFAULT_PORT}"
                else "Tracking off | XY output: TCP ${PuckCoordinateServer.DEFAULT_PORT}")
@@ -112,8 +127,11 @@ class LivePuckTracking(
     fun onPreviewFrame() {
         if (!active || !cameraReady || !preview.isAvailable || preview.width == 0 || preview.height == 0) return
         val now = SystemClock.elapsedRealtimeNanos()
-        if (now - lastSampleNs < SAMPLE_INTERVAL_NS || !busy.compareAndSet(false, true)) return
-        lastSampleNs = now
+        if (!busy.compareAndSet(false, true)) return
+        if (!cadence.tryClaim(now)) {
+            busy.set(false)
+            return
+        }
         val epoch = generation
         val frameId = ++sampleId
         val width = sensorWidth
@@ -147,18 +165,29 @@ class LivePuckTracking(
                     if (trackerGeneration != epoch) {
                         pythonTracker.callAttr("reset")
                         trackerGeneration = epoch
+                        analysisRate = FrameRateWindow()
+                        detectedRate = FrameRateWindow()
                     }
                     val started = SystemClock.elapsedRealtimeNanos()
                     val result = pythonTracker.callAttr("process_argb", framePixels, analysisW, analysisH, now).asList()
-                    val processingMs = (SystemClock.elapsedRealtimeNanos() - started) / 1e6
+                    val completed = SystemClock.elapsedRealtimeNanos()
+                    val processingMs = (completed - started) / 1e6
                     val detected = result.isNotEmpty()
+                    analysisRate.add(completed)
+                    if (detected) detectedRate.add(completed)
                     val u = if (detected) (result[0].toDouble() + 0.5) / analysisW else 0.0
                     val v = if (detected) (result[1].toDouble() + 0.5) / analysisH else 0.0
                     val r = if (detected) result[2].toDouble() else 0.0
                     val (sx, sy) = PreviewCoordinates.toSensor(u, v, angle)
+                    val transport = output.snapshot()
                     val json = JSONObject().apply {
                         put("type", "puck")
                         put("version", 1)
+                        put("tracker", "python_preview")
+                        put("pipeline_revision", 2)
+                        put("stream_revision", 4)
+                        put("detector_backend", "python")
+                        put("sampling_limit_fps", 30)
                         put("frame_id", frameId)
                         put("timestamp_ns", now) // monotonic readback time, NOT sensor exposure time
                         put("preview_timestamp_ns", previewTimestamp)
@@ -174,14 +203,29 @@ class LivePuckTracking(
                         put("analysis_width", analysisW)
                         put("analysis_height", analysisH)
                         put("processing_ms", processingMs)
+                        put("phone_publish_timestamp_ns", SystemClock.elapsedRealtimeNanos())
+                        put("analysis_fps", analysisRate.rate(completed))
+                        put("detected_fps", detectedRate.rate(completed))
+                        put("capture_fps", captureFps)
+                        put("socket_clients", transport.clients)
+                        put("socket_offered_messages", transport.offeredMessages)
+                        put("socket_written_messages", transport.writtenMessages)
+                        put("socket_replaced_messages", transport.replacedMessages)
+                        put("socket_last_write_ms", transport.lastWriteMs)
+                        put("socket_max_write_ms", transport.maxWriteMs)
                     }.toString()
-                    main.post {
+                    val publish = synchronized(publicationLock) {
+                        if (active && epoch == generation) {
+                            output.publish(json)
+                            true
+                        } else false
+                    }
+                    if (publish) main.post {
                         if (active && epoch == generation) {
                             // Do not draw a delayed measurement over a much newer preview.
                             if (SystemClock.elapsedRealtimeNanos() - now < 250_000_000L && detected) {
                                 overlay.show(u, v, r / analysisW, r / analysisH)
                             } else overlay.clear()
-                            output.publish(json)
                             val text = if (detected) String.format(Locale.US, "Puck: X %.1f  Y %.1f | %.0f ms", sx * width - 0.5, sy * height - 0.5, processingMs)
                                        else "Puck lost"
                             status("$text | " + (outputError?.let { "XY unavailable: $it" }
