@@ -64,10 +64,10 @@ GOAL_REWARD             = 10.0
 CONCEDED_GOAL_REWARD    = -10.0
 APPROACH_REWARD         = 0.00125
 HIT_DIRECTION_REWARD    = 0.20
-HIT_BACKWARD_PENALTY    = -0.10
+HIT_BACKWARD_PENALTY    = -0.75
 PUCK_BEHIND_PENALTY     = -0.001
 SHOT_ON_GOAL_REWARD     = 1.50
-MOVE_PENALTY            = -0.0005   # per sim step, times how hard the robot is commanded to move (0 to 1), full game only
+MOVE_PENALTY            = -0.005   # per sim step, times how hard the robot is commanded to move (0 to 1), full game only
 
 
 # Training modes: "full" is the normal game (rewards above), "defense" and "offense" are scenarios for the two worker networks
@@ -441,7 +441,7 @@ class AirHockeyEnv:
     # mode: "full" (normal game), "defense" (puck shot at our goal) or "offense" (puck still on our half)
     # opponent: how the red mallet plays, "mixed" picks a different style each round
     # max_steps: None uses the mode's default (1800 full, 600 defense, 900 offense)
-    def __init__(self, dt=1 / 60, max_steps=None, add_observation_noise=True, seed=None, mode="full", opponent="passive"):
+    def __init__(self, dt=1 / 60, max_steps=None, add_observation_noise=True, seed=None, mode="full", opponent="attacker"):
         if mode not in MODES:
             raise ValueError(f"mode must be one of {MODES}")
         if opponent not in OPPONENT_STYLES:
