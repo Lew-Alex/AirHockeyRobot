@@ -67,6 +67,7 @@ HIT_DIRECTION_REWARD    = 0.20
 HIT_BACKWARD_PENALTY    = -0.10
 PUCK_BEHIND_PENALTY     = -0.001
 SHOT_ON_GOAL_REWARD     = 1.50
+MOVE_PENALTY            = -0.0005   # per sim step, times how hard the robot is commanded to move (0 to 1), full game only
 
 
 # Training modes: "full" is the normal game (rewards above), "defense" and "offense" are scenarios for the two worker networks
@@ -651,6 +652,9 @@ class AirHockeyEnv:
             # Puck behind the mallet (toward the robot's own goal) costs a little every step
             if self.puck_position.y <= self.robot_position.y:
                 parts["puck_behind"] = PUCK_BEHIND_PENALTY
+
+        # Small cost for moving, so the robot does not wander for no reason
+        parts["move"] = MOVE_PENALTY * action.length()
 
         return sum(parts.values()), parts
 
