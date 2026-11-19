@@ -67,6 +67,7 @@ HIT_DIRECTION_REWARD    = 0.20
 HIT_BACKWARD_PENALTY    = -0.75
 PUCK_BEHIND_PENALTY     = -0.001
 SHOT_ON_GOAL_REWARD     = 1.50
+BANK_SHOT_REWARD        = 0.50      # extra, when that shot on goal bounces off a side wall on the way (full game only)
 MOVE_PENALTY            = -0.005   # per sim step, times how hard the robot is commanded to move (0 to 1), full game only
 
 
@@ -373,6 +374,25 @@ def predict_puck_at_line(puck_x, puck_y, velocity_x, velocity_y, line_y):
 
 
 
+# How many side walls the puck's straight path bounces off before it reaches a line (y)
+# Same unfolding as predict_puck_at_line, so only call it when that said the puck arrives
+def count_wall_bounces(puck_x, puck_y, velocity_x, velocity_y, line_y):
+    speed = math.hypot(velocity_x, velocity_y)
+
+    if speed < 1e-6 or velocity_y == 0:
+        return 0
+
+    distance = (line_y - puck_y) * speed / velocity_y
+    left = TABLE_RECT.left + PUCK_RADIUS
+    span = (TABLE_RECT.right - PUCK_RADIUS) - left
+
+    # Each time the unfolded path crosses a multiple of the table width, that was one wall bounce
+    start = math.floor((puck_x - left) / span)
+    end = math.floor((puck_x + velocity_x / speed * distance - left) / span)
+    return abs(end - start)
+
+
+
 # Basic defender, only protects the robot goal
 def simple_defence_action(environment):
     home = pygame.Vector2(TABLE_RECT.centerx, TABLE_RECT.top + 90)
@@ -644,6 +664,9 @@ class AirHockeyEnv:
                 goal_x, _, arrives = predict_puck_at_line(self.puck_position.x, self.puck_position.y, self.puck_velocity.x, self.puck_velocity.y, USER_GOAL_LINE_Y)
                 if arrives and GOAL_LEFT < goal_x < GOAL_RIGHT:
                     parts["shot_on_goal"] = SHOT_ON_GOAL_REWARD
+                    # Extra for a shot on goal that goes off a side wall first (a bank shot)
+                    if count_wall_bounces(self.puck_position.x, self.puck_position.y, self.puck_velocity.x, self.puck_velocity.y, USER_GOAL_LINE_Y) >= 1:
+                        parts["bank_shot"] = BANK_SHOT_REWARD
 
             # Puck on our half, getting closer to it is rewarded
             if puck_y_before_step < TABLE_RECT.centery:
