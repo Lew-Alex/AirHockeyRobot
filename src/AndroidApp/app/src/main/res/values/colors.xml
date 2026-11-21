@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="surface">#F3F7FA</color>
+    <color name="ink">#17354A</color>
+    <color name="secondary_ink">#537081</color>
+    <color name="cyan">#007F91</color>
+    <color name="rule">#D7E3E9</color>
+    <color name="camera_black">#080E12</color>
+    <color name="white">#FFFFFF</color>
+</resources>

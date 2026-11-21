@@ -45,7 +45,7 @@ for update in range(NUM_UPDATES):
     total_reward = 0
     reward_parts_total = {}
     critic_values = []
-    advantages = [] 
+    advantages = []
     rewards = [] # Rewards from each step
     states = []
     actions = []

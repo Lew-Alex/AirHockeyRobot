@@ -53,7 +53,10 @@ class LivePuckTracking(
     private var tracker: PyObject? = null
     private var trackerGeneration = -1
     private var outputError: String? = null
-    private val output = PuckCoordinateServer(onError = { error ->
+    private val output = PuckCoordinateServer(
+        clockNs = SystemClock::elapsedRealtimeNanos,
+        clockName = "elapsed_realtime"
+    ) { error ->
         val epoch = generation
         main.post {
             if (active && epoch == generation) {
@@ -61,7 +64,7 @@ class LivePuckTracking(
                 status("XY output error: $error")
             }
         }
-    })
+    }
 
     fun configure(width: Int, height: Int, clockwiseRotation: Int) {
         sensorWidth = width

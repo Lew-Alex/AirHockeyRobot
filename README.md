@@ -12,9 +12,8 @@ exists in this repository from what is only planned.
 | Area | Status |
 |---|---|
 | Puck tracker (webcam, HSV yellow mask) | Prototype works on a webcam. No table calibration, filtering or bounce handling yet. |
-| Android App Perception Test | High-speed recorder with an integrated Python tracking toggle, live green overlay and local TCP XY output on port 8765. APK build and on-device validation pending; see `src/AndroidApp/README.md`. |
+| Android camera apps | Native GPU/C++ USB tracker and an optional high-speed recorder with Python tracking and annotated MP4 export. Both stream XY over TCP port 8765. See `src/AndroidApp/README.md`. |
 | Camera latency test (OpenCV) | Script exists. Results are not recorded in this repo. |
-| iPhone 120 fps camera test app | Source written (`src/iphone_camera_test`), **not yet compiled or run**: Xcode is not installed on the development Mac. |
 | Simulation (Pygame) | Physics, scripted opponent and reward shaping exist. |
 | PPO training | Actor and critic exist. The trainer collects a short rollout only. GAE, the PPO update and the training loop are not written. |
 | Breakout PCB (ESP32 DevKitC V4) | Designed and passes Prometheus checks and KiCad DRC. **Not ordered, assembled or tested.** |
@@ -32,11 +31,11 @@ exists in this repository from what is only planned.
 ├── .claude/skills/                Project skills (PCB build, PPO training, iPhone app)
 └── src/
     ├── AI_SIm/                    Pygame simulation and PPO code
+    ├── AndroidApp/                Native USB tracker and optional recorder
     ├── perception/
     │   ├── prototype/             Webcam yellow-puck tracker
     │   └── input_testing/         Camera latency test script
-    ├── test_pcb/                  Breakout PCB (Prometheus) and fabrication outputs
-    └── iphone_camera_test/        iOS app to test 120 fps at a fixed shutter speed
+    └── test_pcb/                  Breakout PCB (Prometheus) and fabrication outputs
 ```
 
 ## System overview
@@ -87,8 +86,6 @@ runtime first.
 prometheus board.py out/ --spec req.json --json
 python3 tools/verify_nets.py            # checks the generated netlists against board.py
 ```
-
-**iPhone app** (`src/iphone_camera_test`): see its README. It needs Xcode.
 
 ## Documentation
 

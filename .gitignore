@@ -6,6 +6,7 @@ venv/
 
 # Android local build state
 .gradle/
+.cxx/
 local.properties
 
 # macOS
@@ -19,6 +20,8 @@ build/
 
 # Local logs and recordings
 *.log
+src/AndroidApp/puck-reports/
+src/AndroidApp/tools/puck-reports/
 
 # Trained policy weights and checkpoints
 *.pt

@@ -2,16 +2,16 @@
 
 ## What exists
 
-- `src/AndroidApp`: Android App Perception Test, retaining the high-speed Camera2
-  recorder and adding an opt-in Python yellow-puck tracker with a live green
-  preview ring. It imports `androidAppPerceptionTesting/puck_tracker.py` via
-  Chaquopy. Analysis samples the preview at up to 30 Hz, independently of the
-  recording frame rate. A local TCP NDJSON server on port 8765 exposes native
-  recording-pixel XY and normalized coordinates (not calibrated table units).
-  See the Android README for setup, the output contract and device checks.
-  An independent MP4 toggle now runs a frame-by-frame Python scan after Stop and
-  produces an additional `_tracked.mp4` with the green circle burned into the video.
-  The original recording is retained; no additional high-speed camera output is used.
+- `src/AndroidApp/app`: native GPU/C++ yellow-puck tracker, with two click buttons
+  for USB tracking and camera preview plus a camera-mode selector.
+  TCP NDJSON on port 8765 exposes sensor-image XY and normalized positions; the
+  receiver reports rates and clock-synchronized latency estimates. There is no
+  60 Hz coordinate cap; supported camera modes and processing determine throughput.
+  Preview targets 60 Hz separately. See the Android README for build/setup and checks.
+- `src/AndroidApp/recorder`: high-speed Camera2 recorder with opt-in Python
+  yellow-puck tracking, a live preview ring and TCP XY output. The optional
+  post-recording export creates a separate `_tracked.mp4` with the ring embedded in
+  the video and retains the original capture and metadata.
 - `src/perception/androidAppPerceptionTesting`: shared yellow-puck tracker,
   offline video runner and Android ARGB adapter with synthetic bridge tests.
 
@@ -22,8 +22,6 @@
 - `src/perception/input_testing/camera_latency.py`: shows a source clock and the
   received frame side by side and stamps frames with the Mac's clock, so
   camera-to-Mac delay can be read from a screen recording.
-- `src/iphone_camera_test`: an iOS app that captures at a chosen frame rate and
-  fixed shutter speed and reports the delivered rate. Written, not yet built or run.
 
 ## Camera plan (open)
 

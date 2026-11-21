@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+    android:background="@color/surface"
     android:fitsSystemWindows="true"
-    android:keepScreenOn="true">
+    android:keepScreenOn="true"
+    android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/previewContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/camera_black">
 
         <TextureView
             android:id="@+id/preview"
@@ -25,91 +28,73 @@
             android:importantForAccessibility="no" />
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:background="#99000000"
-        android:fontFamily="monospace"
-        android:padding="8dp"
-        android:textColor="#FFFFFF"
-        android:textSize="13sp" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="#99000000"
-        android:orientation="vertical"
-        android:padding="8dp">
+        android:background="@color/surface"
+        android:orientation="vertical">
 
-        <Switch
-            android:id="@+id/trackingSwitch"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:checked="false"
-            android:text="Track yellow puck (Python)"
-            android:textColor="#FFFFFF" />
-
-        <TextView
-            android:id="@+id/trackingStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Tracking off | XY output: TCP 8765"
-            android:textSize="12sp"
-            android:textColor="#FFFFFF" />
-
-        <Switch
-            android:id="@+id/embedTrackingSwitch"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:checked="false"
-            android:text="Embed green circle in MP4 (after Stop)"
-            android:textColor="#FFFFFF" />
-
-        <TextView
-            android:id="@+id/exportStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="MP4 overlay off"
-            android:textSize="12sp"
-            android:textColor="#FFFFFF" />
-
-        <Button
-            android:id="@+id/cancelExportButton"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:visibility="gone"
-            android:text="Cancel MP4 overlay export" />
-
-        <Spinner
-            android:id="@+id/modeSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="48dp" />
+            android:layout_height="1dp"
+            android:background="@color/rule" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="12dp">
 
             <Button
-                android:id="@+id/shutterButton"
+                android:id="@+id/fastTrackingSwitch"
+                style="@style/MinimalControlButton"
                 android:layout_width="0dp"
-                android:layout_height="64dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Shutter: Auto" />
+                android:backgroundTint="@color/control_button_tint"
+                android:textColor="@color/control_button_text"
+                android:text="USB tracking: Off" />
 
             <Button
-                android:id="@+id/recordButton"
+                android:id="@+id/fastPreviewSwitch"
+                style="@style/MinimalControlButton"
                 android:layout_width="0dp"
-                android:layout_height="64dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:backgroundTint="#C62828"
-                android:text="● REC"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp" />
+                android:backgroundTint="@color/control_button_tint"
+                android:textColor="@color/control_button_text"
+                android:text="Preview: On" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@id/modeSpinner"
+                android:text="Camera mode"
+                android:textColor="@color/secondary_ink"
+                android:textSize="14sp" />
+
+            <Spinner
+                android:id="@+id/modeSpinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="48dp"
+                android:contentDescription="Camera mode" />
         </LinearLayout>
     </LinearLayout>
-</FrameLayout>
+</LinearLayout>
