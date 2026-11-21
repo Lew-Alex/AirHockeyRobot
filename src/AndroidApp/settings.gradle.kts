@@ -16,3 +16,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "AndroidAppPerceptionTest"
 include(":app")
+if (providers.gradleProperty("includeRecorder").orNull == "true") {
+    include(":recorder")
+}

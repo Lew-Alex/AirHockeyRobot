@@ -1,7 +1,8 @@
 # Android App Perception Test
 
-A native USB puck tracker with a camera preview. The Android app contains no Python,
-recording/export code, status bars or position boxes.
+A native USB puck tracker with a camera preview. The default Android build uses
+the `:app` module. For high-speed recording, Python tracking and annotated MP4
+export, build the separate [Air Hockey Recorder](recorder/README.md).
 
 ## Phone controls
 
@@ -31,7 +32,7 @@ still used by the optional **laptop receiver** and separate offline perception s
 The package remains `com.example.fastcam` and launcher name remains
 **Android App Perception Test**. The native library supports arm64-v8a and x86_64.
 Install the resulting APK, grant camera permission and press **USB tracking** to
-start the stream. No Android app compilation has been performed here.
+start the stream.
 
 ## Preview smoothness and tracking rate
 
@@ -153,8 +154,7 @@ g++ -std=c++17 -O3 -Wall -Wextra -pedantic -I app/src/main/cpp app/src/main/cpp/
 ```
 
 Standalone Kotlin test sources cover coordinate rotation, packed-mask detection,
-cadence (including a 60 Hz preview target), rate windows and socket output. Run them
-on the build machine; no Kotlin or Android compilation is performed here.
+cadence (including a 60 Hz preview target), rate windows and socket output.
 
 Required phone checks: camera permission grant/deny; both buttons individually and
 together; each camera mode; smooth preview and circle alignment at all corners;

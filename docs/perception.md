@@ -2,15 +2,18 @@
 
 ## What exists
 
-- `src/AndroidApp`: native GPU/C++ yellow-puck tracker, with two click buttons for
-  USB tracking and camera preview plus a camera-mode selector. The previous Python
-  runtime, recording/export features and stats panels were removed from this app.
+- `src/AndroidApp/app`: native GPU/C++ yellow-puck tracker, with two click buttons
+  for USB tracking and camera preview plus a camera-mode selector.
   TCP NDJSON on port 8765 exposes sensor-image XY and normalized positions; the
   receiver reports rates and clock-synchronized latency estimates. There is no
   60 Hz coordinate cap; supported camera modes and processing determine throughput.
   Preview targets 60 Hz separately. See the Android README for build/setup and checks.
+- `src/AndroidApp/recorder`: high-speed Camera2 recorder with opt-in Python
+  yellow-puck tracking, a live preview ring and TCP XY output. The optional
+  post-recording export creates a separate `_tracked.mp4` with the ring embedded in
+  the video and retains the original capture and metadata.
 - `src/perception/androidAppPerceptionTesting`: shared yellow-puck tracker,
-  offline video runner and historical Android ARGB adapter with synthetic bridge tests.
+  offline video runner and Android ARGB adapter with synthetic bridge tests.
 
 - `src/perception/prototype`: a webcam tracker. It crops the table, converts to
   HSV, thresholds yellow, cleans the mask with morphology, filters regions by area
@@ -19,8 +22,6 @@
 - `src/perception/input_testing/camera_latency.py`: shows a source clock and the
   received frame side by side and stamps frames with the Mac's clock, so
   camera-to-Mac delay can be read from a screen recording.
-- `src/iphone_camera_test`: an iOS app that captures at a chosen frame rate and
-  fixed shutter speed and reports the delivered rate. Written, not yet built or run.
 
 ## Camera plan (open)
 

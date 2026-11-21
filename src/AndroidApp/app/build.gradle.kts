@@ -39,6 +39,8 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    sourceSets.getByName("main").java.srcDir("../shared/src/main/java")
+
     externalNativeBuild {
         cmake {
             path = file("src/main/cpp/CMakeLists.txt")
